@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ethan Xu</title>
+  <meta name="description" content="Ethan Xu: Computer Science at UC Berkeley. ML research, data pipelines, and projects.">
+  <link rel="canonical" href="https://ethanxu.dev/">
+  <meta property="og:url" content="https://ethanxu.dev/">
+  <meta property="og:title" content="Ethan Xu">
+  <meta property="og:description" content="Computer Science at UC Berkeley. ML research, data pipelines, and projects.">
+  <meta name="theme-color" content="#1c2a25">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="site-config.js"></script>
+</head>
+<body>
+  <a class="skip" href="#player">Skip to content</a>
+
+  <!-- ============ HUD (always-visible nav) ============ -->
+  <header class="hud" id="hud">
+    <div class="hud-row">
+      <a class="hud-logo" href="#top" aria-label="Back to top">
+        <span class="hearts" aria-hidden="true">♥♥♥</span>
+        <span class="hud-name">ETHAN XU</span>
+      </a>
+      <nav class="hud-nav" aria-label="Sections">
+        <a href="#player"><span class="key" aria-hidden="true">1</span>Player</a>
+        <a href="#quests"><span class="key" aria-hidden="true">2</span>Quests</a>
+        <a href="#loot"><span class="key" aria-hidden="true">3</span>Loot</a>
+        <a href="#save"><span class="key" aria-hidden="true">4</span>Contact</a>
+      </nav>
+      <a class="btn btn-gold hud-resume" data-link="resume" href="resume/" target="_blank" rel="noopener">Résumé ▸</a>
+    </div>
+    <div class="xp" aria-hidden="true"><span class="xp-label">XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
+  </header>
+
+  <!-- Scroll "map" with a walking sprite (wide screens only) -->
+  <aside class="track" aria-hidden="true">
+    <div class="track-line"></div>
+    <a class="track-flag" href="#player" data-for="player" tabindex="-1"></a>
+    <a class="track-flag" href="#quests" data-for="quests" tabindex="-1"></a>
+    <a class="track-flag" href="#loot" data-for="loot" tabindex="-1"></a>
+    <a class="track-flag" href="#save" data-for="save" tabindex="-1"></a>
+    <canvas class="track-hero" id="trackHero" width="12" height="16"></canvas>
+  </aside>
+
+  <main id="top">
+    <!-- ============ TITLE SCREEN ============ -->
+    <section class="title-screen">
+      <canvas id="scene" aria-hidden="true"></canvas>
+      <div class="title-inner">
+        <p class="kicker">UC BERKELEY · COMPUTER SCIENCE</p>
+        <h1 class="logo">Ethan Xu</h1>
+        <div class="dialog px-box">
+          <span class="dialog-name">ETHAN</span>
+          <p class="sr-only">Hey, I'm Ethan. I study CS at Berkeley, build ML models, scrape messy data, and write research papers about what I find.</p>
+          <p class="dialog-text" id="dialogText" aria-hidden="true"></p>
+          <span class="dialog-caret" aria-hidden="true">▼</span>
+        </div>
+        <div class="title-actions">
+          <a class="btn btn-tomato btn-lg" href="#player">▶ Press start</a>
+          <a class="btn btn-paper btn-lg" data-link="resume" href="resume/" target="_blank" rel="noopener">View résumé</a>
+        </div>
+        <p class="hint">Keys <kbd>1</kbd>–<kbd>4</kbd> jump to a section · <kbd>R</kbd> opens the résumé · click the scene to jump</p>
+      </div>
+      <div class="dirt" aria-hidden="true"></div>
+    </section>
+
+    <!-- ============ WORLD 1: PLAYER ============ -->
+    <section id="player" class="world">
+      <header class="world-head">
+        <p class="world-num">WORLD 1</p>
+        <h2 class="world-title">Player select</h2>
+      </header>
+
+      <div class="player-grid">
+        <figure class="portrait px-box">
+          <div class="portrait-bg">
+            <!-- Headshot comes from site-config.js (SITE.headshot) -->
+            <img id="headshot" src="assets/headshot.png" alt="Portrait of Ethan Xu" width="800" height="920">
+          </div>
+          <figcaption>P1 · ETHAN XU</figcaption>
+        </figure>
+
+        <div class="player-info">
+          <div class="stats px-box paper">
+            <dl>
+              <div><dt>Class</dt><dd>Computer Science, B.A.</dd></div>
+              <div><dt>Guild</dt><dd>UC Berkeley</dd></div>
+              <div><dt>Title</dt><dd>Regents' &amp; Chancellor's Scholar</dd></div>
+              <div><dt>GPA</dt><dd>4.0 <span class="meter" aria-hidden="true"><i style="width:100%"></i></span></dd></div>
+              <div><dt>Grad</dt><dd>May 2028</dd></div>
+            </dl>
+          </div>
+
+          <p class="bio">
+            I build machine learning models and the data pipelines behind them, from sentiment models that read earnings calls to
+            trading-strategy backtests and a NeurIPS workshop paper on sentiment drift in LLMs. Outside research, I've spent four
+            years teaching kids around the world to code.
+          </p>
+
+          <h3 class="mini-head">Inventory</h3>
+          <ul class="inventory">
+            <li><span class="slot-icon" style="--c:#e8a93a">Py</span>Python</li>
+            <li><span class="slot-icon" style="--c:#d4553a">Tf</span>TensorFlow · Keras</li>
+            <li><span class="slot-icon" style="--c:#5f9c8f">Hf</span>Hugging Face</li>
+            <li><span class="slot-icon" style="--c:#8fb8c9">Pd</span>Pandas</li>
+            <li><span class="slot-icon" style="--c:#b5835a">Bs</span>Beautiful Soup</li>
+            <li><span class="slot-icon" style="--c:#9c6b8e">Jv</span>Java</li>
+            <li><span class="slot-icon" style="--c:#7aa35a">Ap</span>Aspen Plus</li>
+            <li><span class="slot-icon" style="--c:#f1e6cc">Sc</span>Scratch</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WORLD 2: QUEST LOG (experience) ============ -->
+    <section id="quests" class="world">
+      <header class="world-head">
+        <p class="world-num">WORLD 2</p>
+        <h2 class="world-title">Quest log</h2>
+      </header>
+
+      <div class="filter" role="group" aria-label="Filter quests">
+        <button class="chip is-on" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="active" aria-pressed="false">Active</button>
+        <button class="chip" data-filter="done" aria-pressed="false">Completed</button>
+      </div>
+
+      <ol class="quests">
+        <!-- To add a quest: copy an <li>. data-status is "active" or "done". -->
+        <li class="quest px-box paper" data-status="active">
+          <div class="quest-top">
+            <span class="badge badge-active">● Active</span>
+            <span class="quest-when">Fall 2026 – Now</span>
+          </div>
+          <h3>Undergraduate Researcher</h3>
+          <p class="quest-org">URAP · UC Berkeley</p>
+          <ul class="quest-list">
+            <li>Building a pipeline that scrapes <em>American Economic Review</em> issues and pulls citation counts from the Crossref and OpenAlex APIs to rank recent work by impact.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Python · Web scraping · REST APIs</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Oct 2024 – Dec 2025</span>
+          </div>
+          <h3>Algorithm Developer</h3>
+          <p class="quest-org">IPMD Inc. · ASTAI Group</p>
+          <ul class="quest-list">
+            <li>Built logistic-regression models with output thresholds in Keras/TensorFlow that <strong>beat S&amp;P benchmarks by 13% over 10 years</strong> in backtests.</li>
+            <li>Backtested Elliott Wave, candlestick and support/resistance strategies on 10 years of daily S&amp;P 500 OHLCV data, reaching a <strong>20% cumulative return</strong>.</li>
+            <li>Built an automated Yahoo Finance news-ingestion pipeline with Beautiful Soup to feed sentiment into multimodal models.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> TensorFlow · Keras · Backtesting · NLP</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Jun 2025 – Sep 2025</span>
+          </div>
+          <h3>Lab Assistant, Dr. Christoph Eick</h3>
+          <p class="quest-org">Data Analysis &amp; Intelligent Systems Lab · University of Houston</p>
+          <ul class="quest-list">
+            <li>Mapped NOAA underwater elevation data to geofenced deep-sea images to build training sets.</li>
+            <li>Helped develop a CNN that classifies, labels and extracts front-facing horizon images from large deep-sea datasets.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Computer vision · CNNs · Geospatial data</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Apr 2025 – Sep 2025</span>
+          </div>
+          <h3>Research Assistant, Dr. Melissa Baldo</h3>
+          <p class="quest-org">College of Business · Lamar University</p>
+          <ul class="quest-list">
+            <li>Researched short-sea freight shipping as a sustainable alternative to US trucking under the Jones Act.</li>
+            <li>Wrote original case studies comparing GHG and PM emissions against rail and trucking for real Texas freight routes; built all tables and figures for a paper submission.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Research writing · Emissions analysis</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">May 2022 – Jul 2026</span>
+          </div>
+          <h3>Program Coordinator, Board Member &amp; Instructor</h3>
+          <p class="quest-org">Appropriate Development Technology (ADTech) Inc.</p>
+          <ul class="quest-list">
+            <li>Led a 6-week STEM summer camp across 8 subjects for <strong>60+ underserved students</strong> internationally.</li>
+            <li>Taught three 10-week Python courses to <strong>50+ students across 3 continents</strong>.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Leadership · Teaching</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Jun 2024 – Feb 2025</span>
+          </div>
+          <h3>Code Instructor</h3>
+          <p class="quest-org">Beaumont Code Wiz</p>
+          <ul class="quest-list">
+            <li>Taught 20+ K–12 students in weekly programming classes; certified in Python, Java and Scratch.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Python · Java · Scratch</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ WORLD 3: LOOT (projects, publications, awards) ============ -->
+    <section id="loot" class="world">
+      <header class="world-head">
+        <p class="world-num">WORLD 3</p>
+        <h2 class="world-title">Loot &amp; trophies</h2>
+      </header>
+
+      <div class="loot-grid">
+        <article class="item px-box">
+          <div class="item-icon" aria-hidden="true" style="--c:#e8a93a">✦</div>
+          <p class="item-type">Publication · NeurIPS 2025</p>
+          <h3>SENTINEL</h3>
+          <p class="item-sub">Sentiment Evolution and Narrative Tracking in Extended LLM Interactions</p>
+          <p>A framework for measuring sentiment drift within long-context LLM conversations and agentic workflows, aimed at reducing LLM emotional hallucination. Published at the NeurIPS MTI-LLM 2025 Workshop.</p>
+          <div class="item-links">
+            <a class="btn btn-sm btn-paper" href="https://openreview.net/forum?id=6ZvINpYdOA" target="_blank" rel="noopener">OpenReview ↗</a>
+            <a class="btn btn-sm btn-ghost" href="https://neurips.cc/virtual/2025/loc/san-diego/128069" target="_blank" rel="noopener">NeurIPS ↗</a>
+          </div>
+        </article>
+
+        <article class="item px-box">
+          <div class="item-icon" aria-hidden="true" style="--c:#5f9c8f">$</div>
+          <p class="item-type">Project · ML</p>
+          <h3>Fintrax</h3>
+          <p class="item-sub">Python · Pandas · Hugging Face · Beautiful Soup</p>
+          <p>A BERT-based confidence model that compares the sentiment of executives' prepared remarks with their open Q&amp;A answers on earnings calls, then turns the gap into buy/sell signals using transcripts scraped in real time.</p>
+          <div class="item-links">
+            <a class="btn btn-sm btn-ghost" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </article>
+
+        <article class="item px-box">
+          <div class="item-icon" aria-hidden="true" style="--c:#8fb8c9">≡</div>
+          <p class="item-type">Project · In progress</p>
+          <h3>AER Citation Tracker</h3>
+          <p class="item-sub">Python · Beautiful Soup · Crossref · OpenAlex</p>
+          <p>Scrapes recent <em>American Economic Review</em> issues, looks up each article's DOI on Crossref and OpenAlex, and outputs a CSV ranked by citation count. Built for URAP research.</p>
+        </article>
+
+        <article class="item px-box">
+          <div class="item-icon" aria-hidden="true" style="--c:#d4553a">⚓</div>
+          <p class="item-type">Award · 2nd place</p>
+          <h3>Emission-Free Maritime Transport</h3>
+          <p class="item-sub">CAPA National Reach Paper Competition · Dec 2024</p>
+          <p>Designed and presented a new concept for emission-free shipping, including an Aspen Plus process simulation of a closed-loop Allam Power Cycle engine.</p>
+        </article>
+      </div>
+
+      <h3 class="mini-head trophy-head">Achievements unlocked</h3>
+      <ul class="trophies">
+        <li><span class="trophy" aria-hidden="true">🏆</span>NeurIPS workshop paper</li>
+        <li><span class="trophy" aria-hidden="true">🥈</span>CAPA national 2nd place</li>
+        <li><span class="trophy" aria-hidden="true">🎓</span>Regents' &amp; Chancellor's Scholar</li>
+        <li><span class="trophy" aria-hidden="true">⭐</span>4.0 GPA at Berkeley</li>
+        <li><span class="trophy" aria-hidden="true">🌍</span>Taught on 3 continents</li>
+      </ul>
+    </section>
+
+    <!-- ============ WORLD 4: SAVE POINT (contact) ============ -->
+    <section id="save" class="world save">
+      <header class="world-head">
+        <p class="world-num">WORLD 4</p>
+        <h2 class="world-title">Save point</h2>
+      </header>
+
+      <div class="save-box px-box">
+        <canvas id="fire" width="16" height="16" aria-hidden="true"></canvas>
+        <div>
+          <p class="save-lead">Rest here and say hi.</p>
+          <p class="save-sub">I'm open to internships, research roles, and interesting collaborations.</p>
+          <div class="save-actions">
+            <button class="btn btn-gold" id="copyEmail" data-email="ethan_xu@berkeley.edu">
+              <span id="emailLabel">ethan_xu@berkeley.edu</span>
+              <span class="copy-tag" id="copyTag">copy</span>
+            </button>
+            <a class="btn btn-paper" data-link="linkedin" href="https://www.linkedin.com/in/ethan-xu-3311382b3/" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a class="btn btn-paper" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
+            <a class="btn btn-tomato" data-link="resume" href="resume/" target="_blank" rel="noopener">Résumé ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="credits">
+    <p class="thanks">Thanks for playing</p>
+    <p>© <span id="year">2026</span> Ethan Xu · Built by hand in Berkeley, CA</p>
+    <a href="#top" class="btn btn-sm btn-ghost">▲ Back to title</a>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
