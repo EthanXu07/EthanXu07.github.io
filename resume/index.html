@@ -2,24 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Ethan Xu · Résumé</title>
-  <meta name="robots" content="noindex">
+  <meta name="description" content="Résumé of Ethan Xu, Computer Science at UC Berkeley.">
+  <meta name="theme-color" content="#1c2a25">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
   <style>
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #1c2a25; color: #f1e6cc; font: 16px/1.6 ui-monospace, Menlo, monospace; text-align: center; padding: 1rem; }
-    a { color: #e8a93a; }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    .resume-bar { position: sticky; top: 0; z-index: 5; padding-top: calc(.75rem + env(safe-area-inset-top, 0px)); }
+    .resume-pages { flex: 1; overflow: visible; }
   </style>
   <script src="../site-config.js"></script>
-  <script>
-    // Shareable link: ethanxu.dev/resume opens the hosted PDF
-    const url = (window.SITE && window.SITE.resumeFile) || 'assets/resume.pdf';
-    if (url) location.replace(new URL(url, new URL('../', location.href)).href);
-  </script>
 </head>
 <body>
-  <p id="msg">Résumé coming soon.<br><a href="../">← Back to ethanxu.dev</a></p>
+  <div class="resume-bar">
+    <a class="btn btn-ghost btn-sm" href="../">← ethanxu.dev</a>
+    <h2>Ethan Xu · Résumé</h2>
+    <div class="resume-actions">
+      <a class="btn btn-gold btn-sm" id="download" href="../assets/resume.pdf" download="Ethan_Xu_Resume.pdf">Download ↓</a>
+    </div>
+  </div>
+  <main class="resume-pages" id="pages">
+    <noscript><p><a href="../assets/resume.pdf">Open the résumé PDF</a></p></noscript>
+  </main>
+
+  <script src="../resume-viewer.js"></script>
   <script>
-    if (url) document.getElementById('msg').innerHTML = 'Opening résumé…<br><a href="' + url + '">Click here if nothing happens</a>';
+    const SITE = window.SITE || {};
+    const file = new URL(SITE.resumeFile || 'assets/resume.pdf', new URL('../', location.href)).href;
+    const dl = document.getElementById('download');
+    dl.href = file;
+    if (SITE.resumeDownloadName) dl.download = SITE.resumeDownloadName;
+    window.ResumeViewer.render(document.getElementById('pages'), file);
   </script>
 </body>
 </html>

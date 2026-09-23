@@ -33,7 +33,7 @@
         <a href="#loot"><span class="key" aria-hidden="true">3</span>Loot</a>
         <a href="#save"><span class="key" aria-hidden="true">4</span>Contact</a>
       </nav>
-      <a class="btn btn-gold hud-resume" data-link="resume" href="assets/resume.pdf" download="Ethan_Xu_Resume.pdf">Résumé ↓</a>
+      <a class="btn btn-gold hud-resume" data-link="resume" href="resume/">Résumé ▸</a>
     </div>
     <div class="xp" aria-hidden="true"><span class="xp-label">XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
   </header>
@@ -63,9 +63,9 @@
         </div>
         <div class="title-actions">
           <a class="btn btn-tomato btn-lg" href="#player">▶ Press start</a>
-          <a class="btn btn-paper btn-lg" data-link="resume" href="assets/resume.pdf" download="Ethan_Xu_Resume.pdf">Download résumé ↓</a>
+          <a class="btn btn-paper btn-lg" data-link="resume" href="resume/">View résumé</a>
         </div>
-        <p class="hint">Keys <kbd>1</kbd>–<kbd>4</kbd> jump to a section · <kbd>R</kbd> downloads the résumé · click the scene to jump</p>
+        <p class="hint">Keys <kbd>1</kbd>–<kbd>4</kbd> jump to a section · <kbd>R</kbd> opens the résumé · click the scene to jump</p>
       </div>
       <div class="dirt" aria-hidden="true"></div>
     </section>
@@ -295,7 +295,7 @@
             </button>
             <a class="btn btn-paper" data-link="linkedin" href="https://www.linkedin.com/in/ethan-xu-3311382b3/" target="_blank" rel="noopener">LinkedIn ↗</a>
             <a class="btn btn-paper" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
-            <a class="btn btn-tomato" data-link="resume" href="assets/resume.pdf" download="Ethan_Xu_Resume.pdf">Résumé ↓</a>
+            <a class="btn btn-tomato" data-link="resume" href="resume/">Résumé ▸</a>
           </div>
         </div>
       </div>
@@ -308,8 +308,22 @@
     <a href="#top" class="btn btn-sm btn-ghost">▲ Back to title</a>
   </footer>
 
+  <!-- Résumé preview pop-up -->
+  <dialog class="resume-modal" id="resumeModal" aria-labelledby="resumeModalTitle">
+    <div class="resume-bar">
+      <h2 id="resumeModalTitle">Résumé</h2>
+      <div class="resume-actions">
+        <a class="btn btn-gold btn-sm" id="resumeDownload" href="assets/resume.pdf" download="Ethan_Xu_Resume.pdf">Download ↓</a>
+        <a class="btn btn-ghost btn-sm resume-full" href="resume/">Full page ↗</a>
+        <button class="btn btn-paper btn-sm" id="resumeClose" aria-label="Close résumé preview">✕</button>
+      </div>
+    </div>
+    <div class="resume-pages" id="resumePages"></div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="resume-viewer.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

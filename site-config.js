@@ -6,12 +6,12 @@ window.SITE = {
   // Any size works. A transparent PNG (e.g. from Photoroom) looks best.
   headshot: "assets/headshot.png",
 
-  // Résumé: a PDF hosted on this site. Every "Résumé" button downloads it,
-  // and ethanxu.dev/resume opens it in the browser.
+  // Résumé: a PDF stored on this site. "Résumé" buttons open a preview
+  // with a Download button; ethanxu.dev/resume shows the same preview.
   // To swap in a new version, run ./update-resume.sh (grabs the newest
   // Ethan_Xu_Resume*.pdf from Downloads) or just replace assets/resume.pdf.
   resumeFile: "assets/resume.pdf",
-  resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename visitors get
+  resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename when they click Download
 
   email: "ethan_xu@berkeley.edu",
   github: "https://github.com/EthanXu07",
