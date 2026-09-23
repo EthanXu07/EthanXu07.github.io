@@ -7,12 +7,13 @@ const $$ = (sel) => [...document.querySelectorAll(sel)];
 //  Apply site-config.js (headshot + links)
 // =====================================================================
 if (SITE.headshot) $('#headshot').src = SITE.headshot;
-const links = { resume: SITE.resumeFile, github: SITE.github, linkedin: SITE.linkedin };
+const links = { github: SITE.github, linkedin: SITE.linkedin };
 $$('[data-link]').forEach((a) => {
   const url = links[a.dataset.link];
-  if (url) a.href = url;
-  if (a.dataset.link === 'resume' && SITE.resumeDownloadName) a.download = SITE.resumeDownloadName;
+  if (url && a.dataset.link !== 'resume') a.href = url;
 });
+$('#resumeDownload').href = SITE.resumeFile || 'assets/resume.pdf';
+if (SITE.resumeDownloadName) $('#resumeDownload').download = SITE.resumeDownloadName;
 if (SITE.email) {
   $('#copyEmail').dataset.email = SITE.email;
   $('#emailLabel').textContent = SITE.email;
@@ -188,16 +189,34 @@ $('#copyEmail').addEventListener('click', async (e) => {
 });
 
 // =====================================================================
-//  Keyboard shortcuts: 1–4 warp to sections, R downloads the résumé
+//  Résumé preview pop-up: preview first, download only if they choose
+// =====================================================================
+const resumeModal = $('#resumeModal');
+let resumeRendered = false;
+function openResume() {
+  if (!resumeModal.showModal) { location.href = 'resume/'; return; }
+  resumeModal.showModal();
+  document.body.style.overflow = 'hidden';
+  if (!resumeRendered) {
+    resumeRendered = true;
+    window.ResumeViewer.render($('#resumePages'), SITE.resumeFile || 'assets/resume.pdf');
+  }
+}
+$$('[data-link="resume"]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openResume(); }));
+$('#resumeClose').addEventListener('click', () => resumeModal.close());
+resumeModal.addEventListener('close', () => { document.body.style.overflow = ''; });
+resumeModal.addEventListener('click', (e) => { if (e.target === resumeModal) resumeModal.close(); });
+
+// =====================================================================
+//  Keyboard shortcuts: 1–4 warp to sections, R opens the résumé
 // =====================================================================
 document.addEventListener('keydown', (e) => {
-  if (e.metaKey || e.ctrlKey || e.altKey || e.target.matches('input, textarea, select')) return;
+  if (e.metaKey || e.ctrlKey || e.altKey || resumeModal.open || e.target.matches('input, textarea, select')) return;
   const ids = { 1: 'player', 2: 'quests', 3: 'loot', 4: 'save' };
   if (ids[e.key]) {
     document.getElementById(ids[e.key]).scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
   } else if (e.key.toLowerCase() === 'r') {
-    $('[data-link="resume"]').click();
-    toast('★ Résumé downloading…');
+    openResume();
   }
 });
 
