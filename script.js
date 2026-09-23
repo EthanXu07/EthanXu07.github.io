@@ -7,10 +7,11 @@ const $$ = (sel) => [...document.querySelectorAll(sel)];
 //  Apply site-config.js (headshot + links)
 // =====================================================================
 if (SITE.headshot) $('#headshot').src = SITE.headshot;
-const links = { resume: SITE.resumeUrl, github: SITE.github, linkedin: SITE.linkedin };
+const links = { resume: SITE.resumeFile, github: SITE.github, linkedin: SITE.linkedin };
 $$('[data-link]').forEach((a) => {
   const url = links[a.dataset.link];
   if (url) a.href = url;
+  if (a.dataset.link === 'resume' && SITE.resumeDownloadName) a.download = SITE.resumeDownloadName;
 });
 if (SITE.email) {
   $('#copyEmail').dataset.email = SITE.email;
@@ -187,7 +188,7 @@ $('#copyEmail').addEventListener('click', async (e) => {
 });
 
 // =====================================================================
-//  Keyboard shortcuts: 1–4 warp to sections, R opens the résumé
+//  Keyboard shortcuts: 1–4 warp to sections, R downloads the résumé
 // =====================================================================
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey || e.target.matches('input, textarea, select')) return;
@@ -195,7 +196,8 @@ document.addEventListener('keydown', (e) => {
   if (ids[e.key]) {
     document.getElementById(ids[e.key]).scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
   } else if (e.key.toLowerCase() === 'r') {
-    window.open($('[data-link="resume"]').href, '_blank', 'noopener');
+    $('[data-link="resume"]').click();
+    toast('★ Résumé downloading…');
   }
 });
 

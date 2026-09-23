@@ -1,3 +1,1 @@
 .DS_Store
-# Keep résumé PDFs (contain phone number) out of the public repo
-*.pdf

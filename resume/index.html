@@ -11,8 +11,8 @@
   </style>
   <script src="../site-config.js"></script>
   <script>
-    // Shareable link: ethanxu.dev/resume sends people to SITE.resumeUrl
-    const url = window.SITE && window.SITE.resumeUrl;
+    // Shareable link: ethanxu.dev/resume opens the hosted PDF
+    const url = (window.SITE && window.SITE.resumeFile) || 'assets/resume.pdf';
     if (url) location.replace(new URL(url, new URL('../', location.href)).href);
   </script>
 </head>
