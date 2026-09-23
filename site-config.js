@@ -15,5 +15,5 @@ window.SITE = {
 
   email: "ethan_xu@berkeley.edu",
   github: "https://github.com/EthanXu07",
-  linkedin: "https://www.linkedin.com/in/ethan-xu-3311382b3/",
+  linkedin: "https://www.linkedin.com/in/EthanXu07/",
 };
