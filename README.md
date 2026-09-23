@@ -20,7 +20,7 @@ Both live in **`site-config.js`**:
 
 ### Overleaf résumé
 
-The site links to your Overleaf **view-only** link, so it always shows your latest version. In Overleaf, go to *Share → Turn on link sharing*, copy the view link (`https://www.overleaf.com/read/…`), and paste it as `resumeUrl`.
+The site links to your Overleaf **view-only** link, so it always shows your latest version. In Overleaf, open *Share*, set link access to **anyone with the link can view** (never edit), copy the sharing link, and paste it as `resumeUrl`.
 
 PDFs are git-ignored on purpose, because the résumé includes a phone number.
 
