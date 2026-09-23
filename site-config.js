@@ -6,9 +6,12 @@ window.SITE = {
   // Any size works. A transparent PNG (e.g. from Photoroom) looks best.
   headshot: "assets/headshot.png",
 
-  // Résumé: every "Résumé" button on the site AND ethanxu.dev/resume
-  // point here. Overleaf → Share → set link access to "can view" → copy link.
-  resumeUrl: "https://www.overleaf.com/project/6aab3149108b030d365fadbd/share#f8233d5c0f2dbbb94b624a0271d526d5de5f13f6ebeb1cf1",
+  // Résumé: a PDF hosted on this site. Every "Résumé" button downloads it,
+  // and ethanxu.dev/resume opens it in the browser.
+  // To swap in a new version, run ./update-resume.sh (grabs the newest
+  // Ethan_Xu_Resume*.pdf from Downloads) or just replace assets/resume.pdf.
+  resumeFile: "assets/resume.pdf",
+  resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename visitors get
 
   email: "ethan_xu@berkeley.edu",
   github: "https://github.com/EthanXu07",
