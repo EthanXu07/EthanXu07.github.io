@@ -7,10 +7,8 @@ window.SITE = {
   headshot: "assets/headshot.png",
 
   // Résumé: every "Résumé" button on the site AND ethanxu.dev/resume
-  // point here. Paste your Overleaf view-only link:
-  //   Overleaf → Share → Turn on link sharing → copy the "view" link
-  //   e.g. "https://www.overleaf.com/read/abcdefghijkl#123456"
-  resumeUrl: "",
+  // point here. Overleaf → Share → set link access to "can view" → copy link.
+  resumeUrl: "https://www.overleaf.com/project/6aab3149108b030d365fadbd/share#f8233d5c0f2dbbb94b624a0271d526d5de5f13f6ebeb1cf1",
 
   email: "ethan_xu@berkeley.edu",
   github: "https://github.com/EthanXu07",
