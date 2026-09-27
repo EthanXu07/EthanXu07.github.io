@@ -151,16 +151,9 @@ ${b.skills.map((s) => {
 console.log('Building site:');
 const DESC = 'Ethan Xu: Computer Science at UC Berkeley. ML research, data pipelines, and projects.';
 
-// Title-screen level: "?" blocks can pop out facts; the Guestbook pipe unlocks at the end
-const homeLevel = {
-  facts: [
-    ...experience.filter((q) => q.status === 'active').map((q) => `Now: ${q.title} @ ${q.org.split(' · ')[0]}`),
-    ...trophies.map((t) => t.label),
-  ],
-};
 page({
   out: 'index.html', path: '/', page: 'home', sub: false, title: 'Ethan Xu', description: DESC,
-  content: fill(src('pages/home-title.html'), { homeLevel: inlineJson(homeLevel) }) + src('pages/home-player.html') + src('pages/home-levels.html'),
+  content: src('pages/home-title.html') + src('pages/home-player.html') + src('pages/home-levels.html'),
   scripts: '  <script src="/home.js"></script>\n',
 });
 

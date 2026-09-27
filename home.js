@@ -1,11 +1,12 @@
 // =====================================================================
 //  Title screen: a small side-scrolling platformer.
 //  Run right from the Campanile, bump "?" blocks (coins, coffee = +1 heart,
-//  stars = invincibility, facts about me, a hidden block), stomp bugs, dodge
+//  star = invincibility, coin magnet, double jump, a hidden 1-up), stomp bugs, dodge
 //  spiky viruses, cross pits and a moving platform, then climb the stairs to
 //  the flag. Finishing raises the Guestbook pipe (Enter or ↓ to go in).
-//  Run out of hearts and it's game over. When play starts, the name + bio
-//  card slides into the corner.
+//  Run out of hearts and it's game over. Before Start only the scenery shows;
+//  on Start the level drops into place and the name + bio card slides into
+//  the corner.
 //  World coordinates: the ground surface is y = 0 and "up" is negative.
 //  Uses drawSprite / SPRITE from script.js.
 // =====================================================================
@@ -14,7 +15,6 @@
   const section = document.getElementById('titleScreen');
   if (!canvas || !section) return;
   const ctx = canvas.getContext('2d');
-  const { facts } = JSON.parse(document.getElementById('homeLevel').textContent);
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $id = (id) => document.getElementById(id);
   const prompt = { el: $id('explorePrompt'), label: $id('exploreLabel'), title: $id('exploreTitle'), desc: $id('exploreDesc'), go: $id('exploreGo') };
@@ -55,20 +55,17 @@
   for (let c = 0; c < 5; c++) for (let r = 0; r <= c; r++) stairs.push({ x: 1110 + c * 12, y: -12 * (r + 1), w: 12, h: 12, kind: 'stone' });
 
   // Blocks: y is the block's top edge. "hidden" blocks are invisible until bumped.
-  let factIndex = 0;
-  const nextFact = () => facts[factIndex++ % facts.length];
   const blockDefs = [
     [160, 52, 'coin'],
     [220, 52, 'brick'], [232, 52, 'coffee'], [244, 52, 'brick'], [256, 52, 'coin'], [268, 52, 'brick'],
-    [244, 96, 'fact'],
+    [244, 96, 'magnet'],                     // coins fly to you
     [560, 52, 'multi'],                      // looks like a brick, pays out 5 coins
     [680, 52, 'star'],
     [830, 52, 'heart', true],                // hidden
-    [880, 52, 'coin'], [892, 52, 'brick'], [904, 52, 'fact'], [916, 52, 'brick'], [928, 52, 'coin'],
+    [880, 52, 'coin'], [892, 52, 'brick'], [904, 52, 'feather'], [916, 52, 'brick'], [928, 52, 'coin'],
   ];
   const blocks = blockDefs.map(([x, top, content, hidden]) => ({
     x, y: -top, w: 12, h: 12, kind: 'block', content, hidden: !!hidden, used: false, hits: content === 'multi' ? 5 : 1, bump: 0,
-    fact: content === 'fact' ? nextFact() : null,
   }));
 
   const movers = [{ x: 724, y: -20, w: 36, h: 5, minX: 722, maxX: 764, vx: 0.5 }]; // right end reaches the far ledge
@@ -90,7 +87,7 @@
 
   // ---------- State ----------
   const keys = { left: false, right: false, jump: false, down: false };
-  let p, enemies, items, coins, cam, t, playing = false, state, hearts, score, coinCount, invuln, star, checkpoint, popups, particles, winT, entering, near;
+  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, checkpoint, popups, particles, winT, entering, near;
   let stars = [], clouds = [];
 
   function newGame() {
@@ -108,7 +105,7 @@
     GB_PIPE.h = 0;
     cam = 0; t = 0;
     state = 'play'; // play | won | over
-    hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0;
+    hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0; magnet = 0; feather = 0; airJumps = 0;
     checkpoint = START_X;
     popups = []; particles = [];
     winT = 0; entering = null; near = null;
@@ -125,6 +122,7 @@
   function start() {
     if (playing) return;
     playing = true;
+    startT = t; // the level drops in from here
     const card = section.querySelector('.title-inner');
     const from = card.getBoundingClientRect();
     section.classList.add('playing');
@@ -276,12 +274,7 @@
         addCoin(cx, b.y - 8);
         if (--b.hits > 0) return;
         break;
-      case 'fact':
-        score += 300;
-        burst(cx, b.y, '#f3c969', 10);
-        popup(cx, b.y - 10, `★ ${b.fact}`, 170, true);
-        break;
-      default: // coffee, star, heart pop out and move
+      default: // coffee, star, heart, magnet, feather pop out and move
         items.push({ type: b.content, x: b.x + 1, y: b.y, w: 10, h: 10, vx: 0, vy: 0, rise: 12, onGround: false });
     }
     b.used = true;
@@ -307,6 +300,9 @@
     const solids = solidList();
     if (invuln > 0) invuln--;
     if (star > 0) star--;
+    if (magnet > 0) magnet--;
+    if (feather > 0) feather--;
+    if (!playing || t - startT < 30) return; // let the level finish dropping in
 
     for (const m of movers) { m.x += m.vx; if (m.x < m.minX || m.x > m.maxX) m.vx *= -1; }
 
@@ -320,7 +316,13 @@
     const maxV = auto ? 1.2 : 2;
     p.vx = Math.max(-maxV, Math.min(maxV, p.vx));
     if (Math.abs(p.vx) < 0.02) p.vx = 0;
-    if (!auto && keys.jump && p.onGround && !p.jumpHeld) { p.vy = JUMP_V; p.onGround = false; }
+    if (!auto && keys.jump && !p.jumpHeld) {
+      if (p.onGround) { p.vy = JUMP_V; p.onGround = false; airJumps = 1; }
+      else if (feather > 0 && airJumps > 0) { // double jump
+        p.vy = JUMP_V * 0.9; airJumps--;
+        for (let i = 0; i < 6; i++) particles.push({ x: p.x + 5, y: p.y + PH, vx: (i - 2.5) * 0.5, vy: 0.6, life: 16, color: '#f1e6cc' });
+      }
+    }
     p.jumpHeld = keys.jump;
     if (!keys.jump && p.vy < -1.8) p.vy = -1.8;
 
@@ -374,15 +376,22 @@
 
     // Items from ? blocks
     for (const it of items) {
-      if (it.rise > 0) { it.y -= 1; if (--it.rise === 0) it.vx = it.type === 'star' ? 0.9 : 0.6; continue; }
+      if (it.rise > 0) { it.y -= 1; if (--it.rise === 0) it.vx = it.type === 'star' ? 0.9 : it.type === 'feather' ? 0 : 0.6; continue; }
       moveActor(it, solids, { turnAtWalls: true });
       if (it.type === 'star' && it.onGround) it.vy = -3.2; // stars bounce
+      if (it.type === 'feather') { it.vy = Math.min(it.vy, 0.35); it.x += Math.sin(t * 0.08) * 0.5; } // feathers drift down
       if (it.y > FALL_Y) it.gone = true;
       if (!it.gone && hitTest(p, it)) {
         it.gone = true;
         if (it.type === 'star') {
           star = 480; score += 500;
           popup(it.x + 5, it.y - 6, 'Star! Invincible!', 90, true);
+        } else if (it.type === 'magnet') {
+          magnet = 600; score += 500;
+          popup(it.x + 5, it.y - 6, 'Coin magnet!', 90, true);
+        } else if (it.type === 'feather') {
+          feather = 600; score += 500;
+          popup(it.x + 5, it.y - 6, 'Double jump!', 90, true);
         } else {
           hearts = Math.min(MAX_HEARTS, hearts + 1);
           score += 500;
@@ -393,6 +402,13 @@
     }
     items = items.filter((it) => !it.gone);
 
+    if (magnet > 0) {
+      for (const c of coins) {
+        if (c.taken) continue;
+        const dx = p.x + PW / 2 - c.x, dy = p.y + PH / 2 - c.y, d = Math.hypot(dx, dy);
+        if (d < 70 && d > 0) { c.x += (dx / d) * 2.6; c.y += (dy / d) * 2.6; }
+      }
+    }
     for (const c of coins) {
       if (!c.taken && Math.abs(p.x + PW / 2 - c.x) < 8 && Math.abs(p.y + PH / 2 - c.y) < 11) { c.taken = true; addCoin(c.x, c.y - 6); }
     }
@@ -482,6 +498,12 @@
       ctx.fillStyle = '#f1e6cc'; ctx.fillRect(x + 1, y + 3, 7, 7); ctx.fillRect(x + 8, y + 4, 2, 4);
       ctx.fillStyle = '#6b4630'; ctx.fillRect(x + 2, y + 3, 5, 2);
       ctx.fillStyle = '#b9b39c'; ctx.fillRect(x + (Math.floor(t / 10) % 2 ? 3 : 5), y, 1, 2);
+    } else if (it.type === 'magnet') {
+      ctx.fillStyle = '#d4553a'; ctx.fillRect(x, y + 1, 3, 7); ctx.fillRect(x + 7, y + 1, 3, 7); ctx.fillRect(x, y + 7, 10, 3);
+      ctx.fillStyle = '#e2d2ac'; ctx.fillRect(x, y, 3, 2); ctx.fillRect(x + 7, y, 3, 2);
+    } else if (it.type === 'feather') {
+      ctx.fillStyle = '#f1e6cc'; ctx.fillRect(x + 4, y, 2, 2); ctx.fillRect(x + 3, y + 2, 4, 2); ctx.fillRect(x + 2, y + 4, 5, 2); ctx.fillRect(x + 2, y + 6, 4, 2);
+      ctx.fillStyle = '#8fb8c9'; ctx.fillRect(x + 5, y + 1, 1, 8); ctx.fillRect(x + 1, y + 8, 2, 2);
     } else if (it.type === 'heart') {
       ctx.fillStyle = '#d4553a';
       ctx.fillRect(x + 1, y + 2, 3, 3); ctx.fillRect(x + 6, y + 2, 3, 3); ctx.fillRect(x + 1, y + 4, 8, 2); ctx.fillRect(x + 2, y + 6, 6, 2); ctx.fillRect(x + 4, y + 8, 2, 1);
@@ -527,6 +549,14 @@
     ctx.fillStyle = '#f3c969'; ctx.fillRect(x + 4, top, 6, 8);
     ctx.fillStyle = '#0f1714'; ctx.fillText(String(coinCount), x + 14, top + 1);
     ctx.fillStyle = '#f3c969'; ctx.fillText(String(coinCount), x + 13, top);
+    // Active power-ups with seconds left
+    const powers = [[star, 'STAR'], [magnet, 'MAGNET'], [feather, '2x JUMP']].filter(([f]) => f > 0).map(([f, n]) => `${n} ${Math.ceil(f / 60)}`);
+    if (powers.length) {
+      ctx.textAlign = narrow ? 'right' : 'center';
+      const px = narrow ? W - 6 : Math.round(W / 2);
+      ctx.fillStyle = '#0f1714'; ctx.fillText(powers.join('  '), px + 1, top + 13);
+      ctx.fillStyle = '#fff3c4'; ctx.fillText(powers.join('  '), px, top + 12);
+    }
     ctx.textBaseline = 'alphabetic';
   }
 
@@ -577,38 +607,48 @@
       ctx.fillStyle = '#5c8a44'; ctx.fillRect(g.x, 2, g.w, 2);
       ctx.fillStyle = '#6b4630'; for (let px = g.x + 5; px < g.x + g.w; px += 13) ctx.fillRect(px, 9 + (px % 3) * 5, 2, 1);
     }
-    ctx.fillStyle = '#e2d2ac'; ctx.fillRect(MID_CHECKPOINT, -30, 1, 30);
-    ctx.fillStyle = checkpoint >= MID_CHECKPOINT ? '#e8a93a' : '#8b949c'; ctx.fillRect(MID_CHECKPOINT + 1, -30, 8, 6);
-    for (const s of stairs) { ctx.fillStyle = '#6b737a'; ctx.fillRect(s.x, s.y, 12, 12); ctx.fillStyle = '#8b949c'; ctx.fillRect(s.x + 1, s.y + 1, 10, 10); ctx.fillStyle = '#a9b1b8'; ctx.fillRect(s.x + 1, s.y + 1, 10, 1); }
-    pipes.forEach((pp) => drawPipe(pp));
-    for (const m of movers) {
-      ctx.fillStyle = '#0f1714'; ctx.fillRect(Math.round(m.x) - 1, m.y - 1, m.w + 2, m.h + 2);
-      ctx.fillStyle = '#e2d2ac'; ctx.fillRect(Math.round(m.x), m.y, m.w, m.h);
-      ctx.fillStyle = '#b3a488'; ctx.fillRect(Math.round(m.x), m.y + m.h - 1, m.w, 1);
-    }
-    for (const b of blocks) {
-      if (b.hidden) continue;
-      const y = b.y - (b.bump > 4 ? 8 - b.bump : b.bump);
-      if (b.content === 'brick' || (b.content === 'multi' && !b.used)) drawBrick(b.x, y);
-      else drawQBlock(b, y);
-    }
-    for (const c of coins) {
-      if (c.taken) continue;
-      const y = c.y + Math.round(Math.sin((t + c.x) * 0.08) * 1.5);
-      ctx.fillStyle = '#b57a1c'; ctx.fillRect(c.x - 3, y - 4, 6, 8);
-      ctx.fillStyle = '#f3c969'; ctx.fillRect(c.x - 2, y - 4, 4, 8); ctx.fillRect(c.x - 3, y - 3, 6, 6);
-      ctx.fillStyle = '#fff3c4'; ctx.fillRect(c.x - 1, y - 2, 1, 3);
-    }
-    items.forEach(drawItem);
-    enemies.forEach(drawEnemy);
+    // Before Start only the scenery shows; on Start the level drops in from above,
+    // then coins, items and enemies appear.
+    if (playing) {
+      const drop = reduceMotion ? 0 : Math.max(0, 30 - (t - startT)) * 5;
+      ctx.save();
+      ctx.translate(0, -drop);
+      ctx.fillStyle = '#e2d2ac'; ctx.fillRect(MID_CHECKPOINT, -30, 1, 30);
+      ctx.fillStyle = checkpoint >= MID_CHECKPOINT ? '#e8a93a' : '#8b949c'; ctx.fillRect(MID_CHECKPOINT + 1, -30, 8, 6);
+      for (const s of stairs) { ctx.fillStyle = '#6b737a'; ctx.fillRect(s.x, s.y, 12, 12); ctx.fillStyle = '#8b949c'; ctx.fillRect(s.x + 1, s.y + 1, 10, 10); ctx.fillStyle = '#a9b1b8'; ctx.fillRect(s.x + 1, s.y + 1, 10, 1); }
+      pipes.forEach((pp) => drawPipe(pp));
+      for (const m of movers) {
+        ctx.fillStyle = '#0f1714'; ctx.fillRect(Math.round(m.x) - 1, m.y - 1, m.w + 2, m.h + 2);
+        ctx.fillStyle = '#e2d2ac'; ctx.fillRect(Math.round(m.x), m.y, m.w, m.h);
+        ctx.fillStyle = '#b3a488'; ctx.fillRect(Math.round(m.x), m.y + m.h - 1, m.w, 1);
+      }
+      for (const b of blocks) {
+        if (b.hidden) continue;
+        const y = b.y - (b.bump > 4 ? 8 - b.bump : b.bump);
+        if (b.content === 'brick' || (b.content === 'multi' && !b.used)) drawBrick(b.x, y);
+        else drawQBlock(b, y);
+      }
 
-    ctx.fillStyle = '#e2d2ac'; ctx.fillRect(FLAG_X, -80, 2, 80);
-    ctx.fillStyle = '#e8a93a'; ctx.fillRect(FLAG_X - 1, -83, 4, 4);
-    const drop = state === 'won' ? Math.min(66, Math.round((t - winT) * 1.5)) : 0;
-    ctx.fillStyle = '#d4553a'; ctx.fillRect(FLAG_X - 14, -78 + drop, 14, 10 - (Math.floor(t / 10) % 2));
-    drawCastle(CASTLE_X);
-    drawPipe(GB_PIPE, Math.round(GB_PIPE.h));
-    if (GB_PIPE.h >= GB_PIPE.maxH) drawSign(GB_PIPE.x + GB_PIPE.w / 2, -GB_PIPE.h - 26, 'GUESTBOOK', near === GB_PIPE);
+      ctx.fillStyle = '#e2d2ac'; ctx.fillRect(FLAG_X, -80, 2, 80);
+      ctx.fillStyle = '#e8a93a'; ctx.fillRect(FLAG_X - 1, -83, 4, 4);
+      const flagDrop = state === 'won' ? Math.min(66, Math.round((t - winT) * 1.5)) : 0;
+      ctx.fillStyle = '#d4553a'; ctx.fillRect(FLAG_X - 14, -78 + flagDrop, 14, 10 - (Math.floor(t / 10) % 2));
+      drawCastle(CASTLE_X);
+      drawPipe(GB_PIPE, Math.round(GB_PIPE.h));
+      if (GB_PIPE.h >= GB_PIPE.maxH) drawSign(GB_PIPE.x + GB_PIPE.w / 2, -GB_PIPE.h - 26, 'GUESTBOOK', near === GB_PIPE);
+      ctx.restore();
+      if (drop === 0) {
+        for (const c of coins) {
+          if (c.taken) continue;
+          const y = c.y + Math.round(Math.sin((t + c.x) * 0.08) * 1.5);
+          ctx.fillStyle = '#b57a1c'; ctx.fillRect(c.x - 3, y - 4, 6, 8);
+          ctx.fillStyle = '#f3c969'; ctx.fillRect(c.x - 2, y - 4, 4, 8); ctx.fillRect(c.x - 3, y - 3, 6, 6);
+          ctx.fillStyle = '#fff3c4'; ctx.fillRect(c.x - 1, y - 2, 1, 3);
+        }
+        items.forEach(drawItem);
+        enemies.forEach(drawEnemy);
+      }
+    }
 
     if (state !== 'over' && !(invuln > 0 && Math.floor(t / 4) % 2)) {
       const moving = Math.abs(p.vx) > 0.3 && p.onGround;
@@ -658,7 +698,7 @@
   // Test hook: ?debug exposes state for automated play-testing
   if (new URLSearchParams(location.search).has('debug')) {
     window.__mover = () => movers[0].x;
-    window.__explorer = () => ({ keys, movers, p, enemies, blocks, items, GB_PIPE, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, entering, near });
+    window.__explorer = () => ({ keys, movers, magnet, feather, p, enemies, blocks, items, GB_PIPE, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, entering, near });
   }
 
   let resizeTimer;
