@@ -1,6 +1,6 @@
-    <!-- ============ TITLE SCREEN: explorer level (home.js) ============ -->
+    <!-- ============ TITLE SCREEN: platformer level (home.js) ============ -->
     <section class="title-screen" id="titleScreen" data-checkpoint="Title">
-      <canvas id="scene" aria-label="Explorer level: walk right, and enter a pipe to visit a page" role="img"></canvas>
+      <canvas id="scene" aria-label="Platformer level: run right, bump ? blocks, avoid bugs and reach the flag" role="img"></canvas>
       <div class="title-inner">
         <p class="kicker">UC BERKELEY · COMPUTER SCIENCE</p>
         <h1 class="logo">Ethan Xu</h1>
@@ -14,11 +14,18 @@
           <a class="btn btn-tomato btn-lg" id="pressStart" href="#player">▶ Press start</a>
           <a class="btn btn-paper btn-lg" data-link="resume" href="/resume/">View resume</a>
         </div>
-        <p class="hint"><kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> explore · <kbd>Space</kbd> jump · <kbd class="arrow">↓</kbd> enter a pipe</p>
+        <p class="hint"><kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> run · <kbd>Space</kbd> jump · bump <kbd>?</kbd> blocks · <kbd>Enter</kbd> pipes</p>
         <a class="explore-scroll" href="#player">Scroll down for more ▾</a>
       </div>
 
       <!-- Shown while playing -->
+      <div class="explore-over" id="exploreOver" hidden>
+        <p class="world-num">GAME OVER</p>
+        <p class="explore-over-title">Out of hearts!</p>
+        <p class="explore-desc" id="exploreOverStats"></p>
+        <button class="btn btn-tomato" id="exploreRetry">Try again</button>
+        <p class="explore-desc">or press <kbd>Enter</kbd></p>
+      </div>
       <div class="explore-prompt" id="explorePrompt" hidden>
         <p class="objectives-label" id="exploreLabel">Warp pipe</p>
         <p class="explore-title" id="exploreTitle"></p>

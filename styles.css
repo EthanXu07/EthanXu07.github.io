@@ -271,6 +271,14 @@ kbd {
 .explore-desc { margin: .25rem 0 .7rem; font-size: .85rem; color: var(--text-dark-2); }
 @media (max-width: 52rem) { .explore-prompt { top: auto; bottom: 5.5rem; right: 50%; transform: translateX(50%); } }
 
+.explore-over {
+  position: absolute; z-index: 4; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  display: grid; justify-items: center; gap: .5rem; width: min(22rem, 86vw); padding: 1.4rem 1.2rem;
+  text-align: center; background: rgba(15, 23, 20, .92); box-shadow: 0 0 0 3px var(--edge), 6px 6px 0 rgba(0, 0, 0, .4);
+}
+.explore-over .world-num { background: var(--tomato); color: var(--paper); }
+.explore-over-title { margin: 0; font: 700 1.8rem/1.1 var(--title); color: var(--paper); text-shadow: 3px 3px 0 var(--edge); }
+.explore-over .explore-desc { color: var(--text-light-2); margin: 0; }
 .explore-pad { z-index: 3; bottom: 2rem; }
 .title-screen:not(.playing) .explore-pad { display: none; }
 .explore-scroll {
