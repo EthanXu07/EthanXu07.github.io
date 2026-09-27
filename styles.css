@@ -31,6 +31,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
 
@@ -140,7 +141,11 @@ kbd {
 .hud-nav a:hover, .hud-nav a.active { color: var(--gold); }
 .hud-nav a.active .key { background: var(--gold); color: var(--text-dark); }
 .key { display: inline-grid; place-items: center; width: 1.2rem; height: 1.2rem; font-size: .5rem; background: var(--ink-3); color: var(--text-light); }
-.hud-resume { padding: .6rem .8rem; font-size: .6rem; }
+.hud-actions { display: flex; align-items: center; gap: .35rem; }
+.hud-resume, .hud-quick { padding: .6rem .8rem; font-size: .6rem; }
+@media (max-width: 26rem) { .hud-quick { padding: .55rem .5rem; font-size: .5rem; } }
+/* Narrow screens: the logo already links home, so drop "Home" to fit six links */
+@media (max-width: 30rem) { .hud-nav a:first-child { display: none; } .hud-nav { justify-content: space-around; } }
 
 .xp { display: flex; align-items: center; gap: .6rem; max-width: 76rem; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem) .5rem; }
 .xp-label { font: .5rem var(--pixel); color: var(--gold); }
@@ -488,6 +493,79 @@ main.subpage { padding-top: 5rem; }
 }
 .credits p { margin: 0 0 1rem; }
 .thanks { font: .8rem var(--pixel); color: var(--gold) !important; animation: blink 1.4s steps(1) infinite; }
+
+.footer-links { font-size: .9rem; }
+.footer-links a { color: var(--gold); }
+.skip-game { margin: 1.1rem 0 0; }
+.skip-game a { font: .6rem var(--pixel); color: var(--paper); text-decoration: none; padding: .35rem .5rem; background: rgba(15, 23, 20, .6); }
+.skip-game a:hover { color: var(--gold); }
+
+/* ---------- Skill tree ---------- */
+.skill-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem); gap: 1.75rem; align-items: start; }
+@media (max-width: 56rem) { .skill-layout { grid-template-columns: 1fr; } }
+.skill-tree { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 1fr)); gap: 1.75rem 1.25rem; }
+.branch-name { margin: 0 0 .9rem; font: .6rem var(--pixel); color: var(--c); text-transform: uppercase; }
+.branch-nodes { list-style: none; margin: 0; padding: 0; }
+.branch-nodes li { position: relative; margin-bottom: .6rem; }
+/* Child skills hang off their parent with a pixel connector */
+.branch-nodes li.child { margin-left: 1.5rem; }
+.branch-nodes li.child::before {
+  content: ""; position: absolute; left: -1rem; top: -.6rem; width: .85rem; height: calc(50% + .6rem);
+  border-left: 3px solid var(--c); border-bottom: 3px solid var(--c);
+}
+.skill-node {
+  display: grid; grid-template-columns: auto 1fr; grid-template-areas: "icon name" "icon pips";
+  align-items: center; column-gap: .65rem; width: 100%;
+  padding: .45rem .6rem; text-align: left;
+  background: var(--ink-2); color: var(--text-light); border: 0; cursor: pointer;
+  box-shadow: inset 0 0 0 3px var(--ink-3);
+  transition: transform .08s steps(2);
+}
+.skill-node:hover { transform: translateX(2px); box-shadow: inset 0 0 0 3px var(--c); }
+.skill-node[aria-pressed="true"] { background: var(--paper); color: var(--text-dark); box-shadow: inset 0 0 0 3px var(--edge), 4px 4px 0 var(--c); }
+.skill-node.locked { opacity: .5; }
+.skill-node .slot-icon { grid-area: icon; width: 2.2rem; height: 2.2rem; }
+.skill-name { grid-area: name; font-weight: 700; font-size: .92rem; line-height: 1.2; }
+.pips { grid-area: pips; font-size: .7rem; letter-spacing: .12em; color: var(--c); }
+.skill-node[aria-pressed="true"] .pips { color: var(--tomato-dark); }
+.skill-panel { position: sticky; top: 6.5rem; padding: 1.25rem 1.4rem; }
+.skill-panel h2 { margin: 0 0 .25rem; font: 700 1.6rem/1.15 var(--title); }
+.skill-level { margin: 0 0 .75rem; font: .5rem/1.8 var(--pixel); color: var(--text-dark-2); text-transform: uppercase; }
+.skill-used li { margin-bottom: .6rem; }
+.skill-used a { color: var(--text-dark); font-weight: 700; }
+.skill-used small { display: block; color: var(--text-dark-2); }
+@media (max-width: 56rem) { .skill-panel { position: static; } }
+
+/* ---------- Bonus level ---------- */
+.game-shell { position: relative; background: var(--ink); overflow: hidden; }
+#game { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: 70vh; outline: none; }
+.game-hud { position: absolute; inset: .7rem .8rem auto; display: flex; justify-content: space-between; gap: 1rem; font: .6rem var(--pixel); color: var(--paper); text-shadow: 2px 2px 0 var(--edge); pointer-events: none; }
+.game-sign { position: absolute; left: 50%; top: 2.6rem; transform: translateX(-50%); width: min(90%, 24rem); padding: .75rem 1rem; background: var(--paper); color: var(--text-dark); box-shadow: 0 0 0 3px var(--edge), 5px 5px 0 rgba(0,0,0,.35); text-align: center; pointer-events: none; }
+.game-sign .objectives-label { margin: 0 0 .35rem; }
+.game-sign h3 { margin: 0; font: 700 1.15rem/1.2 var(--title); }
+.game-sign .quest-org { margin: .15rem 0 0; font-size: .9rem; }
+.game-over { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .6rem; padding: 1rem; background: rgba(15, 23, 20, .88); text-align: center; }
+.game-over .world-title { font-size: clamp(1.5rem, 5vw, 2.4rem); }
+.game-over p { margin: 0; color: var(--text-light-2); }
+.game-over .world-num { color: var(--text-dark); }
+.touch-pad { position: absolute; left: .6rem; right: .6rem; bottom: .6rem; display: none; gap: .5rem; }
+.touch-pad button { width: 3.2rem; height: 3.2rem; border: 0; background: rgba(241, 230, 204, .85); color: var(--text-dark); font: .7rem var(--pixel); box-shadow: 0 0 0 3px var(--edge); touch-action: none; user-select: none; -webkit-user-select: none; }
+.touch-pad .jump { margin-left: auto; width: 5rem; background: rgba(232, 169, 58, .9); }
+@media (hover: none), (pointer: coarse) { .touch-pad { display: flex; } }
+@media (max-width: 40rem) {
+  #game { aspect-ratio: 4 / 3; }
+  .touch-pad button { width: 2.8rem; height: 2.8rem; }
+  .touch-pad .jump { width: 4.2rem; }
+  .game-sign { top: 2.2rem; padding: .5rem .7rem; }
+  .game-sign h3 { font-size: 1rem; }
+}
+.play-world .hint { margin-top: 1rem; color: var(--text-light-2); font-size: .85rem; }
+
+/* ---------- Guestbook ---------- */
+.guestbook-intro { max-width: 40rem; margin: 0 0 2rem; }
+.guestbook-intro p { margin: 0; color: var(--paper); }
+.guestbook-frame { padding: clamp(.75rem, 3vw, 1.5rem); min-height: 12rem; }
+#guestbook .hint { margin-top: 1rem; color: var(--text-light-2); font-size: .85rem; }
 
 /* ---------- Toast ---------- */
 .toast {

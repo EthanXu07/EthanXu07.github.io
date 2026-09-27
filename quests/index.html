@@ -32,10 +32,14 @@
         <a href="/"><span class="key" aria-hidden="true">1</span>Home</a>
         <a href="/quests/" class="active" aria-current="page"><span class="key" aria-hidden="true">2</span>Quests</a>
         <a href="/loot/"><span class="key" aria-hidden="true">3</span>Loot</a>
-        <a href="/interests/"><span class="key" aria-hidden="true">4</span>Interests</a>
-        <a href="#contact"><span class="key" aria-hidden="true">5</span>Contact</a>
+        <a href="/skills/"><span class="key" aria-hidden="true">4</span>Skills</a>
+        <a href="/interests/"><span class="key" aria-hidden="true">5</span>Interests</a>
+        <a href="#contact"><span class="key" aria-hidden="true">6</span>Contact</a>
       </nav>
-      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
+      <div class="hud-actions">
+        <a class="btn btn-ghost hud-quick" href="/quick/" title="Skip the game: everything on one plain page">Quick view</a>
+        <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
+      </div>
     </div>
     <div class="xp" aria-hidden="true"><span class="xp-label">XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
   </header>
@@ -48,6 +52,7 @@
 
   <main id="content" class="subpage">
     <!-- ============ WORLD 2: QUEST LOG (experience) ============ -->
+    <!-- Entries come from src/data/experience.json -->
     <section id="quests" class="world" data-checkpoint="Quest log">
       <header class="world-head">
         <p class="world-num">WORLD 2</p>
@@ -61,8 +66,7 @@
       </div>
 
       <ol class="quests">
-        <!-- To add a quest: copy an <li>. data-status is "active" or "done". -->
-        <li class="quest px-box paper" data-status="active">
+        <li class="quest px-box paper" id="quest-coupang" data-status="active">
           <div class="quest-top">
             <span class="badge badge-active">● Active</span>
             <span class="quest-when">Sep 2026 – Now</span>
@@ -75,7 +79,7 @@
           <p class="reward"><span>Rewards</span> Computer vision · LLMs · Production data</p>
         </li>
 
-        <li class="quest px-box paper" data-status="active">
+        <li class="quest px-box paper" id="quest-climformatics" data-status="active">
           <div class="quest-top">
             <span class="badge badge-active">● Active</span>
             <span class="quest-when">Sep 2026 – Now</span>
@@ -88,7 +92,7 @@
           <p class="reward"><span>Rewards</span> Forecasting · Time series · Solar data</p>
         </li>
 
-        <li class="quest px-box paper" data-status="active">
+        <li class="quest px-box paper" id="quest-urap" data-status="active">
           <div class="quest-top">
             <span class="badge badge-active">● Active</span>
             <span class="quest-when">Fall 2026 – Now</span>
@@ -101,7 +105,7 @@
           <p class="reward"><span>Rewards</span> Python · Web scraping · REST APIs</p>
         </li>
 
-        <li class="quest px-box paper" data-status="done">
+        <li class="quest px-box paper" id="quest-ipmd" data-status="done">
           <div class="quest-top">
             <span class="badge badge-done">★ Complete</span>
             <span class="quest-when">Oct 2024 – Dec 2025</span>
@@ -116,7 +120,7 @@
           <p class="reward"><span>Rewards</span> TensorFlow · Keras · Backtesting · NLP</p>
         </li>
 
-        <li class="quest px-box paper" data-status="done">
+        <li class="quest px-box paper" id="quest-uh-lab" data-status="done">
           <div class="quest-top">
             <span class="badge badge-done">★ Complete</span>
             <span class="quest-when">Jun 2025 – Sep 2025</span>
@@ -130,7 +134,7 @@
           <p class="reward"><span>Rewards</span> Computer vision · CNNs · Geospatial data</p>
         </li>
 
-        <li class="quest px-box paper" data-status="done">
+        <li class="quest px-box paper" id="quest-lamar" data-status="done">
           <div class="quest-top">
             <span class="badge badge-done">★ Complete</span>
             <span class="quest-when">Apr 2025 – Sep 2025</span>
@@ -144,7 +148,7 @@
           <p class="reward"><span>Rewards</span> Research writing · Emissions analysis</p>
         </li>
 
-        <li class="quest px-box paper" data-status="done">
+        <li class="quest px-box paper" id="quest-adtech" data-status="done">
           <div class="quest-top">
             <span class="badge badge-done">★ Complete</span>
             <span class="quest-when">May 2022 – Jul 2026</span>
@@ -158,7 +162,7 @@
           <p class="reward"><span>Rewards</span> Leadership · Teaching</p>
         </li>
 
-        <li class="quest px-box paper" data-status="done">
+        <li class="quest px-box paper" id="quest-codewiz" data-status="done">
           <div class="quest-top">
             <span class="badge badge-done">★ Complete</span>
             <span class="quest-when">Jun 2024 – Feb 2025</span>
@@ -172,7 +176,6 @@
         </li>
       </ol>
     </section>
-
 
   </main>
 
@@ -203,6 +206,7 @@
 
   <footer class="credits">
     <p class="thanks">Thanks for playing</p>
+    <p class="footer-links"><a href="/play/">Bonus level</a> · <a href="/guestbook/">Guestbook</a> · <a href="/quick/">Quick view</a></p>
     <p>© <span id="year">2026</span> Ethan Xu · Built by hand in Berkeley, CA</p>
     <a href="#hud" class="btn btn-sm btn-ghost">▲ Back to top</a>
   </footer>
@@ -225,5 +229,6 @@
 
   <script src="/resume-viewer.js"></script>
   <script src="/script.js"></script>
+
 </body>
 </html>

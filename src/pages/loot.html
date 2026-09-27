@@ -1,4 +1,5 @@
     <!-- ============ WORLD 3: LOOT (projects, publications, awards) ============ -->
+    <!-- Entries come from src/data/projects.json -->
     <section id="loot" class="world" data-checkpoint="Loot">
       <header class="world-head">
         <p class="world-num">WORLD 3</p>
@@ -6,44 +7,11 @@
       </header>
 
       <div class="loot-grid">
-        <article class="item px-box">
-          <div class="item-icon" aria-hidden="true" style="--c:#e8a93a">✦</div>
-          <p class="item-type">Publication · NeurIPS 2025</p>
-          <h3>SENTINEL</h3>
-          <p class="item-sub">Sentiment Evolution and Narrative Tracking in Extended LLM Interactions</p>
-          <p>A framework for measuring sentiment drift within long-context LLM conversations and agentic workflows, aimed at reducing LLM emotional hallucination. Published at the NeurIPS MTI-LLM 2025 Workshop.</p>
-          <div class="item-links">
-            <a class="btn btn-sm btn-paper" href="https://openreview.net/forum?id=6ZvINpYdOA" target="_blank" rel="noopener">OpenReview ↗</a>
-            <a class="btn btn-sm btn-ghost" href="https://neurips.cc/virtual/2025/loc/san-diego/128069" target="_blank" rel="noopener">NeurIPS ↗</a>
-          </div>
-        </article>
-
-        <article class="item px-box">
-          <div class="item-icon" aria-hidden="true" style="--c:#5f9c8f">$</div>
-          <p class="item-type">Project · ML</p>
-          <h3>Fintrax</h3>
-          <p class="item-sub">Python · Pandas · Hugging Face · Beautiful Soup</p>
-          <p>A pretrained BERT-based confidence model that compares the sentiment of executives' prepared remarks with their open Q&amp;A answers on earnings calls, then turns the gap into buy/sell signals using transcripts scraped in real time.</p>
-          <div class="item-links">
-            <a class="btn btn-sm btn-ghost" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
-          </div>
-        </article>
-
-        <article class="item px-box">
-          <div class="item-icon" aria-hidden="true" style="--c:#8fb8c9">≡</div>
-          <p class="item-type">Project · In progress</p>
-          <h3>AER Citation Tracker</h3>
-          <p class="item-sub">Python · Beautiful Soup · Crossref · OpenAlex</p>
-          <p>Scrapes recent <em>American Economic Review</em> issues, looks up each article's DOI on Crossref and OpenAlex, and outputs a CSV ranked by citation count. Built for URAP research.</p>
-        </article>
+{{projects}}
       </div>
 
       <h3 class="mini-head trophy-head">Achievements unlocked</h3>
       <ul class="trophies">
-        <li><span class="trophy" aria-hidden="true">🏆</span>NeurIPS workshop paper</li>
-        <li><span class="trophy" aria-hidden="true">🎓</span>Regents' &amp; Chancellor's Scholar</li>
-        <li><span class="trophy" aria-hidden="true">⭐</span>4.0 GPA at Berkeley</li>
-        <li><span class="trophy" aria-hidden="true">🌍</span>Taught on 3 continents</li>
+{{trophies}}
       </ul>
     </section>
-

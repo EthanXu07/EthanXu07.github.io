@@ -168,6 +168,48 @@ $$('.chip').forEach((chip) => {
 });
 
 // =====================================================================
+//  Skill tree: pick a node to see where the skill was used
+// =====================================================================
+(() => {
+  const dataEl = $('#skillData');
+  if (!dataEl) return;
+  const skills = JSON.parse(dataEl.textContent);
+  const nodes = $$('.skill-node');
+  const panel = $('#skillPanel');
+
+  function select(id, scroll) {
+    const s = skills[id];
+    if (!s) return;
+    nodes.forEach((n) => n.setAttribute('aria-pressed', String(n.dataset.skill === id)));
+    $('#skillName').textContent = s.name;
+    $('#skillLevel').textContent = `${s.branch} · Level ${s.level} / 5 ${'■'.repeat(s.level)}${'□'.repeat(5 - s.level)}`;
+    $('#skillHint').textContent = s.used.length
+      ? `Used in ${s.used.length} ${s.used.length === 1 ? 'quest or project' : 'quests and projects'}:`
+      : 'Not used on a quest yet.';
+    const list = $('#skillUsed');
+    list.replaceChildren(...s.used.map((u) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = u.href;
+      a.textContent = u.label;
+      const small = document.createElement('small');
+      small.textContent = ` ${u.kind} · ${u.sub}`;
+      li.append(a, small);
+      return li;
+    }));
+    // On narrow screens the panel sits below the tree: bring it into view
+    if (scroll && panel.getBoundingClientRect().top > window.innerHeight * 0.6) {
+      panel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+    }
+  }
+
+  nodes.forEach((n) => n.addEventListener('click', () => select(n.dataset.skill, true)));
+  // Start on the most-used skill
+  const top = Object.entries(skills).sort((a, b) => b[1].level - a[1].level)[0];
+  if (top) select(top[0], false);
+})();
+
+// =====================================================================
 //  Toast + copy email
 // =====================================================================
 const toastEl = $('#toast');
@@ -211,14 +253,14 @@ resumeModal.addEventListener('close', () => { document.body.style.overflow = '';
 resumeModal.addEventListener('click', (e) => { if (e.target === resumeModal) resumeModal.close(); });
 
 // =====================================================================
-//  Keyboard shortcuts: 1–4 switch pages, 5 jumps to contact, R opens the résumé
+//  Keyboard shortcuts: 1–5 switch pages, 6 jumps to contact, R opens the résumé
 // =====================================================================
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey || resumeModal.open || e.target.closest?.('input, textarea, select')) return;
   const link = $$('.hud-nav a')[Number(e.key) - 1];
-  if (/^[1-5]$/.test(e.key) && link) {
+  if (/^[1-6]$/.test(e.key) && link) {
     location.href = link.href;
-  } else if (e.key.toLowerCase() === 'r') {
+  } else if (e.key.toLowerCase() === 'r' && document.body.dataset.page !== 'play') {
     openResume();
   }
 });
