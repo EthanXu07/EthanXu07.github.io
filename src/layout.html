@@ -31,21 +31,22 @@
       <nav class="hud-nav" aria-label="Pages">
 {{nav}}
       </nav>
-      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Résumé ▸</a>
+      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
     </div>
     <div class="xp" aria-hidden="true"><span class="xp-label">XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
   </header>
 
-  <!-- World map: one flag per page, the sprite marks where you are (wide screens only) -->
-  <nav class="track" aria-label="World map">
+  <!-- Level map: a checkpoint flag per section; the sprite walks down as you scroll (wide screens only) -->
+  <aside class="track" aria-hidden="true">
     <div class="track-line"></div>
-{{track}}
-  </nav>
+    <canvas class="track-hero" id="trackHero" width="12" height="16"></canvas>
+  </aside>
 
   <main id="content" class="{{mainClass}}">
 {{content}}
   </main>
 
+{{contact}}
   <footer class="credits">
     <p class="thanks">Thanks for playing</p>
     <p>© <span id="year">2026</span> Ethan Xu · Built by hand in Berkeley, CA</p>

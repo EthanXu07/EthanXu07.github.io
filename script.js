@@ -83,29 +83,62 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 })();
 
 // =====================================================================
-//  XP bar (page scroll progress) + world-map sprite
+//  XP bar + level map: the sprite walks down the track as you scroll,
+//  raising a flag at each checkpoint (every [data-checkpoint] section)
 // =====================================================================
 (() => {
   const fill = $('#xpFill');
-  const update = () => {
-    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    fill.style.width = `${Math.min(1, window.scrollY / max) * 100}%`;
+  const track = $('.track');
+  const heroCanvas = $('#trackHero');
+  const hctx = heroCanvas?.getContext('2d');
+  const checkpoints = $$('[data-checkpoint]');
+  const flags = checkpoints.map((section) => {
+    const flag = document.createElement('a');
+    flag.className = 'track-flag';
+    flag.title = section.dataset.checkpoint;
+    flag.tabIndex = -1;
+    flag.addEventListener('click', () => section.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }));
+    track?.insertBefore(flag, heroCanvas);
+    return flag;
+  });
+  let walkFrame = 0;
+  let lastY = window.scrollY;
+  let idleTimer;
+
+  const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  const drawHero = (frame) => {
+    if (!hctx) return;
+    hctx.clearRect(0, 0, 12, 16);
+    drawSprite(hctx, frame ? SPRITE.walk : SPRITE.stand, 0, 0);
   };
+
+  function update() {
+    const p = Math.min(1, window.scrollY / maxScroll());
+    fill.style.width = `${p * 100}%`;
+    if (!track || getComputedStyle(track).display === 'none') return;
+
+    const h = track.clientHeight;
+    heroCanvas.style.top = `${p * h}px`;
+    checkpoints.forEach((section, i) => {
+      const at = Math.min(1, Math.max(0, (section.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3) / maxScroll()));
+      flags[i].style.top = `${at * h}px`;
+      flags[i].classList.toggle('reached', p >= at - 0.001);
+    });
+    // Alternate legs while scrolling; stand still when you stop
+    if (Math.abs(window.scrollY - lastY) > 24) {
+      walkFrame ^= 1;
+      lastY = window.scrollY;
+      drawHero(walkFrame);
+    }
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => drawHero(0), 180);
+  }
+
+  drawHero(0);
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
+  window.addEventListener('load', update);
   update();
-
-  // The build places the sprite on the current page's flag; here it just idles in place
-  const hero = $('#trackHero');
-  if (!hero) return;
-  const g = hero.getContext('2d');
-  let frame = 0;
-  const draw = () => {
-    g.clearRect(0, 0, 12, 16);
-    drawSprite(g, frame ? SPRITE.walk : SPRITE.stand, 0, 0);
-  };
-  draw();
-  if (!reduceMotion) setInterval(() => { frame ^= 1; draw(); }, 600);
 })();
 
 // =====================================================================
@@ -178,7 +211,7 @@ resumeModal.addEventListener('close', () => { document.body.style.overflow = '';
 resumeModal.addEventListener('click', (e) => { if (e.target === resumeModal) resumeModal.close(); });
 
 // =====================================================================
-//  Keyboard shortcuts: 1–5 switch pages, R opens the résumé
+//  Keyboard shortcuts: 1–4 switch pages, 5 jumps to contact, R opens the résumé
 // =====================================================================
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey || resumeModal.open || e.target.closest?.('input, textarea, select')) return;
@@ -336,7 +369,16 @@ document.addEventListener('keydown', (e) => {
 
     // Hero wanders the ground, pausing now and then; click to jump
     const floor = groundY - 16;
-    if (hero.pause > 0) hero.pause--;
+    const left = LEFT.some((k) => held.has(k));
+    const right = RIGHT.some((k) => held.has(k));
+    if (playing > 0) {
+      playing--;
+      hero.pause = 0;
+      if (left !== right) {
+        hero.dir = left ? -1 : 1;
+        hero.x = Math.max(0, Math.min(W - 12, hero.x + hero.dir * 0.9));
+      }
+    } else if (hero.pause > 0) hero.pause--;
     else {
       hero.x += 0.25 * hero.dir;
       if (hero.x < 4 || hero.x > W - 16) { hero.dir *= -1; hero.pause = 60; }
@@ -345,7 +387,7 @@ document.addEventListener('keydown', (e) => {
     hero.vy += 0.12;
     hero.y = Math.min(floor, hero.y + hero.vy);
     if (hero.y >= floor) hero.vy = 0;
-    const walking = hero.pause === 0 && hero.y >= floor;
+    const walking = (playing > 0 ? left !== right : hero.pause === 0) && hero.y >= floor;
     const f = walking && Math.floor(t / 10) % 2 ? SPRITE.walk : SPRITE.stand;
     ctx.fillStyle = 'rgba(0,0,0,0.25)';
     ctx.fillRect(Math.round(hero.x) + 2, groundY, 8, 1);
@@ -354,7 +396,26 @@ document.addEventListener('keydown', (e) => {
     if (running && !reduceMotion) requestAnimationFrame(frame);
   }
 
-  canvas.addEventListener('click', () => { if (hero.y >= groundY - 16) hero.vy = -2.4; });
+  // ----- Play: ←/→ or A/D walk, Space/↑/W jump, click to jump -----
+  const held = new Set();
+  let playing = 0; // frames of player control left before the hero wanders again
+  const jump = () => { if (hero.y >= groundY - 16) hero.vy = -2.4; };
+  canvas.addEventListener('click', jump);
+  const LEFT = ['ArrowLeft', 'a', 'A'];
+  const RIGHT = ['ArrowRight', 'd', 'D'];
+  const JUMP = [' ', 'ArrowUp', 'w', 'W'];
+  window.addEventListener('keydown', (e) => {
+    if (!running || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.closest?.('input, textarea, select, button, a, dialog')) return;
+    if ([...LEFT, ...RIGHT, ...JUMP].includes(e.key)) {
+      e.preventDefault(); // don't scroll the page while playing
+      held.add(e.key);
+      playing = 600;
+      if (JUMP.includes(e.key)) jump();
+    }
+  });
+  window.addEventListener('keyup', (e) => held.delete(e.key));
+  window.addEventListener('blur', () => held.clear());
 
   new IntersectionObserver(([e]) => {
     const was = running;

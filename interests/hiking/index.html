@@ -33,27 +33,22 @@
         <a href="/quests/"><span class="key" aria-hidden="true">2</span>Quests</a>
         <a href="/loot/"><span class="key" aria-hidden="true">3</span>Loot</a>
         <a href="/interests/" class="active" aria-current="page"><span class="key" aria-hidden="true">4</span>Interests</a>
-        <a href="/contact/"><span class="key" aria-hidden="true">5</span>Contact</a>
+        <a href="#contact"><span class="key" aria-hidden="true">5</span>Contact</a>
       </nav>
-      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Résumé ▸</a>
+      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
     </div>
     <div class="xp" aria-hidden="true"><span class="xp-label">XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
   </header>
 
-  <!-- World map: one flag per page, the sprite marks where you are (wide screens only) -->
-  <nav class="track" aria-label="World map">
+  <!-- Level map: a checkpoint flag per section; the sprite walks down as you scroll (wide screens only) -->
+  <aside class="track" aria-hidden="true">
     <div class="track-line"></div>
-    <a class="track-flag reached" href="/" style="top:0.00%" title="Home" aria-label="Home"></a>
-    <a class="track-flag reached" href="/quests/" style="top:25.00%" title="Quests" aria-label="Quests"></a>
-    <a class="track-flag reached" href="/loot/" style="top:50.00%" title="Loot" aria-label="Loot"></a>
-    <a class="track-flag reached" href="/interests/" style="top:75.00%" title="Interests" aria-label="Interests" aria-current="page"></a>
-    <a class="track-flag" href="/contact/" style="top:100.00%" title="Contact" aria-label="Contact"></a>
-    <canvas class="track-hero" id="trackHero" width="12" height="16" style="top:75.00%" aria-hidden="true"></canvas>
-  </nav>
+    <canvas class="track-hero" id="trackHero" width="12" height="16"></canvas>
+  </aside>
 
   <main id="content" class="subpage">
     <!-- ============ SIDE QUEST (generated per interest from src/interests.json) ============ -->
-    <article class="world interest-page">
+    <article class="world interest-page" data-checkpoint="Hiking">
       <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/interests/">Side quests</a> <span aria-hidden="true">›</span> <span aria-current="page">Hiking</span></nav>
 
       <header class="interest-hero">
@@ -91,6 +86,31 @@
     </article>
 
   </main>
+
+    <!-- ============ SAVE POINT (contact): on every page, above the credits ============ -->
+    <section id="contact" class="world save" data-checkpoint="Save point">
+      <header class="world-head">
+        <p class="world-num">SAVE POINT</p>
+        <h2 class="world-title">Contact</h2>
+      </header>
+
+      <div class="save-box px-box">
+        <canvas id="fire" width="16" height="16" aria-hidden="true"></canvas>
+        <div>
+          <p class="save-lead">Rest here and say hi.</p>
+          <p class="save-sub">I'm open to internships, research roles, and interesting collaborations.</p>
+          <div class="save-actions">
+            <button class="btn btn-gold" id="copyEmail" data-email="ethan_xu@berkeley.edu">
+              <span id="emailLabel">ethan_xu@berkeley.edu</span>
+              <span class="copy-tag" id="copyTag">copy</span>
+            </button>
+            <a class="btn btn-paper" data-link="linkedin" href="https://www.linkedin.com/in/EthanXu07/" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a class="btn btn-paper" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
+            <a class="btn btn-tomato" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
+          </div>
+        </div>
+      </div>
+    </section>
 
   <footer class="credits">
     <p class="thanks">Thanks for playing</p>
