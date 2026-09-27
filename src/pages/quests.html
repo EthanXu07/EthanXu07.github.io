@@ -1,0 +1,126 @@
+    <!-- ============ WORLD 2: QUEST LOG (experience) ============ -->
+    <section id="quests" class="world">
+      <header class="world-head">
+        <p class="world-num">WORLD 2</p>
+        <h1 class="world-title">Quest log</h1>
+      </header>
+
+      <div class="filter" role="group" aria-label="Filter quests">
+        <button class="chip is-on" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="active" aria-pressed="false">Active</button>
+        <button class="chip" data-filter="done" aria-pressed="false">Completed</button>
+      </div>
+
+      <ol class="quests">
+        <!-- To add a quest: copy an <li>. data-status is "active" or "done". -->
+        <li class="quest px-box paper" data-status="active">
+          <div class="quest-top">
+            <span class="badge badge-active">● Active</span>
+            <span class="quest-when">Sep 2026 – Now</span>
+          </div>
+          <h3>Software Engineering Intern</h3>
+          <p class="quest-org">Coupang</p>
+          <ul class="quest-list">
+            <li>Building a <strong>computer vision and LLM pipeline</strong> against Coupang's production catalog that turns raw product images and seller metadata into <strong>structured listings, attributes, SEO keywords and quality scores</strong>.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Computer vision · LLMs · Production data</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="active">
+          <div class="quest-top">
+            <span class="badge badge-active">● Active</span>
+            <span class="quest-when">Sep 2026 – Now</span>
+          </div>
+          <h3>Data Science Intern</h3>
+          <p class="quest-org">Climformatics</p>
+          <ul class="quest-list">
+            <li>Building a <strong>meteorological forecasting model</strong> from GHI, DNI, DHI, temperature and wind-speed data that predicts at <strong>hourly resolution up to 14 days out</strong>, verified against ground-truth solar data.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Forecasting · Time series · Solar data</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="active">
+          <div class="quest-top">
+            <span class="badge badge-active">● Active</span>
+            <span class="quest-when">Fall 2026 – Now</span>
+          </div>
+          <h3>Undergraduate Researcher</h3>
+          <p class="quest-org">URAP · UC Berkeley</p>
+          <ul class="quest-list">
+            <li>Building a pipeline that scrapes <em>American Economic Review</em> issues and pulls citation counts from the Crossref and OpenAlex APIs to rank recent work by impact.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Python · Web scraping · REST APIs</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Oct 2024 – Dec 2025</span>
+          </div>
+          <h3>Software Engineering Intern</h3>
+          <p class="quest-org">IPMD Inc. · ASTAI Group</p>
+          <ul class="quest-list">
+            <li>Built logistic-regression models with output thresholds in Keras/TensorFlow that <strong>beat S&amp;P benchmarks by 13% over 10 years</strong> in backtests.</li>
+            <li>Backtested Elliott Wave, candlestick and support/resistance strategies on 10 years of daily S&amp;P 500 OHLCV data, reaching a <strong>20% cumulative return</strong>.</li>
+            <li>Built an automated Yahoo Finance news-ingestion pipeline with Beautiful Soup to feed sentiment into multimodal models.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> TensorFlow · Keras · Backtesting · NLP</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Jun 2025 – Sep 2025</span>
+          </div>
+          <h3>Lab Assistant, Dr. Christoph Eick</h3>
+          <p class="quest-org">Data Analysis &amp; Intelligent Systems Lab · University of Houston</p>
+          <ul class="quest-list">
+            <li>Mapped NOAA underwater elevation data to geofenced deep-sea images to build training sets.</li>
+            <li>Helped develop a CNN that classifies, labels and extracts front-facing horizon images from large deep-sea datasets into model-ready image databases.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Computer vision · CNNs · Geospatial data</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Apr 2025 – Sep 2025</span>
+          </div>
+          <h3>Research Assistant, Dr. Melissa Baldo</h3>
+          <p class="quest-org">College of Business · Lamar University</p>
+          <ul class="quest-list">
+            <li>Researched short-sea freight shipping as a sustainable alternative to US trucking under the Jones Act.</li>
+            <li>Wrote original case studies comparing GHG and PM emissions against rail and trucking for real Texas freight routes; built all tables and figures for a paper submission.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Research writing · Emissions analysis</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">May 2022 – Jul 2026</span>
+          </div>
+          <h3>Program Coordinator, Board Member &amp; Instructor</h3>
+          <p class="quest-org">Appropriate Development Technology (ADTech) Inc.</p>
+          <ul class="quest-list">
+            <li>Led a 6-week STEM summer camp across 8 subjects for <strong>60+ underserved students</strong> internationally.</li>
+            <li>Taught three 10-week Python courses to <strong>50+ students across 3 continents</strong>.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Leadership · Teaching</p>
+        </li>
+
+        <li class="quest px-box paper" data-status="done">
+          <div class="quest-top">
+            <span class="badge badge-done">★ Complete</span>
+            <span class="quest-when">Jun 2024 – Feb 2025</span>
+          </div>
+          <h3>Code Instructor</h3>
+          <p class="quest-org">Beaumont Code Wiz</p>
+          <ul class="quest-list">
+            <li>Taught 20+ K–12 students in weekly programming classes; certified in Python, Java and Scratch.</li>
+          </ul>
+          <p class="reward"><span>Rewards</span> Python · Java · Scratch</p>
+        </li>
+      </ol>
+    </section>
+

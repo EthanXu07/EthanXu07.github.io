@@ -6,22 +6,18 @@ const $$ = (sel) => [...document.querySelectorAll(sel)];
 // =====================================================================
 //  Apply site-config.js (headshot + links)
 // =====================================================================
-if (SITE.headshot) $('#headshot').src = SITE.headshot;
+if (SITE.headshot && $('#headshot')) $('#headshot').src = SITE.headshot;
 const links = { github: SITE.github, linkedin: SITE.linkedin };
 $$('[data-link]').forEach((a) => {
   const url = links[a.dataset.link];
   if (url && a.dataset.link !== 'resume') a.href = url;
 });
-$('#resumeDownload').href = SITE.resumeFile || 'assets/resume.pdf';
+$('#resumeDownload').href = SITE.resumeFile || '/assets/resume.pdf';
 if (SITE.resumeDownloadName) $('#resumeDownload').download = SITE.resumeDownloadName;
-if (SITE.email) {
+if (SITE.email && $('#copyEmail')) {
   $('#copyEmail').dataset.email = SITE.email;
   $('#emailLabel').textContent = SITE.email;
 }
-$$('img[data-photo]').forEach((img) => {
-  const src = SITE.interestPhotos?.[img.dataset.photo];
-  if (src) img.src = src;
-});
 $('#year').textContent = new Date().getFullYear();
 
 // =====================================================================
@@ -74,6 +70,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 // =====================================================================
 (() => {
   const el = $('#dialogText');
+  if (!el) return;
   const text = "Hey, I'm Ethan. I study CS at Berkeley, build ML models, scrape messy data, and write research papers about what I find.";
   if (reduceMotion) { el.textContent = text; return; }
   let i = 0;
@@ -86,67 +83,36 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 })();
 
 // =====================================================================
-//  Scroll: XP bar, active nav, side-track sprite
+//  XP bar (page scroll progress) + world-map sprite
 // =====================================================================
 (() => {
   const fill = $('#xpFill');
-  const sections = ['player', 'quests', 'loot', 'interests', 'save'].map((id) => document.getElementById(id));
-  const navLinks = $$('.hud-nav a');
-  const track = $('.track');
-  const flags = $$('.track-flag');
-  const heroCanvas = $('#trackHero');
-  const hctx = heroCanvas.getContext('2d');
-  let walkFrame = 0;
-  let lastY = window.scrollY;
-  let idleTimer;
-
-  function maxScroll() { return Math.max(1, document.documentElement.scrollHeight - window.innerHeight); }
-  function sectionProgress(s) { return Math.min(1, Math.max(0, (s.offsetTop - window.innerHeight * 0.3) / maxScroll())); }
-
-  function drawTrackHero(frame) {
-    hctx.clearRect(0, 0, 12, 16);
-    drawSprite(hctx, frame ? SPRITE.walk : SPRITE.stand, 0, 0);
-  }
-
-  function update() {
-    const p = Math.min(1, window.scrollY / maxScroll());
-    fill.style.width = `${p * 100}%`;
-
-    // Active section = last one whose top has passed 40% of the viewport
-    let current = null;
-    for (const s of sections) if (s.getBoundingClientRect().top < window.innerHeight * 0.4) current = s.id;
-    navLinks.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === `#${current}`));
-
-    if (track && getComputedStyle(track).display !== 'none') {
-      const h = track.clientHeight;
-      heroCanvas.style.top = `${p * h}px`;
-      flags.forEach((f) => {
-        const fp = sectionProgress(document.getElementById(f.dataset.for));
-        f.style.top = `${fp * h}px`;
-        f.classList.toggle('reached', p >= fp - 0.001);
-      });
-      if (Math.abs(window.scrollY - lastY) > 24) {
-        walkFrame ^= 1;
-        lastY = window.scrollY;
-        drawTrackHero(walkFrame);
-      }
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => drawTrackHero(0), 180);
-    }
-  }
-
-  drawTrackHero(0);
+  const update = () => {
+    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    fill.style.width = `${Math.min(1, window.scrollY / max) * 100}%`;
+  };
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
-  window.addEventListener('load', update);
   update();
+
+  // The build places the sprite on the current page's flag; here it just idles in place
+  const hero = $('#trackHero');
+  if (!hero) return;
+  const g = hero.getContext('2d');
+  let frame = 0;
+  const draw = () => {
+    g.clearRect(0, 0, 12, 16);
+    drawSprite(g, frame ? SPRITE.walk : SPRITE.stand, 0, 0);
+  };
+  draw();
+  if (!reduceMotion) setInterval(() => { frame ^= 1; draw(); }, 600);
 })();
 
 // =====================================================================
 //  Stepped reveal on scroll
 // =====================================================================
 (() => {
-  const targets = $$('.world-head, .portrait, .player-info, .quest, .item, .trophies, .interest, .save-box');
+  const targets = $$('.world-head, .portrait, .player-info, .level, .quest, .item, .trophies, .interest, .interest-hero, .interest-section, .gallery, .save-box');
   if (reduceMotion || !('IntersectionObserver' in window)) return;
   targets.forEach((el) => el.classList.add('reveal'));
   const io = new IntersectionObserver((entries) => {
@@ -180,7 +146,7 @@ function toast(msg) {
   toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
 }
 
-$('#copyEmail').addEventListener('click', async (e) => {
+$('#copyEmail')?.addEventListener('click', async (e) => {
   const email = e.currentTarget.dataset.email;
   try {
     await navigator.clipboard.writeText(email);
@@ -198,12 +164,12 @@ $('#copyEmail').addEventListener('click', async (e) => {
 const resumeModal = $('#resumeModal');
 let resumeRendered = false;
 function openResume() {
-  if (!resumeModal.showModal) { location.href = 'resume/'; return; }
+  if (!resumeModal.showModal) { location.href = '/resume/'; return; }
   resumeModal.showModal();
   document.body.style.overflow = 'hidden';
   if (!resumeRendered) {
     resumeRendered = true;
-    window.ResumeViewer.render($('#resumePages'), SITE.resumeFile || 'assets/resume.pdf');
+    window.ResumeViewer.render($('#resumePages'), SITE.resumeFile || '/assets/resume.pdf');
   }
 }
 $$('[data-link="resume"]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openResume(); }));
@@ -212,13 +178,13 @@ resumeModal.addEventListener('close', () => { document.body.style.overflow = '';
 resumeModal.addEventListener('click', (e) => { if (e.target === resumeModal) resumeModal.close(); });
 
 // =====================================================================
-//  Keyboard shortcuts: 1–5 warp to sections, R opens the résumé
+//  Keyboard shortcuts: 1–5 switch pages, R opens the résumé
 // =====================================================================
 document.addEventListener('keydown', (e) => {
-  if (e.metaKey || e.ctrlKey || e.altKey || resumeModal.open || e.target.matches('input, textarea, select')) return;
-  const ids = { 1: 'player', 2: 'quests', 3: 'loot', 4: 'interests', 5: 'save' };
-  if (ids[e.key]) {
-    document.getElementById(ids[e.key]).scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+  if (e.metaKey || e.ctrlKey || e.altKey || resumeModal.open || e.target.closest?.('input, textarea, select')) return;
+  const link = $$('.hud-nav a')[Number(e.key) - 1];
+  if (/^[1-5]$/.test(e.key) && link) {
+    location.href = link.href;
   } else if (e.key.toLowerCase() === 'r') {
     openResume();
   }
@@ -229,6 +195,7 @@ document.addEventListener('keydown', (e) => {
 // =====================================================================
 (() => {
   const canvas = $('#scene');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const section = $('.title-screen');
   let W, H, groundY, horizonY, bg, clouds, stars, flies;
@@ -411,6 +378,7 @@ document.addEventListener('keydown', (e) => {
 (() => {
   const img = $('#headshot');
   const box = $('.portrait-bg');
+  if (!img || !box) return;
   if (reduceMotion || !('IntersectionObserver' in window)) return;
 
   function play() {
@@ -456,6 +424,7 @@ document.addEventListener('keydown', (e) => {
 // =====================================================================
 (() => {
   const c = $('#fire');
+  if (!c) return;
   const g = c.getContext('2d');
   const FLAME = ['#f3c969', '#e8a93a', '#d4553a', '#9c3423'];
   function draw() {

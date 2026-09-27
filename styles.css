@@ -175,6 +175,7 @@ kbd {
     background: var(--ink-3); box-shadow: 0 0 0 3px var(--edge);
   }
   .track-flag.reached { background: var(--gold); }
+  .track-flag:hover, .track-flag:focus-visible { background: var(--paper); }
   .track-hero {
     position: absolute; left: 50%; width: 36px; height: 48px;
     transform: translate(-50%, -50%);
@@ -388,11 +389,32 @@ kbd {
 }
 .trophy { display: grid; place-items: center; width: 2rem; height: 2rem; background: var(--ink-3); font-size: 1rem; }
 
+/* ---------- Multi-page layout ---------- */
+main.subpage { padding-top: 5rem; min-height: calc(100vh - 10rem); }
+@media (max-width: 52rem) { main.subpage { padding-top: 7.5rem; } }
+
+/* Home: level select */
+.levels { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: 1.75rem; }
+.level {
+  display: flex; flex-direction: column; gap: .5rem; height: 100%;
+  padding: 1.25rem; color: inherit; text-decoration: none;
+  transition: transform .1s steps(2);
+}
+.level:hover, .level:focus-visible { transform: translate(-2px, -2px); }
+.level-num { font: .55rem var(--pixel); color: var(--gold); }
+.level strong { font: 700 1.5rem/1.15 var(--title); color: var(--paper); }
+.level span:not(.level-num):not(.level-go) { color: var(--text-light-2); font-size: .95rem; flex: 1; }
+.level-go { font: .6rem var(--pixel); color: var(--tomato); }
+.level:hover .level-go { animation: blink .8s steps(1) infinite; }
+
 /* ---------- Side quests (interests) ---------- */
 .section-lede { margin: -1.25rem 0 2rem; color: var(--text-light-2); }
 .interests { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: 1.75rem; }
-.interest { display: flex; flex-direction: column; align-items: flex-start; padding: 1rem 1rem 1.25rem; transition: transform .1s steps(2); }
-.interest:hover { transform: translate(-2px, -2px); }
+.interests li { display: flex; }
+.interest { display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding: 1rem 1rem 1.25rem; color: inherit; text-decoration: none; transition: transform .1s steps(2); }
+.interest:hover, .interest:focus-visible { transform: translate(-2px, -2px); }
+.interest-enter { margin-top: auto; padding-top: .9rem; font: .6rem var(--pixel); color: var(--tomato); }
+.interest:hover .interest-enter { animation: blink .8s steps(1) infinite; }
 
 .interest-photo {
   display: block;
@@ -407,6 +429,24 @@ kbd {
 .interest-tag { margin: 0 0 .4rem; font: .5rem var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
 .interest h3 { margin: 0 0 .4rem; font: 700 1.45rem/1.15 var(--title); color: var(--paper); }
 .interest p:not(.interest-tag) { margin: 0; color: var(--text-light-2); font-size: .95rem; }
+
+/* Single interest page */
+.breadcrumb { margin-bottom: 1.75rem; font: .55rem/1.8 var(--pixel); color: var(--text-light-2); text-transform: uppercase; }
+.breadcrumb a { color: var(--gold); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.interest-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; margin-bottom: 2.5rem; }
+@media (max-width: 46rem) { .interest-hero { grid-template-columns: 1fr; } }
+.interest-hero-photo { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink-3); }
+.interest-hero .world-num { display: inline-block; margin-bottom: 1rem; }
+.interest-lede { margin: 1rem 0 0; font-size: 1.15rem; color: var(--text-light-2); }
+.interest-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1.75rem; }
+.interest-section { padding: 1.25rem 1.4rem; }
+.interest-section h2 { margin: 0 0 .6rem; font: 700 1.35rem/1.2 var(--title); color: var(--paper); }
+.interest-section p { margin: 0; color: var(--text-light-2); }
+.placeholder-note { padding: .75rem .9rem; border: 2px dashed var(--ink-3); color: var(--text-light-2); font-style: italic; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: 1rem; }
+.gallery img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink-3); box-shadow: 0 0 0 3px var(--edge); }
+.interest-pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; margin-top: 3rem; }
 
 /* ---------- Save point ---------- */
 .save-box { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem 2rem; padding: clamp(1.25rem, 4vw, 2.25rem); }
