@@ -1,0 +1,51 @@
+{
+  "_note": "Each skill's level = how many quests/projects list it (see the \"skills\" arrays in experience.json and projects.json). \"requires\" draws the branch lines.",
+  "branches": [
+    {
+      "id": "ml",
+      "name": "Machine learning",
+      "color": "#d4553a",
+      "skills": [
+        { "id": "tensorflow", "name": "TensorFlow · Keras", "code": "Tf" },
+        { "id": "computer-vision", "name": "Computer vision", "code": "Cv", "requires": "tensorflow" },
+        { "id": "huggingface", "name": "Hugging Face", "code": "Hf" },
+        { "id": "nlp", "name": "NLP · Sentiment", "code": "Nl", "requires": "huggingface" },
+        { "id": "llms", "name": "LLMs", "code": "Lm", "requires": "nlp" }
+      ]
+    },
+    {
+      "id": "data",
+      "name": "Data",
+      "color": "#5f9c8f",
+      "skills": [
+        { "id": "pandas", "name": "Pandas", "code": "Pd" },
+        { "id": "web-scraping", "name": "Web scraping", "code": "Bs" },
+        { "id": "rest-apis", "name": "REST APIs", "code": "Ap", "requires": "web-scraping" },
+        { "id": "forecasting", "name": "Time series · Forecasting", "code": "Ts" },
+        { "id": "backtesting", "name": "Backtesting", "code": "Bt", "requires": "forecasting" },
+        { "id": "geospatial", "name": "Geospatial data", "code": "Geo" }
+      ]
+    },
+    {
+      "id": "code",
+      "name": "Programming",
+      "color": "#e8a93a",
+      "skills": [
+        { "id": "python", "name": "Python", "code": "Py" },
+        { "id": "java", "name": "Java", "code": "Jv" },
+        { "id": "scratch", "name": "Scratch", "code": "Sc" }
+      ]
+    },
+    {
+      "id": "people",
+      "name": "Research & teaching",
+      "color": "#8fb8c9",
+      "skills": [
+        { "id": "research-writing", "name": "Research writing", "code": "Rw" },
+        { "id": "data-viz", "name": "Tables & figures", "code": "Dv", "requires": "research-writing" },
+        { "id": "teaching", "name": "Teaching", "code": "Te" },
+        { "id": "leadership", "name": "Leadership", "code": "Ld", "requires": "teaching" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+[
+  {
+    "id": "coupang",
+    "status": "active",
+    "start": "2026-09",
+    "when": "Sep 2026 – Now",
+    "title": "Software Engineering Intern",
+    "org": "Coupang",
+    "bullets": [
+      "Building a <strong>computer vision and LLM pipeline</strong> against Coupang's production catalog that turns raw product images and seller metadata into <strong>structured listings, attributes, SEO keywords and quality scores</strong>."
+    ],
+    "rewards": "Computer vision · LLMs · Production data",
+    "skills": [
+      "computer-vision",
+      "llms"
+    ]
+  },
+  {
+    "id": "climformatics",
+    "status": "active",
+    "start": "2026-09",
+    "when": "Sep 2026 – Now",
+    "title": "Data Science Intern",
+    "org": "Climformatics",
+    "bullets": [
+      "Building a <strong>meteorological forecasting model</strong> from GHI, DNI, DHI, temperature and wind-speed data that predicts at <strong>hourly resolution up to 14 days out</strong>, verified against ground-truth solar data."
+    ],
+    "rewards": "Forecasting · Time series · Solar data",
+    "skills": [
+      "forecasting"
+    ]
+  },
+  {
+    "id": "urap",
+    "status": "active",
+    "start": "2026-08",
+    "when": "Fall 2026 – Now",
+    "title": "Undergraduate Researcher",
+    "org": "URAP · UC Berkeley",
+    "bullets": [
+      "Building a pipeline that scrapes <em>American Economic Review</em> issues and pulls citation counts from the Crossref and OpenAlex APIs to rank recent work by impact."
+    ],
+    "rewards": "Python · Web scraping · REST APIs",
+    "skills": [
+      "python",
+      "web-scraping",
+      "rest-apis",
+      "research-writing"
+    ]
+  },
+  {
+    "id": "ipmd",
+    "status": "done",
+    "start": "2024-10",
+    "when": "Oct 2024 – Dec 2025",
+    "title": "Software Engineering Intern",
+    "org": "IPMD Inc. · ASTAI Group",
+    "bullets": [
+      "Built logistic-regression models with output thresholds in Keras/TensorFlow that <strong>beat S&amp;P benchmarks by 13% over 10 years</strong> in backtests.",
+      "Backtested Elliott Wave, candlestick and support/resistance strategies on 10 years of daily S&amp;P 500 OHLCV data, reaching a <strong>20% cumulative return</strong>.",
+      "Built an automated Yahoo Finance news-ingestion pipeline with Beautiful Soup to feed sentiment into multimodal models."
+    ],
+    "rewards": "TensorFlow · Keras · Backtesting · NLP",
+    "skills": [
+      "python",
+      "tensorflow",
+      "nlp",
+      "forecasting",
+      "backtesting",
+      "web-scraping"
+    ]
+  },
+  {
+    "id": "uh-lab",
+    "status": "done",
+    "start": "2025-06",
+    "when": "Jun 2025 – Sep 2025",
+    "title": "Lab Assistant, Dr. Christoph Eick",
+    "org": "Data Analysis & Intelligent Systems Lab · University of Houston",
+    "bullets": [
+      "Mapped NOAA underwater elevation data to geofenced deep-sea images to build training sets.",
+      "Helped develop a CNN that classifies, labels and extracts front-facing horizon images from large deep-sea datasets into model-ready image databases."
+    ],
+    "rewards": "Computer vision · CNNs · Geospatial data",
+    "skills": [
+      "computer-vision",
+      "geospatial"
+    ]
+  },
+  {
+    "id": "lamar",
+    "status": "done",
+    "start": "2025-04",
+    "when": "Apr 2025 – Sep 2025",
+    "title": "Research Assistant, Dr. Melissa Baldo",
+    "org": "College of Business · Lamar University",
+    "bullets": [
+      "Researched short-sea freight shipping as a sustainable alternative to US trucking under the Jones Act.",
+      "Wrote original case studies comparing GHG and PM emissions against rail and trucking for real Texas freight routes; built all tables and figures for a paper submission."
+    ],
+    "rewards": "Research writing · Emissions analysis",
+    "skills": [
+      "research-writing",
+      "data-viz"
+    ]
+  },
+  {
+    "id": "adtech",
+    "status": "done",
+    "start": "2022-05",
+    "when": "May 2022 – Jul 2026",
+    "title": "Program Coordinator, Board Member & Instructor",
+    "org": "Appropriate Development Technology (ADTech) Inc.",
+    "bullets": [
+      "Led a 6-week STEM summer camp across 8 subjects for <strong>60+ underserved students</strong> internationally.",
+      "Taught three 10-week Python courses to <strong>50+ students across 3 continents</strong>."
+    ],
+    "rewards": "Leadership · Teaching",
+    "skills": [
+      "python",
+      "teaching",
+      "leadership"
+    ]
+  },
+  {
+    "id": "codewiz",
+    "status": "done",
+    "start": "2024-06",
+    "when": "Jun 2024 – Feb 2025",
+    "title": "Code Instructor",
+    "org": "Beaumont Code Wiz",
+    "bullets": [
+      "Taught 20+ K–12 students in weekly programming classes; certified in Python, Java and Scratch."
+    ],
+    "rewards": "Python · Java · Scratch",
+    "skills": [
+      "python",
+      "java",
+      "scratch",
+      "teaching"
+    ]
+  }
+]

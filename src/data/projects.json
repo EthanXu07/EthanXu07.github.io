@@ -1,0 +1,87 @@
+{
+  "projects": [
+    {
+      "id": "sentinel",
+      "icon": "✦",
+      "color": "#e8a93a",
+      "type": "Publication · NeurIPS 2025",
+      "title": "SENTINEL",
+      "sub": "Sentiment Evolution and Narrative Tracking in Extended LLM Interactions",
+      "desc": "A framework for measuring sentiment drift within long-context LLM conversations and agentic workflows, aimed at reducing LLM emotional hallucination. Published at the NeurIPS MTI-LLM 2025 Workshop.",
+      "links": [
+        {
+          "label": "OpenReview",
+          "url": "https://openreview.net/forum?id=6ZvINpYdOA",
+          "style": "btn-paper"
+        },
+        {
+          "label": "NeurIPS",
+          "url": "https://neurips.cc/virtual/2025/loc/san-diego/128069",
+          "style": "btn-ghost"
+        }
+      ],
+      "skills": [
+        "llms",
+        "nlp",
+        "research-writing"
+      ]
+    },
+    {
+      "id": "fintrax",
+      "icon": "$",
+      "color": "#5f9c8f",
+      "type": "Project · ML",
+      "title": "Fintrax",
+      "sub": "Python · Pandas · Hugging Face · Beautiful Soup",
+      "desc": "A pretrained BERT-based confidence model that compares the sentiment of executives' prepared remarks with their open Q&amp;A answers on earnings calls, then turns the gap into buy/sell signals using transcripts scraped in real time.",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/EthanXu07",
+          "style": "btn-ghost"
+        }
+      ],
+      "skills": [
+        "python",
+        "huggingface",
+        "nlp",
+        "pandas",
+        "web-scraping",
+        "backtesting"
+      ]
+    },
+    {
+      "id": "aer-tracker",
+      "icon": "≡",
+      "color": "#8fb8c9",
+      "type": "Project · In progress",
+      "title": "AER Citation Tracker",
+      "sub": "Python · Beautiful Soup · Crossref · OpenAlex",
+      "desc": "Scrapes recent <em>American Economic Review</em> issues, looks up each article's DOI on Crossref and OpenAlex, and outputs a CSV ranked by citation count. Built for URAP research.",
+      "links": [],
+      "skills": [
+        "python",
+        "web-scraping",
+        "rest-apis"
+      ]
+    }
+  ],
+  "trophies": [
+    {
+      "icon": "🏆",
+      "label": "NeurIPS workshop paper"
+    },
+    {
+      "icon": "🎓",
+      "label": "Regents' & Chancellor's Scholar"
+    },
+    {
+      "icon": "⭐",
+      "label": "4.0 GPA at Berkeley"
+    },
+    {
+      "icon": "🌍",
+      "label": "Taught on 3 continents"
+    }
+  ]
+}

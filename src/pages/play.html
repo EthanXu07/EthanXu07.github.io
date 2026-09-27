@@ -1,0 +1,34 @@
+    <!-- ============ BONUS LEVEL ============ -->
+    <!-- The level is generated from src/data/experience.json + skills (see play.js) -->
+    <section id="play" class="world play-world" data-checkpoint="Bonus level">
+      <header class="world-head">
+        <p class="world-num">BONUS LEVEL</p>
+        <h1 class="world-title">Career run</h1>
+      </header>
+      <p class="section-lede">Run through my quest log from 2022 to today. Every platform is a job, every coin a skill. Reach the flag to find the Save Point.</p>
+
+      <div class="game-shell px-box" id="gameShell">
+        <canvas id="game" aria-label="Career run: a side-scrolling platform game" role="img"></canvas>
+        <div class="game-hud" aria-hidden="true">
+          <span id="gameCoins">◉ 0</span>
+          <span id="gameQuest">Press → to start</span>
+          <span id="gameTime">0.0s</span>
+        </div>
+        <div class="game-sign" id="gameSign" hidden></div>
+        <div class="game-over" id="gameOver" hidden>
+          <p class="world-num">LEVEL CLEAR</p>
+          <h2 class="world-title">Save point reached!</h2>
+          <p id="gameStats"></p>
+          <div class="save-actions">
+            <button class="btn btn-gold" id="gameReplay">Play again</button>
+            <a class="btn btn-tomato" href="#contact">Contact me <span class="tri" aria-hidden="true"></span></a>
+            <a class="btn btn-paper" data-link="resume" href="/resume/">Resume</a>
+          </div>
+        </div>
+        <div class="touch-pad" aria-hidden="true">
+          <button data-key="left">◀</button><button data-key="right">▶</button><button data-key="jump" class="jump">JUMP</button>
+        </div>
+      </div>
+      <p class="hint">Move: <kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> or <kbd>A</kbd> <kbd>D</kbd> · Jump: <kbd>Space</kbd> <kbd class="arrow">↑</kbd> <kbd>W</kbd> · Restart: <kbd>R</kbd> in the level · Touch: on-screen buttons</p>
+      <script type="application/json" id="levelData">{{levelData}}</script>
+    </section>
