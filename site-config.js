@@ -13,6 +13,16 @@ window.SITE = {
   resumeFile: "assets/resume.pdf",
   resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename when they click Download
 
+  // Interests ("Side quests") photos: drop images into assets/interests/
+  // and point each one here. Any size works; they're cropped to 4:3.
+  interestPhotos: {
+    hiking: "assets/interests/hiking.svg",
+    racket: "assets/interests/racket.svg",
+    soccer: "assets/interests/soccer.svg",
+    swim: "assets/interests/swim.svg",
+    food: "assets/interests/food.svg",
+  },
+
   email: "ethan_xu@berkeley.edu",
   github: "https://github.com/EthanXu07",
   linkedin: "https://www.linkedin.com/in/EthanXu07/",

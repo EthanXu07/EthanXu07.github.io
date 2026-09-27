@@ -18,6 +18,10 @@ if (SITE.email) {
   $('#copyEmail').dataset.email = SITE.email;
   $('#emailLabel').textContent = SITE.email;
 }
+$$('img[data-photo]').forEach((img) => {
+  const src = SITE.interestPhotos?.[img.dataset.photo];
+  if (src) img.src = src;
+});
 $('#year').textContent = new Date().getFullYear();
 
 // =====================================================================
@@ -474,110 +478,4 @@ document.addEventListener('keydown', (e) => {
   }
   draw();
   if (!reduceMotion) setInterval(draw, 140);
-})();
-
-// =====================================================================
-//  Side-quest icons: 12×12 pixel sprites for each interest
-// =====================================================================
-(() => {
-  const SPRITES_INTERESTS = {
-    hiking: {
-      colors: { w: '#f1e6cc', g: '#8b949c', d: '#5b646c', t: '#3f7a5a', y: '#f3c969' },
-      rows: [
-        '..........yy',
-        '.....ww...yy',
-        '....wwww....',
-        '....wggw..w.',
-        '...gggggg.ww',
-        '..gggdgggggw',
-        '..ggdddggggg',
-        '.gggdddgdggg',
-        '.ggddddddggg',
-        'tggtdddttggt',
-        'tttttttttttt',
-        'tttttttttttt',
-      ],
-    },
-    racket: {
-      colors: { r: '#d4553a', s: '#e2d2ac', h: '#6b4630', y: '#d7e34a' },
-      rows: [
-        '..rrrr......',
-        '.rssssr.....',
-        'rssssssr....',
-        'rssssssr....',
-        'rssssssr.yy.',
-        '.rssssr..yy.',
-        '..rrrr......',
-        '...hh.......',
-        '....hh......',
-        '.....hh.....',
-        '......hh....',
-        '.......hh...',
-      ],
-    },
-    soccer: {
-      colors: { w: '#f1e6cc', k: '#1c2a25' },
-      rows: [
-        '...wwwwww...',
-        '..wwwkkwww..',
-        '.wwwkkkkwww.',
-        '.wkwwkkwwkw.',
-        'wkkwwwwwwkkw',
-        'wkwwwkkwwwkw',
-        'wwwwkkkkwwww',
-        'wwkwwkkwwkww',
-        '.wkkwwwwkkw.',
-        '.wwkwwwwkww.',
-        '..wwwkkwww..',
-        '...wwwwww...',
-      ],
-    },
-    swim: {
-      colors: { c: '#d4553a', s: '#f0c8a0', l: '#a9d3e0', b: '#5b8fb0' },
-      rows: [
-        '............',
-        '.......cc...',
-        '......cccc..',
-        '......cssc..',
-        '..ss...ss...',
-        '...ss.ssss..',
-        'llllllllllll',
-        'bbllbbbbllbb',
-        'bbbbbbbbbbbb',
-        'bllbbbllbbbb',
-        'bbbbbbbbbbbb',
-        'bbbbllbbbbbl',
-      ],
-    },
-    food: {
-      colors: { t: '#b9b39c', c: '#b5835a', n: '#f3c969', e: '#fff7e6', o: '#d4553a', y: '#f1e6cc', d: '#9c3423' },
-      rows: [
-        '..t...t....c',
-        '.t...t....c.',
-        '..t...t..c.c',
-        '.t...t..c.c.',
-        'nnennnnc.c..',
-        'oooooooooooo',
-        'oyyyyyyyyyyo',
-        '.oooooooooo.',
-        '..oooooooo..',
-        '...oooooo...',
-        '....dddd....',
-        '............',
-      ],
-    },
-  };
-
-  document.querySelectorAll('canvas[data-sprite]').forEach((canvas) => {
-    const sprite = SPRITES_INTERESTS[canvas.dataset.sprite];
-    if (!sprite) return;
-    const g = canvas.getContext('2d');
-    sprite.rows.forEach((row, y) => {
-      [...row].forEach((ch, x) => {
-        if (ch === '.') return;
-        g.fillStyle = sprite.colors[ch];
-        g.fillRect(x, y, 1, 1);
-      });
-    });
-  });
 })();
