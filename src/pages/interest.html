@@ -1,0 +1,28 @@
+    <!-- ============ SIDE QUEST (generated per interest from src/interests.json) ============ -->
+    <article class="world interest-page">
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/interests/">Side quests</a> <span aria-hidden="true">›</span> <span aria-current="page">{{title}}</span></nav>
+
+      <header class="interest-hero">
+        <img class="interest-hero-photo px-box" src="{{photo}}" alt="{{title}}" width="400" height="300">
+        <div>
+          <p class="world-num">SIDE QUEST {{num}} / {{total}}</p>
+          <h1 class="world-title">{{title}}</h1>
+          <p class="interest-lede">{{tagline}}</p>
+        </div>
+      </header>
+
+      <div class="interest-sections">
+{{sections}}
+      </div>
+
+      <h2 class="mini-head">Gallery</h2>
+      <div class="gallery">
+{{gallery}}
+      </div>
+
+      <nav class="interest-pager" aria-label="More side quests">
+        <a class="btn btn-ghost" href="{{prevHref}}">◀ {{prevTitle}}</a>
+        <a class="btn btn-paper" href="/interests/">All side quests</a>
+        <a class="btn btn-ghost" href="{{nextHref}}">{{nextTitle}} ▶</a>
+      </nav>
+    </article>
