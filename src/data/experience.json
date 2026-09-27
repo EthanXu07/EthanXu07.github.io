@@ -31,24 +31,6 @@
     ]
   },
   {
-    "id": "urap",
-    "status": "active",
-    "start": "2026-08",
-    "when": "Fall 2026 – Now",
-    "title": "Undergraduate Researcher",
-    "org": "URAP · UC Berkeley",
-    "bullets": [
-      "Building a pipeline that scrapes <em>American Economic Review</em> issues and pulls citation counts from the Crossref and OpenAlex APIs to rank recent work by impact."
-    ],
-    "rewards": "Python · Web scraping · REST APIs",
-    "skills": [
-      "python",
-      "web-scraping",
-      "rest-apis",
-      "research-writing"
-    ]
-  },
-  {
     "id": "ipmd",
     "status": "done",
     "start": "2024-10",

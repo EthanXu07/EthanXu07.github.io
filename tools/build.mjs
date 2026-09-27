@@ -176,9 +176,13 @@ page({
 });
 
 // Bonus level: quests in chronological order become platforms; their skills become coins
-const levelData = [...experience].sort((a, b) => a.start.localeCompare(b.start)).map((q) => ({
-  title: q.title, org: q.org, when: q.when, skills: q.skills.map(skillName),
-}));
+// "?" blocks pop out trophies and project names as fun facts
+const levelData = {
+  quests: [...experience].sort((a, b) => a.start.localeCompare(b.start)).map((q) => ({
+    title: q.title, org: q.org, when: q.when, skills: q.skills.map(skillName),
+  })),
+  facts: [...trophies.map((t) => t.label), ...projects.map((p) => `${p.title} unlocked`)],
+};
 page({
   out: 'play/index.html', path: '/play/', page: 'play', title: 'Bonus level · Ethan Xu', description: 'A tiny platformer through Ethan Xu\'s career.',
   content: fill(src('pages/play.html'), { levelData: inlineJson(levelData) }),
