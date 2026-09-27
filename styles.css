@@ -152,8 +152,10 @@ kbd {
   .hud-nav a { padding: .45rem .3rem; font-size: .55rem; }
   html { scroll-padding-top: 8rem; }
 }
-@media (max-width: 26rem) {
+@media (max-width: 36rem) {
   .hud-nav .key { display: none; }
+}
+@media (max-width: 26rem) {
   .hearts { display: none; }
 }
 
@@ -385,6 +387,23 @@ kbd {
   font-size: .95rem;
 }
 .trophy { display: grid; place-items: center; width: 2rem; height: 2rem; background: var(--ink-3); font-size: 1rem; }
+
+/* ---------- Side quests (interests) ---------- */
+.section-lede { margin: -1.25rem 0 2rem; color: var(--text-light-2); }
+.interests { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr)); gap: 1.75rem; }
+.interest { display: flex; flex-direction: column; align-items: flex-start; padding: 1.25rem; transition: transform .1s steps(2); }
+.interest:hover { transform: translate(-2px, -2px); }
+.interest-icon {
+  width: 60px; height: 60px; margin-bottom: 1rem; padding: 6px;
+  box-sizing: content-box;
+  background: var(--ink-3);
+  box-shadow: 0 0 0 3px var(--edge);
+}
+.interest:hover .interest-icon { animation: hop .4s steps(2); }
+@keyframes hop { 50% { transform: translateY(-6px); } }
+.interest-tag { margin: 0 0 .4rem; font: .5rem var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
+.interest h3 { margin: 0 0 .4rem; font: 700 1.45rem/1.15 var(--title); color: var(--paper); }
+.interest p:not(.interest-tag) { margin: 0; color: var(--text-light-2); font-size: .95rem; }
 
 /* ---------- Save point ---------- */
 .save-box { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem 2rem; padding: clamp(1.25rem, 4vw, 2.25rem); }
