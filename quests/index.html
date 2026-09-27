@@ -29,17 +29,14 @@
         <span class="hud-name">ETHAN XU</span>
       </a>
       <nav class="hud-nav" aria-label="Pages">
-        <a href="/"><span class="key" aria-hidden="true">1</span>Home</a>
-        <a href="/quests/" class="active" aria-current="page"><span class="key" aria-hidden="true">2</span>Quests</a>
-        <a href="/loot/"><span class="key" aria-hidden="true">3</span>Loot</a>
-        <a href="/skills/"><span class="key" aria-hidden="true">4</span>Skills</a>
-        <a href="/interests/"><span class="key" aria-hidden="true">5</span>Interests</a>
-        <a href="#contact"><span class="key" aria-hidden="true">6</span>Contact</a>
+        <a href="/" title="Home"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M4 0h2v1h-2zM3 1h4v1h-4zM2 2h6v1h-6zM1 3h8v1h-8zM0 4h10v1h-10zM1 5h8v1h-8zM1 6h3v1h-3zM6 6h3v1h-3zM1 7h2v1h-2zM7 7h2v1h-2zM1 8h2v1h-2zM7 8h2v1h-2zM1 9h2v1h-2zM7 9h2v1h-2z"/></svg><span class="nav-label">Home</span></a>
+        <a href="/quests/" title="Quests" class="active" aria-current="page"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 0h8v1h-8zM0 1h2v1h-2zM8 1h2v1h-2zM1 2h1v1h-1zM3 2h4v1h-4zM8 2h1v1h-1zM1 3h1v1h-1zM8 3h1v1h-1zM1 4h1v1h-1zM3 4h4v1h-4zM8 4h1v1h-1zM1 5h1v1h-1zM8 5h1v1h-1zM1 6h1v1h-1zM3 6h3v1h-3zM8 6h1v1h-1zM1 7h1v1h-1zM8 7h1v1h-1zM0 8h2v1h-2zM8 8h2v1h-2zM1 9h8v1h-8z"/></svg><span class="nav-label">Quests</span></a>
+        <a href="/loot/" title="Loot"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1h8v1h-8zM0 2h1v1h-1zM9 2h1v1h-1zM0 3h1v1h-1zM9 3h1v1h-1zM0 4h10v1h-10zM0 5h1v1h-1zM4 5h2v1h-2zM9 5h1v1h-1zM0 6h1v1h-1zM4 6h2v1h-2zM9 6h1v1h-1zM0 7h1v1h-1zM9 7h1v1h-1zM0 8h10v1h-10z"/></svg><span class="nav-label">Loot</span></a>
+        <a href="/skills/" title="Skills"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M4 0h2v1h-2zM4 1h2v1h-2zM3 2h4v1h-4zM0 3h10v1h-10zM1 4h8v1h-8zM2 5h6v1h-6zM2 6h6v1h-6zM1 7h3v1h-3zM6 7h3v1h-3zM1 8h2v1h-2zM7 8h2v1h-2zM0 9h2v1h-2zM8 9h2v1h-2z"/></svg><span class="nav-label">Skills</span></a>
+        <a href="/interests/" title="Interests"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1h2v1h-2zM7 1h2v1h-2zM0 2h4v1h-4zM6 2h4v1h-4zM0 3h10v1h-10zM0 4h10v1h-10zM1 5h8v1h-8zM2 6h6v1h-6zM3 7h4v1h-4zM4 8h2v1h-2z"/></svg><span class="nav-label">Interests</span></a>
+        <a href="#contact" title="Contact"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M0 1h10v1h-10zM0 2h2v1h-2zM8 2h2v1h-2zM0 3h1v1h-1zM2 3h1v1h-1zM7 3h1v1h-1zM9 3h1v1h-1zM0 4h1v1h-1zM3 4h1v1h-1zM6 4h1v1h-1zM9 4h1v1h-1zM0 5h1v1h-1zM4 5h2v1h-2zM9 5h1v1h-1zM0 6h1v1h-1zM9 6h1v1h-1zM0 7h1v1h-1zM9 7h1v1h-1zM0 8h10v1h-10z"/></svg><span class="nav-label">Contact</span></a>
       </nav>
-      <div class="hud-actions">
-        <a class="btn btn-ghost hud-quick" href="/quick/" title="Skip the game: everything on one plain page">Quick view</a>
-        <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
-      </div>
+      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
     </div>
     <div class="xp" aria-hidden="true"><span class="xp-label">XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
   </header>
@@ -206,7 +203,7 @@
 
   <footer class="credits">
     <p class="thanks">Thanks for playing</p>
-    <p class="footer-links"><a href="/play/">Bonus level</a> · <a href="/guestbook/">Guestbook</a> · <a href="/quick/">Quick view</a></p>
+    <p class="footer-links"><a href="/play/">Bonus level</a> · <a href="/guestbook/">Guestbook</a></p>
     <p>© <span id="year">2026</span> Ethan Xu · Built by hand in Berkeley, CA</p>
     <a href="#hud" class="btn btn-sm btn-ghost">▲ Back to top</a>
   </footer>

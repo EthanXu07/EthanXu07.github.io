@@ -3,11 +3,10 @@
 // No dependencies:   node tools/build.mjs
 //
 //   src/layout.html           shared nav, footer, résumé pop-up (game pages)
-//   src/quick.html            the plain "Quick view" page for recruiters
 //   src/pages/*.html          page bodies
 //   src/data/experience.json  quests (jobs + research)   ┐ one source of truth for the
 //   src/data/projects.json    loot (projects + trophies) │ quest log, loot, skill tree,
-//   src/data/skills.json      skill tree branches        │ bonus level and quick view
+//   src/data/skills.json      skill tree branches        │ and bonus level
 //   src/interests.json        side quests                ┘
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -43,9 +42,33 @@ const WORLDS = [
   { key: 'contact', label: 'Contact', href: '#contact' },
 ];
 
-const nav = (active) => WORLDS.map((w, i) => {
+// 10×10 pixel icons for the nav ('#' = filled). Rendered as crisp SVG in currentColor.
+const ICONS = {
+  home: ['....##....', '...####...', '..######..', '.########.', '##########', '.########.', '.###..###.', '.##....##.', '.##....##.', '.##....##.'],
+  quests: ['.########.', '##......##', '.#.####.#.', '.#......#.', '.#.####.#.', '.#......#.', '.#.###..#.', '.#......#.', '##......##', '.########.'],
+  loot: ['..........', '.########.', '#........#', '#........#', '##########', '#...##...#', '#...##...#', '#........#', '##########', '..........'],
+  skills: ['....##....', '....##....', '...####...', '##########', '.########.', '..######..', '..######..', '.###..###.', '.##....##.', '##......##'],
+  interests: ['..........', '.##....##.', '####..####', '##########', '##########', '.########.', '..######..', '...####...', '....##....', '..........'],
+  contact: ['..........', '##########', '##......##', '#.#....#.#', '#..#..#..#', '#...##...#', '#........#', '#........#', '##########', '..........'],
+};
+const pixelIcon = (rows) => {
+  let d = '';
+  rows.forEach((row, y) => {
+    // Merge horizontal runs into one rect each
+    for (let x = 0; x < row.length; x++) {
+      if (row[x] !== '#') continue;
+      let w = 1;
+      while (row[x + w] === '#') w++;
+      d += `M${x} ${y}h${w}v1h-${w}z`;
+      x += w - 1;
+    }
+  });
+  return `<svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+};
+
+const nav = (active) => WORLDS.map((w) => {
   const current = w.key === active;
-  return `        <a href="${w.href}"${current ? ' class="active" aria-current="page"' : ''}><span class="key" aria-hidden="true">${i + 1}</span>${w.label}</a>`;
+  return `        <a href="${w.href}" title="${w.label}"${current ? ' class="active" aria-current="page"' : ''}>${pixelIcon(ICONS[w.key])}<span class="nav-label">${w.label}</span></a>`;
 }).join('\n');
 
 function page({ out, path, page, title, description, content, sub = true, scripts = '' }) {
@@ -238,27 +261,6 @@ interests.forEach((it, i) => {
     }),
   });
 });
-
-// ---------------------------------------------------------------- Quick view (no game)
-const quickExperience = experience.map((q) => `      <article class="q-entry">
-        <header><h3>${esc(q.title)} <span>· ${esc(q.org)}</span></h3><time>${esc(q.when)}</time></header>
-        <ul>
-${q.bullets.map((b) => `          <li>${b}</li>`).join('\n')}
-        </ul>
-      </article>`).join('\n');
-const quickProjects = projects.map((p) => `      <article class="q-entry">
-        <header><h3>${esc(p.title)} <span>· ${esc(p.type)}</span></h3>${p.links.length ? `<span class="q-links">${p.links.map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join(' · ')}</span>` : ''}</header>
-        <p>${p.desc}</p>
-      </article>`).join('\n');
-const quickSkills = branches.map((b) => `      <p><strong>${esc(b.name)}:</strong> ${b.skills.filter((s) => level(s.id) > 0).map((s) => esc(s.name)).join(', ')}</p>`).join('\n');
-
-write('quick/index.html', fill(src('quick.html'), {
-  experience: quickExperience,
-  projects: quickProjects,
-  skills: quickSkills,
-  awards: trophies.map((t) => esc(t.label)).join(' · '),
-  interests: interests.map((it) => `<a href="/interests/${it.slug}/">${esc(it.title)}</a>`).join(' · '),
-}));
 
 // Old /contact/ URL → the Save Point section
 write('contact/index.html', `<!doctype html><meta charset="utf-8"><title>Contact · Ethan Xu</title>
