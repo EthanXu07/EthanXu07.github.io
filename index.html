@@ -31,7 +31,8 @@
         <a href="#player"><span class="key" aria-hidden="true">1</span>Player</a>
         <a href="#quests"><span class="key" aria-hidden="true">2</span>Quests</a>
         <a href="#loot"><span class="key" aria-hidden="true">3</span>Loot</a>
-        <a href="#save"><span class="key" aria-hidden="true">4</span>Contact</a>
+        <a href="#interests"><span class="key" aria-hidden="true">4</span>Interests</a>
+        <a href="#save"><span class="key" aria-hidden="true">5</span>Contact</a>
       </nav>
       <a class="btn btn-gold hud-resume" data-link="resume" href="resume/">Résumé ▸</a>
     </div>
@@ -44,6 +45,7 @@
     <a class="track-flag" href="#player" data-for="player" tabindex="-1"></a>
     <a class="track-flag" href="#quests" data-for="quests" tabindex="-1"></a>
     <a class="track-flag" href="#loot" data-for="loot" tabindex="-1"></a>
+    <a class="track-flag" href="#interests" data-for="interests" tabindex="-1"></a>
     <a class="track-flag" href="#save" data-for="save" tabindex="-1"></a>
     <canvas class="track-hero" id="trackHero" width="12" height="16"></canvas>
   </aside>
@@ -65,7 +67,7 @@
           <a class="btn btn-tomato btn-lg" href="#player">▶ Press start</a>
           <a class="btn btn-paper btn-lg" data-link="resume" href="resume/">View résumé</a>
         </div>
-        <p class="hint">Keys <kbd>1</kbd>–<kbd>4</kbd> jump to a section · <kbd>R</kbd> opens the résumé · click the scene to jump</p>
+        <p class="hint">Keys <kbd>1</kbd>–<kbd>5</kbd> jump to a section · <kbd>R</kbd> opens the résumé · click the scene to jump</p>
       </div>
       <div class="dirt" aria-hidden="true"></div>
     </section>
@@ -295,10 +297,53 @@
       </ul>
     </section>
 
-    <!-- ============ WORLD 4: SAVE POINT (contact) ============ -->
-    <section id="save" class="world save">
+    <!-- ============ WORLD 4: SIDE QUESTS (personal interests) ============ -->
+    <section id="interests" class="world">
       <header class="world-head">
         <p class="world-num">WORLD 4</p>
+        <h2 class="world-title">Side quests</h2>
+      </header>
+      <p class="section-lede">What I'm up to when I'm not coding.</p>
+
+      <!-- To add an interest: copy an <li>. data-sprite picks the pixel icon in script.js (SPRITES_INTERESTS). -->
+      <ul class="interests">
+        <li class="interest px-box">
+          <canvas class="interest-icon" data-sprite="hiking" width="12" height="12" aria-hidden="true"></canvas>
+          <p class="interest-tag">Side quest</p>
+          <h3>Hiking</h3>
+          <p>Trails, switchbacks and whatever view is waiting at the top.</p>
+        </li>
+        <li class="interest px-box">
+          <canvas class="interest-icon" data-sprite="racket" width="12" height="12" aria-hidden="true"></canvas>
+          <p class="interest-tag">Side quest</p>
+          <h3>Racket sports</h3>
+          <p>If there's a racket, a net and a rally, I'm in.</p>
+        </li>
+        <li class="interest px-box">
+          <canvas class="interest-icon" data-sprite="soccer" width="12" height="12" aria-hidden="true"></canvas>
+          <p class="interest-tag">Side quest</p>
+          <h3>Soccer</h3>
+          <p>Always down for a pickup game.</p>
+        </li>
+        <li class="interest px-box">
+          <canvas class="interest-icon" data-sprite="swim" width="12" height="12" aria-hidden="true"></canvas>
+          <p class="interest-tag">Side quest</p>
+          <h3>Swimming</h3>
+          <p>Laps in the pool are my favorite way to reset.</p>
+        </li>
+        <li class="interest px-box">
+          <canvas class="interest-icon" data-sprite="food" width="12" height="12" aria-hidden="true"></canvas>
+          <p class="interest-tag">Side quest</p>
+          <h3>Eating</h3>
+          <p>Always hunting for the next great meal. Taste-testing counts as a sport.</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ WORLD 5: SAVE POINT (contact) ============ -->
+    <section id="save" class="world save">
+      <header class="world-head">
+        <p class="world-num">WORLD 5</p>
         <h2 class="world-title">Save point</h2>
       </header>
 
