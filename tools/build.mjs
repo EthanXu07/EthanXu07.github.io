@@ -72,20 +72,38 @@ writeFileSync(join(ROOT, 'contact/index.html'), `<!doctype html><meta charset="u
 console.log('  contact/index.html (redirect)');
 
 // ---------- Interests hub + one page per interest ----------
-const cards = interests.map((it, i) => `        <li>
-          <a class="interest px-box" href="/interests/${it.slug}/">
-            <img class="interest-photo" src="${esc(it.photo)}" alt="${esc(it.title)}" loading="lazy" width="400" height="300">
-            <p class="interest-tag">Side quest ${i + 1}</p>
-            <h3>${esc(it.title)}</h3>
-            <p>${esc(it.tagline)}</p>
-            <span class="interest-enter">Enter <span class="tri" aria-hidden="true"></span></span>
+const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const objectivesList = (it) => it.objectives.map((o) => `              <li>${esc(o)}</li>`).join('\n');
+
+const cards = interests.map((it, i) => `        <li class="quest side-quest px-box paper" data-type="${slugify(it.type)}">
+          <a class="side-quest-photo" href="/interests/${it.slug}/" tabindex="-1" aria-hidden="true">
+            <img src="${esc(it.photo)}" alt="" loading="lazy" width="400" height="300">
           </a>
+          <div class="side-quest-body">
+            <div class="quest-top">
+              <span class="badge badge-active">● Ongoing</span>
+              <span class="quest-when">Side quest ${i + 1} · ${esc(it.type)}</span>
+            </div>
+            <h3><a href="/interests/${it.slug}/">${esc(it.title)}</a></h3>
+            <p class="quest-org">${esc(it.tagline)}</p>
+            <p class="objectives-label">Objectives</p>
+            <ul class="quest-list">
+${objectivesList(it)}
+            </ul>
+            <div class="side-quest-foot">
+              <p class="reward"><span>Rewards</span> ${esc(it.rewards)}</p>
+              <a class="btn btn-tomato btn-sm" href="/interests/${it.slug}/">View quest <span class="tri" aria-hidden="true"></span></a>
+            </div>
+          </div>
         </li>`).join('\n');
+
+const chips = [...new Set(interests.map((it) => it.type))]
+  .map((t) => `        <button class="chip" data-filter="${slugify(t)}" aria-pressed="false">${esc(t)}</button>`).join('\n');
 
 page({
   out: 'interests/index.html', path: '/interests/', page: 'interests',
   title: 'Side quests · Ethan Xu', description: 'What Ethan Xu does when he is not coding.',
-  content: fill(src('pages/interests.html'), { cards }),
+  content: fill(src('pages/interests.html'), { cards, chips }),
 });
 
 const interestTpl = src('pages/interest.html');
@@ -105,6 +123,7 @@ interests.forEach((it, i) => {
       num: String(i + 1), total: String(interests.length),
       title: esc(it.title), tagline: esc(it.tagline), photo: esc(it.photo),
       sections, gallery,
+      type: esc(it.type), rewards: esc(it.rewards), objectives: objectivesList(it),
       prevHref: `/interests/${prev.slug}/`, prevTitle: esc(prev.title),
       nextHref: `/interests/${next.slug}/`, nextTitle: esc(next.title),
     }),

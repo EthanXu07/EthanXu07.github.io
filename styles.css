@@ -434,6 +434,19 @@ main.subpage { padding-top: 5rem; }
 .interest h3 { margin: 0 0 .4rem; font: 700 1.45rem/1.15 var(--title); color: var(--paper); }
 .interest p:not(.interest-tag) { margin: 0; color: var(--text-light-2); font-size: .95rem; }
 
+/* Side quests as quest-log entries */
+.side-quest { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+@media (max-width: 44rem) { .side-quest { grid-template-columns: 1fr; } }
+.side-quest-photo { display: block; box-shadow: 0 0 0 3px var(--text-dark); }
+.side-quest-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink-3); }
+.side-quest h3 a { color: inherit; text-decoration: none; }
+.side-quest h3 a:hover { text-decoration: underline; text-decoration-thickness: 3px; }
+.objectives-label { margin: .9rem 0 .5rem; font: .5rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; }
+.side-quest-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; margin-top: 1rem; padding-top: .75rem; border-top: 2px dashed var(--paper-2); }
+.side-quest-foot .reward { margin: 0; padding: 0; border: 0; }
+.quest-details { margin-bottom: 1.75rem; }
+.quest-details .objectives-label { margin-top: .25rem; }
+
 /* Single interest page */
 .breadcrumb { margin-bottom: 1.75rem; font: .55rem/1.8 var(--pixel); color: var(--text-light-2); text-transform: uppercase; }
 .breadcrumb a { color: var(--gold); text-decoration: none; }
@@ -479,15 +492,16 @@ main.subpage { padding-top: 5rem; }
 /* ---------- Toast ---------- */
 .toast {
   position: fixed; left: 50%; bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); z-index: 60;
-  transform: translate(-50%, 200%);
+  transform: translate(-50%, calc(100% + 3rem));
+  visibility: hidden;
   padding: .8rem 1rem;
   font: .6rem var(--pixel);
   background: var(--paper); color: var(--text-dark);
   box-shadow: 0 0 0 3px var(--edge), 5px 5px 0 rgba(0,0,0,.4);
-  transition: transform .2s steps(3);
+  transition: transform .2s steps(3), visibility 0s linear .2s;
   pointer-events: none;
 }
-.toast.show { transform: translate(-50%, 0); }
+.toast.show { transform: translate(-50%, 0); visibility: visible; transition-delay: 0s; }
 
 /* ---------- Résumé preview ---------- */
 .resume-modal {

@@ -2,56 +2,141 @@
   {
     "slug": "hiking",
     "title": "Hiking",
+    "type": "Outdoors",
     "tagline": "Trails, switchbacks and whatever view is waiting at the top.",
+    "objectives": [
+      "Find the trailhead, follow the switchbacks, earn the view",
+      "Explore the Berkeley Hills and trails beyond the Bay",
+      "Bring back summit photos for the gallery"
+    ],
+    "rewards": "Fresh air · Views · Leg day",
     "photo": "/assets/interests/hiking.svg",
-    "gallery": ["/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg"],
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
     "sections": [
-      { "heading": "Why I hike", "placeholder": "A few sentences on what gets you out on the trail." },
-      { "heading": "Favorite trails", "placeholder": "List a few favorite trails, summits or parks." }
+      {
+        "heading": "Why I hike",
+        "placeholder": "A few sentences on what gets you out on the trail."
+      },
+      {
+        "heading": "Favorite trails",
+        "placeholder": "List a few favorite trails, summits or parks."
+      }
     ]
   },
   {
     "slug": "racket-sports",
     "title": "Racket sports",
+    "type": "Sports",
     "tagline": "If there's a racket, a net and a rally, I'm in.",
+    "objectives": [
+      "Find a court and a rally partner",
+      "Keep every rally going one shot longer",
+      "Try every sport that comes with a racket"
+    ],
+    "rewards": "Reflexes · Footwork · Friendly rivalries",
     "photo": "/assets/interests/racket.svg",
-    "gallery": ["/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg"],
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
     "sections": [
-      { "heading": "What I play", "placeholder": "Which ones: tennis, badminton, pickleball, squash, table tennis…" },
-      { "heading": "Best moments", "placeholder": "A favorite match, rally or place to play." }
+      {
+        "heading": "What I play",
+        "placeholder": "Which ones: tennis, badminton, pickleball, squash, table tennis…"
+      },
+      {
+        "heading": "Best moments",
+        "placeholder": "A favorite match, rally or place to play."
+      }
     ]
   },
   {
     "slug": "soccer",
     "title": "Soccer",
+    "type": "Sports",
     "tagline": "Always down for a pickup game.",
+    "objectives": [
+      "Show up for pickup games",
+      "Win the ball back and play it forward",
+      "Catch the big matches with friends"
+    ],
+    "rewards": "Teamwork · Cardio · Bragging rights",
     "photo": "/assets/interests/soccer.svg",
-    "gallery": ["/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg"],
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
     "sections": [
-      { "heading": "On the pitch", "placeholder": "Where you play and which position." },
-      { "heading": "Teams I follow", "placeholder": "Favorite clubs or players." }
+      {
+        "heading": "On the pitch",
+        "placeholder": "Where you play and which position."
+      },
+      {
+        "heading": "Teams I follow",
+        "placeholder": "Favorite clubs or players."
+      }
     ]
   },
   {
     "slug": "swimming",
     "title": "Swimming",
+    "type": "Sports",
     "tagline": "Laps in the pool are my favorite way to reset.",
+    "objectives": [
+      "Swim laps to clear my head",
+      "Keep sharpening stroke technique",
+      "Beat a personal best"
+    ],
+    "rewards": "Endurance · Recovery · Calm",
     "photo": "/assets/interests/swim.svg",
-    "gallery": ["/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg"],
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
     "sections": [
-      { "heading": "In the water", "placeholder": "Favorite stroke, pool or open-water spot." },
-      { "heading": "Goals", "placeholder": "Anything you're training toward." }
+      {
+        "heading": "In the water",
+        "placeholder": "Favorite stroke, pool or open-water spot."
+      },
+      {
+        "heading": "Goals",
+        "placeholder": "Anything you're training toward."
+      }
     ]
   },
   {
     "slug": "eating",
     "title": "Eating",
+    "type": "Food",
     "tagline": "Always hunting for the next great meal. Taste-testing counts as a sport.",
+    "objectives": [
+      "Hunt down the best spots around Berkeley",
+      "Try a cuisine I haven't had before",
+      "Never skip dessert"
+    ],
+    "rewards": "Flavor · Good company · Zero regrets",
     "photo": "/assets/interests/food.svg",
-    "gallery": ["/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg", "/assets/interests/placeholder.svg"],
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
     "sections": [
-      { "heading": "Favorite cuisines", "placeholder": "What you'd happily eat every week." },
-      { "heading": "Top spots", "placeholder": "Go-to restaurants around Berkeley and beyond." }
+      {
+        "heading": "Favorite cuisines",
+        "placeholder": "What you'd happily eat every week."
+      },
+      {
+        "heading": "Top spots",
+        "placeholder": "Go-to restaurants around Berkeley and beyond."
+      }
     ]
   }
 ]
