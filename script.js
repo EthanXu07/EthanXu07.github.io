@@ -163,7 +163,7 @@ $$('.chip').forEach((chip) => {
   chip.addEventListener('click', () => {
     const f = chip.dataset.filter;
     $$('.chip').forEach((c) => { c.classList.toggle('is-on', c === chip); c.setAttribute('aria-pressed', c === chip); });
-    $$('.quest').forEach((q) => { q.hidden = f !== 'all' && q.dataset.status !== f; });
+    $$('.quest').forEach((q) => { q.hidden = f !== 'all' && q.dataset.status !== f && q.dataset.type !== f; });
   });
 });
 
