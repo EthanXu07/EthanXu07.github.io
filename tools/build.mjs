@@ -22,7 +22,8 @@ const WORLDS = [
   { key: 'quests', label: 'Quests', href: '/quests/' },
   { key: 'loot', label: 'Loot', href: '/loot/' },
   { key: 'interests', label: 'Interests', href: '/interests/' },
-  { key: 'contact', label: 'Contact', href: '/contact/' },
+  // Contact isn't a page: it's the Save Point at the bottom of every page
+  { key: 'contact', label: 'Contact', href: '#contact' },
 ];
 
 function nav(active) {
@@ -32,15 +33,6 @@ function nav(active) {
   }).join('\n');
 }
 
-function track(active) {
-  const idx = WORLDS.findIndex((w) => w.key === active);
-  const pct = (i) => ((i / (WORLDS.length - 1)) * 100).toFixed(2);
-  const flags = WORLDS.map((w, i) =>
-    `    <a class="track-flag${i <= idx ? ' reached' : ''}" href="${w.href}" style="top:${pct(i)}%" title="${w.label}" aria-label="${w.label}"${i === idx ? ' aria-current="page"' : ''}></a>`);
-  flags.push(`    <canvas class="track-hero" id="trackHero" width="12" height="16" style="top:${pct(idx)}%" aria-hidden="true"></canvas>`);
-  return flags.join('\n');
-}
-
 function page({ out, path, page, title, description, content, sub = true }) {
   const html = fill(layout, {
     title: esc(title),
@@ -48,7 +40,7 @@ function page({ out, path, page, title, description, content, sub = true }) {
     path,
     page,
     nav: nav(page),
-    track: track(page),
+    contact: src('pages/contact.html'),
     mainClass: sub ? 'subpage' : 'home',
     content,
     resumeModal: src('pages/_resume-modal.html'),
@@ -71,7 +63,13 @@ page({
 
 page({ out: 'quests/index.html', path: '/quests/', page: 'quests', title: 'Quest log · Ethan Xu', description: 'Experience and research: Ethan Xu.', content: src('pages/quests.html') });
 page({ out: 'loot/index.html', path: '/loot/', page: 'loot', title: 'Loot & trophies · Ethan Xu', description: 'Projects, publications and awards: Ethan Xu.', content: src('pages/loot.html') });
-page({ out: 'contact/index.html', path: '/contact/', page: 'contact', title: 'Save point · Ethan Xu', description: 'Get in touch with Ethan Xu.', content: src('pages/contact.html') });
+// Old /contact/ URL → the Save Point section
+mkdirSync(join(ROOT, 'contact'), { recursive: true });
+writeFileSync(join(ROOT, 'contact/index.html'), `<!doctype html><meta charset="utf-8"><title>Contact · Ethan Xu</title>
+<meta http-equiv="refresh" content="0; url=/#contact"><link rel="canonical" href="https://ethanxu.dev/#contact">
+<a href="/#contact">Contact Ethan Xu</a>
+`);
+console.log('  contact/index.html (redirect)');
 
 // ---------- Interests hub + one page per interest ----------
 const cards = interests.map((it, i) => `        <li>
@@ -80,7 +78,7 @@ const cards = interests.map((it, i) => `        <li>
             <p class="interest-tag">Side quest ${i + 1}</p>
             <h3>${esc(it.title)}</h3>
             <p>${esc(it.tagline)}</p>
-            <span class="interest-enter">Enter ▸</span>
+            <span class="interest-enter">Enter <span class="tri" aria-hidden="true"></span></span>
           </a>
         </li>`).join('\n');
 

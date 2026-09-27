@@ -33,27 +33,22 @@
         <a href="/quests/"><span class="key" aria-hidden="true">2</span>Quests</a>
         <a href="/loot/"><span class="key" aria-hidden="true">3</span>Loot</a>
         <a href="/interests/"><span class="key" aria-hidden="true">4</span>Interests</a>
-        <a href="/contact/"><span class="key" aria-hidden="true">5</span>Contact</a>
+        <a href="#contact"><span class="key" aria-hidden="true">5</span>Contact</a>
       </nav>
-      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Résumé ▸</a>
+      <a class="btn btn-gold hud-resume" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
     </div>
     <div class="xp" aria-hidden="true"><span class="xp-label">XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div>
   </header>
 
-  <!-- World map: one flag per page, the sprite marks where you are (wide screens only) -->
-  <nav class="track" aria-label="World map">
+  <!-- Level map: a checkpoint flag per section; the sprite walks down as you scroll (wide screens only) -->
+  <aside class="track" aria-hidden="true">
     <div class="track-line"></div>
-    <a class="track-flag reached" href="/" style="top:0.00%" title="Home" aria-label="Home" aria-current="page"></a>
-    <a class="track-flag" href="/quests/" style="top:25.00%" title="Quests" aria-label="Quests"></a>
-    <a class="track-flag" href="/loot/" style="top:50.00%" title="Loot" aria-label="Loot"></a>
-    <a class="track-flag" href="/interests/" style="top:75.00%" title="Interests" aria-label="Interests"></a>
-    <a class="track-flag" href="/contact/" style="top:100.00%" title="Contact" aria-label="Contact"></a>
-    <canvas class="track-hero" id="trackHero" width="12" height="16" style="top:0.00%" aria-hidden="true"></canvas>
-  </nav>
+    <canvas class="track-hero" id="trackHero" width="12" height="16"></canvas>
+  </aside>
 
   <main id="content" class="home">
     <!-- ============ TITLE SCREEN ============ -->
-    <section class="title-screen">
+    <section class="title-screen" data-checkpoint="Title">
       <canvas id="scene" aria-hidden="true"></canvas>
       <div class="title-inner">
         <p class="kicker">UC BERKELEY · COMPUTER SCIENCE</p>
@@ -66,15 +61,15 @@
         </div>
         <div class="title-actions">
           <a class="btn btn-tomato btn-lg" href="#player">▶ Press start</a>
-          <a class="btn btn-paper btn-lg" data-link="resume" href="/resume/">View résumé</a>
+          <a class="btn btn-paper btn-lg" data-link="resume" href="/resume/">View resume</a>
         </div>
-        <p class="hint">Keys <kbd>1</kbd>–<kbd>5</kbd> switch pages · <kbd>R</kbd> opens the résumé · click the scene to jump</p>
+        <p class="hint">Play: <kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> walk · <kbd>Space</kbd> jump · <kbd>1</kbd>–<kbd>4</kbd> pages · <kbd>5</kbd> contact · <kbd>R</kbd> resume</p>
       </div>
       <div class="dirt" aria-hidden="true"></div>
     </section>
 
     <!-- ============ WORLD 1: PLAYER ============ -->
-    <section id="player" class="world">
+    <section id="player" class="world" data-checkpoint="Player select">
       <header class="world-head">
         <p class="world-num">WORLD 1</p>
         <h2 class="world-title">Player select</h2>
@@ -124,21 +119,46 @@
     </section>
 
     <!-- ============ LEVEL SELECT ============ -->
-    <section id="levels" class="world">
+    <section id="levels" class="world" data-checkpoint="Level select">
       <header class="world-head">
         <p class="world-num">LEVEL SELECT</p>
         <h2 class="world-title">Choose your world</h2>
       </header>
       <ul class="levels">
-        <li><a class="level px-box" href="/quests/"><span class="level-num">WORLD 2</span><strong>Quest log</strong><span>Internships, research and teaching</span><span class="level-go">Enter ▸</span></a></li>
-        <li><a class="level px-box" href="/loot/"><span class="level-num">WORLD 3</span><strong>Loot &amp; trophies</strong><span>Projects, publications and awards</span><span class="level-go">Enter ▸</span></a></li>
-        <li><a class="level px-box" href="/interests/"><span class="level-num">WORLD 4</span><strong>Side quests</strong><span>Hiking, racket sports, soccer, swimming, eating</span><span class="level-go">Enter ▸</span></a></li>
-        <li><a class="level px-box" href="/contact/"><span class="level-num">WORLD 5</span><strong>Save point</strong><span>Email, LinkedIn, GitHub</span><span class="level-go">Enter ▸</span></a></li>
+        <li><a class="level px-box" href="/quests/"><span class="level-num">WORLD 2</span><strong>Quest log</strong><span>Internships, research and teaching</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
+        <li><a class="level px-box" href="/loot/"><span class="level-num">WORLD 3</span><strong>Loot &amp; trophies</strong><span>Projects, publications and awards</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
+        <li><a class="level px-box" href="/interests/"><span class="level-num">WORLD 4</span><strong>Side quests</strong><span>Hiking, racket sports, soccer, swimming, eating</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
+        <li><a class="level px-box" href="#contact"><span class="level-num">SAVE POINT</span><strong>Contact</strong><span>Email, LinkedIn, GitHub</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
       </ul>
     </section>
 
 
   </main>
+
+    <!-- ============ SAVE POINT (contact): on every page, above the credits ============ -->
+    <section id="contact" class="world save" data-checkpoint="Save point">
+      <header class="world-head">
+        <p class="world-num">SAVE POINT</p>
+        <h2 class="world-title">Contact</h2>
+      </header>
+
+      <div class="save-box px-box">
+        <canvas id="fire" width="16" height="16" aria-hidden="true"></canvas>
+        <div>
+          <p class="save-lead">Rest here and say hi.</p>
+          <p class="save-sub">I'm open to internships, research roles, and interesting collaborations.</p>
+          <div class="save-actions">
+            <button class="btn btn-gold" id="copyEmail" data-email="ethan_xu@berkeley.edu">
+              <span id="emailLabel">ethan_xu@berkeley.edu</span>
+              <span class="copy-tag" id="copyTag">copy</span>
+            </button>
+            <a class="btn btn-paper" data-link="linkedin" href="https://www.linkedin.com/in/EthanXu07/" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a class="btn btn-paper" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
+            <a class="btn btn-tomato" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
+          </div>
+        </div>
+      </div>
+    </section>
 
   <footer class="credits">
     <p class="thanks">Thanks for playing</p>
