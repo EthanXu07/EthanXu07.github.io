@@ -55,15 +55,16 @@
         <p class="world-num">BONUS LEVEL</p>
         <h1 class="world-title">Career run</h1>
       </header>
-      <p class="section-lede">Run through my quest log from 2022 to today. Every platform is a job, every coin a skill. Reach the flag to find the Save Point.</p>
+      <p class="section-lede">Run through my quest log from 2022 to today. Every platform is a job and every coin a skill. Bump the <strong>?</strong> blocks for trophies, stomp the bugs, and reach the flag to find the Save Point.</p>
 
       <div class="game-shell px-box" id="gameShell">
         <canvas id="game" aria-label="Career run: a side-scrolling platform game" role="img"></canvas>
         <div class="game-hud" aria-hidden="true">
-          <span id="gameCoins">◉ 0</span>
+          <span class="hud-left"><span id="gameHearts" class="hearts-hud">♥♥♥</span> <span id="gameCoins">◉ 0</span></span>
           <span id="gameQuest">Press → to start</span>
-          <span id="gameTime">0.0s</span>
+          <span class="hud-right"><span id="gameScore">00000</span> <span id="gameTime">0.0s</span></span>
         </div>
+        <button class="game-mute" id="gameMute" aria-pressed="true" title="Sound (M)">♪ on</button>
         <div class="game-sign" id="gameSign" hidden></div>
         <div class="game-over" id="gameOver" hidden>
           <p class="world-num">LEVEL CLEAR</p>
@@ -79,8 +80,8 @@
           <button data-key="left">◀</button><button data-key="right">▶</button><button data-key="jump" class="jump">JUMP</button>
         </div>
       </div>
-      <p class="hint">Move: <kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> or <kbd>A</kbd> <kbd>D</kbd> · Jump: <kbd>Space</kbd> <kbd class="arrow">↑</kbd> <kbd>W</kbd> · Restart: <kbd>R</kbd> in the level · Touch: on-screen buttons</p>
-      <script type="application/json" id="levelData">[{"title":"Program Coordinator, Board Member & Instructor","org":"Appropriate Development Technology (ADTech) Inc.","when":"May 2022 – Jul 2026","skills":["Python","Teaching","Leadership"]},{"title":"Code Instructor","org":"Beaumont Code Wiz","when":"Jun 2024 – Feb 2025","skills":["Python","Java","Scratch","Teaching"]},{"title":"Software Engineering Intern","org":"IPMD Inc. · ASTAI Group","when":"Oct 2024 – Dec 2025","skills":["Python","TensorFlow · Keras","NLP · Sentiment","Time series · Forecasting","Backtesting","Web scraping"]},{"title":"Research Assistant, Dr. Melissa Baldo","org":"College of Business · Lamar University","when":"Apr 2025 – Sep 2025","skills":["Research writing","Tables & figures"]},{"title":"Lab Assistant, Dr. Christoph Eick","org":"Data Analysis & Intelligent Systems Lab · University of Houston","when":"Jun 2025 – Sep 2025","skills":["Computer vision","Geospatial data"]},{"title":"Undergraduate Researcher","org":"URAP · UC Berkeley","when":"Fall 2026 – Now","skills":["Python","Web scraping","REST APIs","Research writing"]},{"title":"Software Engineering Intern","org":"Coupang","when":"Sep 2026 – Now","skills":["Computer vision","LLMs"]},{"title":"Data Science Intern","org":"Climformatics","when":"Sep 2026 – Now","skills":["Time series · Forecasting"]}]</script>
+      <p class="hint">Move <kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> / <kbd>A</kbd> <kbd>D</kbd> · Jump <kbd>Space</kbd> / <kbd class="arrow">↑</kbd> / tap the game · Restart <kbd>R</kbd> · Sound <kbd>M</kbd>. Scoring: skill +100 · bug +200 · ? block +300, plus time and heart bonuses.</p>
+      <script type="application/json" id="levelData">{"quests":[{"title":"Program Coordinator, Board Member & Instructor","org":"Appropriate Development Technology (ADTech) Inc.","when":"May 2022 – Jul 2026","skills":["Python","Teaching","Leadership"]},{"title":"Code Instructor","org":"Beaumont Code Wiz","when":"Jun 2024 – Feb 2025","skills":["Python","Java","Scratch","Teaching"]},{"title":"Software Engineering Intern","org":"IPMD Inc. · ASTAI Group","when":"Oct 2024 – Dec 2025","skills":["Python","TensorFlow · Keras","NLP · Sentiment","Time series · Forecasting","Backtesting","Web scraping"]},{"title":"Research Assistant, Dr. Melissa Baldo","org":"College of Business · Lamar University","when":"Apr 2025 – Sep 2025","skills":["Research writing","Tables & figures"]},{"title":"Lab Assistant, Dr. Christoph Eick","org":"Data Analysis & Intelligent Systems Lab · University of Houston","when":"Jun 2025 – Sep 2025","skills":["Computer vision","Geospatial data"]},{"title":"Software Engineering Intern","org":"Coupang","when":"Sep 2026 – Now","skills":["Computer vision","LLMs"]},{"title":"Data Science Intern","org":"Climformatics","when":"Sep 2026 – Now","skills":["Time series · Forecasting"]}],"facts":["NeurIPS workshop paper","Regents' & Chancellor's Scholar","4.0 GPA at Berkeley","Taught on 3 continents","SENTINEL unlocked","Fintrax unlocked","AER Citation Tracker unlocked"]}</script>
     </section>
 
   </main>
