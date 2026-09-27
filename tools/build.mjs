@@ -151,9 +151,25 @@ ${b.skills.map((s) => {
 console.log('Building site:');
 const DESC = 'Ethan Xu: Computer Science at UC Berkeley. ML research, data pipelines, and projects.';
 
+// Title-screen explorer level: a warp pipe per page, "?" blocks with facts
+const homeLevel = {
+  pipes: [
+    { label: 'Quest log', href: '/quests/', desc: 'Internships, research and teaching' },
+    { label: 'Loot', href: '/loot/', desc: 'Projects, publications and awards' },
+    { label: 'Skill tree', href: '/skills/', desc: 'Every skill, and where I earned it' },
+    { label: 'Side quests', href: '/interests/', desc: 'Hiking, racket sports, soccer, swimming, eating' },
+    { label: 'Bonus level', href: '/play/', desc: 'A platformer through my career' },
+    { label: 'Guestbook', href: '/guestbook/', desc: 'Leave a note or an emoji' },
+  ],
+  facts: [
+    ...experience.filter((q) => q.status === 'active').map((q) => `Now: ${q.title} @ ${q.org.split(' · ')[0]}`),
+    ...trophies.map((t) => t.label),
+  ],
+};
 page({
   out: 'index.html', path: '/', page: 'home', sub: false, title: 'Ethan Xu', description: DESC,
-  content: src('pages/home-title.html') + src('pages/home-player.html') + src('pages/home-levels.html'),
+  content: fill(src('pages/home-title.html'), { homeLevel: inlineJson(homeLevel) }) + src('pages/home-player.html') + src('pages/home-levels.html'),
+  scripts: '  <script src="/home.js"></script>\n',
 });
 
 page({

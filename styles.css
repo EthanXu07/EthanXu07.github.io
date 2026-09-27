@@ -196,6 +196,8 @@ kbd {
 #scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; cursor: pointer; }
 .title-inner { position: relative; z-index: 1; width: min(100%, 40rem); text-align: center; pointer-events: none; }
 .title-inner a, .title-inner button, .dialog { pointer-events: auto; }
+.title-screen.playing .title-inner { pointer-events: none; }
+.title-screen.playing .title-inner a { pointer-events: auto; }
 
 .kicker {
   display: inline-block;
@@ -238,6 +240,48 @@ kbd {
 .title-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
 .hint { margin: 1.5rem 0 0; font-size: .8rem; color: var(--paper); text-shadow: 0 2px 0 var(--edge); }
 @media (hover: none) { .hint { display: none; } }
+
+/* ---------- Explorer mode (home.js): the card moves to the corner ---------- */
+#scene { touch-action: manipulation; }
+.title-screen.playing .title-inner {
+  position: absolute; z-index: 2;
+  top: calc(6.25rem + env(safe-area-inset-top, 0px)); left: clamp(1rem, 3vw, 2rem);
+  width: min(23rem, 44vw); text-align: left;
+}
+.title-screen.playing .kicker { margin-bottom: .5rem; font-size: .45rem; }
+.title-screen.playing .logo { font-size: clamp(1.6rem, 3.4vw, 2.4rem); text-shadow: 3px 0 0 var(--edge), -3px 0 0 var(--edge), 0 3px 0 var(--edge), 0 -3px 0 var(--edge), 0 6px 0 var(--tomato), 0 8px 0 var(--edge); }
+.title-screen.playing .dialog { margin: 1.5rem 0 0; padding: 1rem .9rem .8rem; }
+.title-screen.playing .dialog-text { min-height: 0; font-size: .88rem; line-height: 1.45; }
+.title-screen.playing .dialog-caret, .title-screen.playing .title-actions, .title-screen.playing .hint { display: none; }
+@media (max-width: 52rem) { .title-screen.playing .title-inner { top: calc(8.4rem + env(safe-area-inset-top, 0px)); } }
+@media (max-width: 40rem) {
+  .title-screen.playing .title-inner { width: min(16rem, 64vw); }
+  .title-screen.playing .dialog-text { font-size: .75rem; }
+  .title-screen.playing .dialog { padding: .8rem .7rem .6rem; }
+}
+
+.explore-prompt {
+  position: absolute; z-index: 3; right: clamp(1rem, 3vw, 2rem); top: calc(6.25rem + env(safe-area-inset-top, 0px));
+  width: min(17rem, 70vw); padding: .8rem 1rem;
+  background: var(--paper); color: var(--text-dark);
+  box-shadow: 0 0 0 3px var(--edge), 5px 5px 0 rgba(0, 0, 0, .35);
+}
+.explore-prompt .objectives-label { margin: 0 0 .3rem; }
+.explore-title { margin: 0; font: 700 1.25rem/1.15 var(--title); }
+.explore-desc { margin: .25rem 0 .7rem; font-size: .85rem; color: var(--text-dark-2); }
+@media (max-width: 52rem) { .explore-prompt { top: auto; bottom: 5.5rem; right: 50%; transform: translateX(50%); } }
+
+.explore-pad { z-index: 3; bottom: 2rem; }
+.title-screen:not(.playing) .explore-pad { display: none; }
+.explore-scroll {
+  display: none; margin-top: .9rem; padding: .35rem .6rem; width: fit-content;
+  font: .5rem var(--pixel); color: var(--paper); text-decoration: none;
+  background: rgba(15, 23, 20, .75); box-shadow: 0 0 0 2px var(--edge);
+}
+.explore-scroll:hover { color: var(--gold); }
+.title-screen.playing .explore-scroll { display: block; }
+/* Leave room for the level map on wide screens */
+@media (min-width: 80rem) { .title-screen.playing .title-inner { left: 5.5rem; } }
 
 .dirt {
   position: absolute; left: 0; right: 0; bottom: 0; height: 24px; z-index: 1;
