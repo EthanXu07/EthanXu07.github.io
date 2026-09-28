@@ -101,7 +101,7 @@ for (const q of experience) for (const id of q.skills) {
 }
 for (const p of projects) for (const id of p.skills) {
   if (!usedIn[id]) throw new Error(`projects.json "${p.id}" uses unknown skill "${id}"`);
-  usedIn[id].push({ label: p.title, sub: p.type, href: `/projects/#project-${p.id}`, kind: 'Project' });
+  usedIn[id].push({ label: p.title, sub: p.type.replace(/^Project · /, ""), href: `/projects/#project-${p.id}`, kind: 'Project' });
 }
 const usedBadge = (n) => (n ? `Used ×${n}` : 'On résumé');
 const skillName = (id) => skillIndex[id].name;

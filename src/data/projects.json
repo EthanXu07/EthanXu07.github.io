@@ -54,7 +54,7 @@
       "id": "aer-tracker",
       "icon": "≡",
       "color": "#8fb8c9",
-      "type": "Project · In progress",
+      "type": "Project · Data",
       "title": "AER Citation Tracker",
       "sub": "Python · Beautiful Soup · Crossref · OpenAlex",
       "desc": "Scrapes recent <em>American Economic Review</em> issues, looks up each article's DOI on Crossref and OpenAlex, and outputs a CSV ranked by citation count.",
