@@ -20,4 +20,4 @@ node tools/build.mjs
 
 Edit, rebuild, then commit the generated `index.html` files along with `src/`.
 
-The guestbook is a shared pixel wall (`pixelwall.js`). To make it shared, create a free [Supabase](https://supabase.com) project, run `supabase/pixel-wall.sql` in its SQL Editor, and paste the project URL + anon key into `site-config.js` → `pixelWall`. Until then it runs in "this browser only" preview mode.
+The guestbook is a shared 128×128 pixel wall (`pixelwall.js`): no cooldown, with a server-side cap of 600 pixels/minute per visitor to stop bots. To make it shared, create a free [Supabase](https://supabase.com) project, run `supabase/pixel-wall.sql` in its SQL Editor, and paste the project URL + anon key into `site-config.js` → `pixelWall`. Until then it runs in "this browser only" preview mode.

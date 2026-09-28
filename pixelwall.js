@@ -1,20 +1,22 @@
 // =====================================================================
-//  Guestbook pixel wall: a shared 64×64 r/place-style canvas.
-//  Anyone can paint one pixel every 5 seconds, no sign-in.
+//  Guestbook pixel wall: a shared 128×128 r/place-style canvas.
+//  Anyone can paint, no sign-in, no cooldown. Click or drag to draw;
+//  zoom, brush sizes and an eyedropper help with detail. Painted pixels
+//  are sent in small batches (a generous server-side cap stops bots).
 //  Shared mode needs Supabase keys in site-config.js (SITE.pixelWall) and
-//  supabase/pixel-wall.sql run once. Without them the wall still works,
-//  but saves only in this browser.
+//  supabase/pixel-wall.sql run once; otherwise it saves in this browser only.
 // =====================================================================
 (() => {
   const canvas = document.getElementById('wall');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const $id = (id) => document.getElementById(id);
+  const scroller = $id('wallScroll');
 
-  const SIZE = 64;
-  const CELL = 10;
-  const COOLDOWN_MS = 5000;
+  const SIZE = 128;
+  const CELL = 6;
   const POLL_MS = 3000;
+  const FLUSH_MS = 250;
   const PALETTE = [
     ['#f1e6cc', 'Parchment'], ['#ffffff', 'White'], ['#b9b39c', 'Stone'], ['#5e4b3c', 'Bark'],
     ['#2a1f1a', 'Ink'], ['#0f1714', 'Night'], ['#d4553a', 'Tomato'], ['#9c3423', 'Brick'],
@@ -29,16 +31,20 @@
 
   const grid = new Uint8Array(SIZE * SIZE);
   let selected = 6;
-  let cursor = { x: 32, y: 32 };
+  let brush = 1;
+  let tool = 'paint'; // paint | pick | pan
+  let zoom = 1;
+  let cursor = { x: 64, y: 64 };
   let hover = null;
   let lastSync = null;
-  let lastPlaced = 0;
-  try { lastPlaced = Number(localStorage.getItem('pixelWallLast')) || 0; } catch { /* storage blocked */ }
+  const pending = new Map(); // "x,y" -> color, waiting to be sent
+  let sending = false;
+  let myCount = 0;
 
   canvas.width = SIZE * CELL;
   canvas.height = SIZE * CELL;
 
-  // ---------- Palette ----------
+  // ---------- Controls ----------
   const paletteEl = $id('wallPalette');
   PALETTE.forEach(([hex, name], i) => {
     const b = document.createElement('button');
@@ -46,8 +52,7 @@
     b.style.setProperty('--c', hex);
     b.title = name;
     b.setAttribute('aria-label', name);
-    b.setAttribute('aria-pressed', String(i === selected));
-    b.addEventListener('click', () => selectColor(i));
+    b.addEventListener('click', () => { selectColor(i); if (tool === 'pick') setTool('paint'); });
     paletteEl.appendChild(b);
   });
   function selectColor(i) {
@@ -57,48 +62,74 @@
     $id('wallColorChip').style.background = PALETTE[i][0];
     render();
   }
+  function setGroup(attr, value) {
+    document.querySelectorAll(`[data-${attr}]`).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset[attr] === String(value))));
+  }
+  function setTool(t) {
+    tool = t;
+    setGroup('tool', t);
+    canvas.dataset.tool = t;
+  }
+  function setZoom(z) {
+    // Keep the center of the view steady while zooming
+    const cx = (scroller.scrollLeft + scroller.clientWidth / 2) / scroller.scrollWidth;
+    const cy = (scroller.scrollTop + scroller.clientHeight / 2) / scroller.scrollHeight;
+    zoom = z;
+    canvas.style.width = `${z * 100}%`;
+    setGroup('zoom', z);
+    scroller.scrollLeft = cx * scroller.scrollWidth - scroller.clientWidth / 2;
+    scroller.scrollTop = cy * scroller.scrollHeight - scroller.clientHeight / 2;
+    render();
+  }
+  document.querySelectorAll('[data-tool]').forEach((b) => b.addEventListener('click', () => setTool(b.dataset.tool)));
+  document.querySelectorAll('[data-brush]').forEach((b) => b.addEventListener('click', () => { brush = Number(b.dataset.brush); setGroup('brush', brush); render(); }));
+  document.querySelectorAll('[data-zoom]').forEach((b) => b.addEventListener('click', () => setZoom(Number(b.dataset.zoom))));
 
   // ---------- Rendering ----------
+  let raf = 0;
   function render() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; draw(); });
+  }
+  function draw() {
     for (let y = 0; y < SIZE; y++) {
       for (let x = 0; x < SIZE; x++) {
         ctx.fillStyle = PALETTE[grid[y * SIZE + x]][0];
         ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
       }
     }
-    // faint grid
-    ctx.fillStyle = 'rgba(15, 23, 20, 0.06)';
-    for (let i = 1; i < SIZE; i++) {
-      ctx.fillRect(i * CELL, 0, 1, canvas.height);
-      ctx.fillRect(0, i * CELL, canvas.width, 1);
+    if (zoom >= 2) { // grid lines only when zoomed in
+      ctx.fillStyle = 'rgba(15, 23, 20, 0.07)';
+      for (let i = 1; i < SIZE; i++) { ctx.fillRect(i * CELL, 0, 1, canvas.height); ctx.fillRect(0, i * CELL, canvas.width, 1); }
     }
-    // preview + outline where you'd paint
     const target = hover || cursor;
-    if (target) {
-      ctx.globalAlpha = 0.6;
-      ctx.fillStyle = PALETTE[selected][0];
-      ctx.fillRect(target.x * CELL, target.y * CELL, CELL, CELL);
+    if (target && tool !== 'pan') {
+      const cells = brushCells(target.x, target.y);
+      ctx.globalAlpha = 0.55;
+      ctx.fillStyle = tool === 'pick' ? '#ffffff' : PALETTE[selected][0];
+      for (const [x, y] of cells) ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
       ctx.globalAlpha = 1;
+      const [minX, minY] = cells[0];
+      const size = tool === 'pick' ? 1 : brush;
       ctx.strokeStyle = '#0f1714';
       ctx.lineWidth = 2;
-      ctx.strokeRect(target.x * CELL + 1, target.y * CELL + 1, CELL - 2, CELL - 2);
+      ctx.strokeRect(minX * CELL + 1, minY * CELL + 1, size * CELL - 2, size * CELL - 2);
     }
-    $id('wallCoords').textContent = `(${target.x}, ${target.y})`;
+    $id('wallCoords').textContent = target ? `(${target.x}, ${target.y})` : '';
     let painted = 0;
     for (const c of grid) if (c !== 0) painted++;
     $id('wallCount').textContent = painted.toLocaleString();
+    $id('wallMine').textContent = myCount.toLocaleString();
   }
 
-  // ---------- Cooldown ----------
-  const bar = $id('wallCooldownBar');
-  const cdText = $id('wallCooldownText');
-  function tickCooldown() {
-    const left = Math.max(0, COOLDOWN_MS - (Date.now() - lastPlaced));
-    bar.style.width = `${100 - (left / COOLDOWN_MS) * 100}%`;
-    cdText.textContent = left > 0 ? `Next pixel in ${(left / 1000).toFixed(1)}s` : 'Ready to paint!';
-    canvas.classList.toggle('cooling', left > 0);
+  function brushCells(cx, cy) {
+    const size = tool === 'pick' ? 1 : brush;
+    const x0 = Math.max(0, Math.min(SIZE - size, cx - Math.floor((size - 1) / 2)));
+    const y0 = Math.max(0, Math.min(SIZE - size, cy - Math.floor((size - 1) / 2)));
+    const out = [];
+    for (let y = y0; y < y0 + size; y++) for (let x = x0; x < x0 + size; x++) out.push([x, y]);
+    return out;
   }
-  setInterval(tickCooldown, 100);
 
   function message(text, kind = '') {
     const el = $id('wallMessage');
@@ -106,83 +137,147 @@
     el.dataset.kind = kind;
   }
 
-  // ---------- Placing ----------
-  async function place(x, y) {
-    if (Date.now() - lastPlaced < COOLDOWN_MS) { message('Hold on! One pixel every 5 seconds.', 'warn'); return; }
-    const i = y * SIZE + x;
-    const before = grid[i];
-    grid[i] = selected;
-    lastPlaced = Date.now();
-    try { localStorage.setItem('pixelWallLast', String(lastPlaced)); } catch { /* ignore */ }
+  // ---------- Painting ----------
+  function paintAt(cx, cy) {
+    for (const [x, y] of brushCells(cx, cy)) {
+      const i = y * SIZE + x;
+      if (grid[i] === selected && !pending.has(`${x},${y}`)) continue;
+      grid[i] = selected;
+      pending.set(`${x},${y}`, selected);
+      myCount++;
+    }
     render();
-    if (!shared) { saveLocal(); message(`Painted (${x}, ${y}).`, 'ok'); return; }
+  }
+  // Paint every cell along a drag, so fast strokes don't leave gaps
+  function paintLine(a, b) {
+    let { x: x0, y: y0 } = a;
+    const { x: x1, y: y1 } = b;
+    const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+    let err = dx + dy;
+    for (;;) {
+      paintAt(x0, y0);
+      if (x0 === x1 && y0 === y1) break;
+      const e2 = 2 * err;
+      if (e2 >= dy) { err += dy; x0 += sx; }
+      if (e2 <= dx) { err += dx; y0 += sy; }
+    }
+  }
+
+  async function flush() {
+    if (sending || pending.size === 0) return;
+    if (!shared) { pending.clear(); saveLocal(); return; }
+    sending = true;
+    const batch = [...pending.entries()].slice(0, 500);
+    batch.forEach(([k]) => pending.delete(k));
+    const items = batch.map(([k, c]) => { const [x, y] = k.split(',').map(Number); return [x, y, c]; });
     try {
-      const res = await fetch(`${api}/rpc/place_pixel`, {
+      const res = await fetch(`${api}/rpc/place_pixels`, {
         method: 'POST',
         headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ px: x, py: y, pc: selected }),
+        body: JSON.stringify({ items }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.message || `HTTP ${res.status}`);
       }
-      message(`Painted (${x}, ${y}). Everyone can see it now.`, 'ok');
+      message('Saved. Everyone can see your pixels.', 'ok');
     } catch (err) {
-      grid[i] = before;
-      render();
-      message(String(err.message).includes('cooldown') ? 'Hold on! One pixel every 5 seconds.' : 'Could not save that pixel. Try again in a moment.', 'warn');
+      // Put them back so they're retried (unless the server rejected them outright)
+      if (String(err.message).includes('slow_down')) {
+        message('Whoa, that\'s a lot of pixels! Take a breather for a few seconds.', 'warn');
+        batch.forEach(([k, c]) => pending.set(k, c));
+      } else if (String(err.message).includes('bad_pixel')) {
+        message('Something went wrong with those pixels.', 'warn');
+      } else {
+        message('Connection hiccup. Retrying…', 'warn');
+        batch.forEach(([k, c]) => pending.set(k, c));
+      }
+    } finally {
+      sending = false;
     }
   }
+  setInterval(flush, FLUSH_MS);
+  window.addEventListener('pagehide', flush);
 
-  // ---------- Input: mouse / touch / keyboard ----------
+  // ---------- Input ----------
   function cellFromEvent(e) {
     const r = canvas.getBoundingClientRect();
     const x = Math.floor(((e.clientX - r.left) / r.width) * SIZE);
     const y = Math.floor(((e.clientY - r.top) / r.height) * SIZE);
     return x >= 0 && y >= 0 && x < SIZE && y < SIZE ? { x, y } : null;
   }
-  canvas.addEventListener('pointermove', (e) => { hover = cellFromEvent(e); render(); });
-  canvas.addEventListener('pointerleave', () => { hover = null; render(); });
-  canvas.addEventListener('click', (e) => {
+  let drawing = false, last = null, panStart = null;
+  canvas.addEventListener('pointerdown', (e) => {
     const c = cellFromEvent(e);
+    if (tool === 'pan' || e.button === 1) {
+      panStart = { x: e.clientX, y: e.clientY, left: scroller.scrollLeft, top: scroller.scrollTop };
+      canvas.setPointerCapture(e.pointerId);
+      return;
+    }
     if (!c) return;
+    if (tool === 'pick' || e.altKey) { selectColor(grid[c.y * SIZE + c.x]); setTool('paint'); return; }
+    e.preventDefault();
+    drawing = true;
+    last = c;
     cursor = c;
-    place(c.x, c.y);
+    canvas.setPointerCapture(e.pointerId);
+    paintAt(c.x, c.y);
   });
+  canvas.addEventListener('pointermove', (e) => {
+    if (panStart) {
+      scroller.scrollLeft = panStart.left - (e.clientX - panStart.x);
+      scroller.scrollTop = panStart.top - (e.clientY - panStart.y);
+      return;
+    }
+    const c = cellFromEvent(e);
+    hover = c;
+    if (drawing && c && last && (c.x !== last.x || c.y !== last.y)) { paintLine(last, c); last = c; }
+    render();
+  });
+  const stop = () => { drawing = false; last = null; panStart = null; };
+  canvas.addEventListener('pointerup', stop);
+  canvas.addEventListener('pointercancel', stop);
+  canvas.addEventListener('pointerleave', () => { hover = null; render(); });
   canvas.addEventListener('keydown', (e) => {
     const moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
     if (moves[e.key]) {
       e.preventDefault();
       hover = null;
       cursor = { x: Math.max(0, Math.min(SIZE - 1, cursor.x + moves[e.key][0])), y: Math.max(0, Math.min(SIZE - 1, cursor.y + moves[e.key][1])) };
+      if (e.shiftKey) paintAt(cursor.x, cursor.y); // Shift+arrows draws a line
       render();
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      place(cursor.x, cursor.y);
+      paintAt(cursor.x, cursor.y);
     }
   });
 
   // ---------- Storage: shared (Supabase) or this browser only ----------
   function saveLocal() {
-    try { localStorage.setItem('pixelWallLocal', btoa(String.fromCharCode(...grid))); } catch { /* ignore */ }
+    try {
+      let s = '';
+      for (let i = 0; i < grid.length; i += 2) s += String.fromCharCode((grid[i] << 4) | grid[i + 1]);
+      localStorage.setItem('pixelWall128', btoa(s));
+    } catch { /* storage blocked or full */ }
   }
   function loadLocal() {
     try {
-      const raw = localStorage.getItem('pixelWallLocal');
-      if (raw) atob(raw).split('').forEach((ch, i) => { grid[i] = ch.charCodeAt(0) & 15; });
+      const raw = localStorage.getItem('pixelWall128');
+      if (!raw) return;
+      const s = atob(raw);
+      for (let i = 0; i < s.length; i++) { const b = s.charCodeAt(i); grid[i * 2] = b >> 4; grid[i * 2 + 1] = b & 15; }
     } catch { /* ignore */ }
   }
 
   function apply(rows) {
     for (const r of rows) {
-      grid[r.y * SIZE + r.x] = r.color;
+      const k = `${r.x},${r.y}`;
+      if (!pending.has(k)) grid[r.y * SIZE + r.x] = r.color; // don't clobber strokes still being sent
       if (!lastSync || r.updated_at > lastSync) lastSync = r.updated_at;
     }
   }
-
   async function loadShared() {
-    // PostgREST caps rows per request, so page through the wall
-    for (let offset = 0; ; offset += 1000) {
+    for (let offset = 0; ; offset += 1000) { // PostgREST caps rows per request
       const res = await fetch(`${api}/pixels?select=x,y,color,updated_at&order=updated_at.asc&limit=1000&offset=${offset}`, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const rows = await res.json();
@@ -190,18 +285,14 @@
       if (rows.length < 1000) break;
     }
   }
-
   async function poll() {
     try {
       const since = lastSync ? `&updated_at=gt.${encodeURIComponent(lastSync)}` : '';
-      const res = await fetch(`${api}/pixels?select=x,y,color,updated_at&order=updated_at.asc${since}`, { headers });
-      if (res.ok) {
-        const rows = await res.json();
-        if (rows.length) { apply(rows); render(); }
-        $id('wallLive').dataset.state = 'live';
-      } else {
-        $id('wallLive').dataset.state = 'error';
-      }
+      const res = await fetch(`${api}/pixels?select=x,y,color,updated_at&order=updated_at.asc&limit=5000${since}`, { headers });
+      if (!res.ok) throw new Error();
+      const rows = await res.json();
+      if (rows.length) { apply(rows); render(); }
+      $id('wallLive').dataset.state = 'live';
     } catch {
       $id('wallLive').dataset.state = 'error';
     }
@@ -209,6 +300,9 @@
 
   // ---------- Start ----------
   selectColor(selected);
+  setTool('paint');
+  setGroup('brush', brush);
+  setGroup('zoom', zoom);
   if (shared) {
     $id('wallMode').textContent = 'Live · shared with everyone';
     loadShared()
@@ -221,5 +315,7 @@
     loadLocal();
     render();
   }
-  tickCooldown();
+
+  // Test hook: ?debug exposes state for automated checks
+  if (new URLSearchParams(location.search).has('debug')) window.__wall = () => ({ grid, pending, myCount, SIZE });
 })();

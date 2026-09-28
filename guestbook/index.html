@@ -58,11 +58,37 @@
         <p class="world-num">GUESTBOOK</p>
         <h1 class="world-title">The pixel wall</h1>
       </header>
-      <p class="section-lede">Leave your mark: a shared 64×64 canvas anyone can paint on. Pick a color and click a square. One pixel every 5 seconds, no sign-in.</p>
+      <p class="section-lede">Leave your mark on a shared 128×128 canvas. Pick a color, then click or drag to paint. No sign-in, no waiting.</p>
+
+      <div class="wall-warning" role="note">
+        <span class="wall-warning-icon" aria-hidden="true">!</span>
+        <p><strong>Please be kind.</strong> Don't paint over other people's drawings. Find an empty spot, add to the wall, and leave everyone else's art the way you found it. Thanks!</p>
+      </div>
 
       <div class="wall-layout">
-        <div class="wall-frame px-box">
-          <canvas id="wall" tabindex="0" aria-label="Shared pixel wall. Use arrow keys to move and Enter to paint."></canvas>
+        <div class="wall-main">
+          <div class="wall-toolbar" role="toolbar" aria-label="Painting tools">
+            <div class="tool-group" role="group" aria-label="Tool">
+              <button class="tool-btn" data-tool="paint" title="Paint (click or drag)">Paint</button>
+              <button class="tool-btn" data-tool="pick" title="Pick a color from the wall (or Alt+click)">Pick</button>
+              <button class="tool-btn" data-tool="pan" title="Move around when zoomed in">Move</button>
+            </div>
+            <div class="tool-group" role="group" aria-label="Brush size">
+              <button class="tool-btn" data-brush="1" title="1 pixel">1px</button>
+              <button class="tool-btn" data-brush="2" title="2×2 pixels">2px</button>
+              <button class="tool-btn" data-brush="4" title="4×4 pixels">4px</button>
+            </div>
+            <div class="tool-group" role="group" aria-label="Zoom">
+              <button class="tool-btn" data-zoom="1">1×</button>
+              <button class="tool-btn" data-zoom="2">2×</button>
+              <button class="tool-btn" data-zoom="4">4×</button>
+            </div>
+          </div>
+          <div class="wall-frame px-box">
+            <div class="wall-scroll" id="wallScroll">
+              <canvas id="wall" tabindex="0" aria-label="Shared pixel wall. Arrow keys move, Enter paints, Shift+arrows draws."></canvas>
+            </div>
+          </div>
         </div>
 
         <aside class="wall-panel px-box paper">
@@ -71,17 +97,13 @@
           <p class="objectives-label">Pick a color</p>
           <div class="wall-palette" id="wallPalette" role="group" aria-label="Colors"></div>
           <p class="wall-selected"><span class="wall-chip" id="wallColorChip"></span> <strong id="wallColorName"></strong> <span class="wall-coords" id="wallCoords"></span></p>
-
-          <p class="objectives-label">Cooldown</p>
-          <div class="wall-cooldown"><div id="wallCooldownBar"></div></div>
-          <p class="wall-cd-text" id="wallCooldownText">Ready to paint!</p>
           <p class="wall-message" id="wallMessage" aria-live="polite"></p>
 
           <dl class="wall-stats">
-            <div><dt>Pixels painted</dt><dd id="wallCount">0</dd></div>
-            <div><dt>Canvas</dt><dd>64 × 64</dd></div>
+            <div><dt>Pixels on the wall</dt><dd id="wallCount">0</dd></div>
+            <div><dt>You painted</dt><dd id="wallMine">0</dd></div>
           </dl>
-          <p class="wall-help">Keyboard: focus the wall, move with <kbd class="arrow">←</kbd><kbd class="arrow">↑</kbd><kbd class="arrow">→</kbd><kbd class="arrow">↓</kbd>, paint with <kbd>Enter</kbd>.</p>
+          <p class="wall-help">Tips: drag to draw lines · <kbd>Alt</kbd>+click picks a color · zoom in for detail. Keyboard: arrows move, <kbd>Enter</kbd> paints, <kbd>Shift</kbd>+arrows draws.</p>
         </aside>
       </div>
     </section>
