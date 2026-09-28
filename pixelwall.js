@@ -32,7 +32,8 @@
   const grid = new Uint8Array(SIZE * SIZE);
   let selected = 6;
   let brush = 1;
-  let tool = 'paint'; // paint | pick | pan
+  let tool = 'paint'; // paint | erase | pick | pan
+  const ERASE = 0; // erasing paints the blank parchment color
   let zoom = 1;
   let cursor = { x: 64, y: 64 };
   let hover = null;
@@ -52,7 +53,7 @@
     b.style.setProperty('--c', hex);
     b.title = name;
     b.setAttribute('aria-label', name);
-    b.addEventListener('click', () => { selectColor(i); if (tool === 'pick') setTool('paint'); });
+    b.addEventListener('click', () => { selectColor(i); if (tool === 'pick' || tool === 'erase') setTool('paint'); });
     paletteEl.appendChild(b);
   });
   function selectColor(i) {
@@ -106,14 +107,16 @@
     if (target && tool !== 'pan') {
       const cells = brushCells(target.x, target.y);
       ctx.globalAlpha = 0.55;
-      ctx.fillStyle = tool === 'pick' ? '#ffffff' : PALETTE[selected][0];
+      ctx.fillStyle = tool === 'pick' ? '#ffffff' : tool === 'erase' ? PALETTE[ERASE][0] : PALETTE[selected][0];
       for (const [x, y] of cells) ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
       ctx.globalAlpha = 1;
       const [minX, minY] = cells[0];
       const size = tool === 'pick' ? 1 : brush;
-      ctx.strokeStyle = '#0f1714';
+      ctx.strokeStyle = tool === 'erase' ? '#d4553a' : '#0f1714';
       ctx.lineWidth = 2;
+      if (tool === 'erase') ctx.setLineDash([3, 2]);
       ctx.strokeRect(minX * CELL + 1, minY * CELL + 1, size * CELL - 2, size * CELL - 2);
+      ctx.setLineDash([]);
     }
     $id('wallCoords').textContent = target ? `(${target.x}, ${target.y})` : '';
     let painted = 0;
@@ -139,12 +142,13 @@
 
   // ---------- Painting ----------
   function paintAt(cx, cy) {
+    const color = tool === 'erase' ? ERASE : selected;
     for (const [x, y] of brushCells(cx, cy)) {
       const i = y * SIZE + x;
-      if (grid[i] === selected && !pending.has(`${x},${y}`)) continue;
-      grid[i] = selected;
-      pending.set(`${x},${y}`, selected);
-      myCount++;
+      if (grid[i] === color && !pending.has(`${x},${y}`)) continue;
+      grid[i] = color;
+      pending.set(`${x},${y}`, color);
+      if (color !== ERASE) myCount++;
     }
     render();
   }
@@ -249,6 +253,12 @@
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       paintAt(cursor.x, cursor.y);
+    }
+  });
+  // E toggles the eraser anywhere on the page (unless typing)
+  window.addEventListener('keydown', (e) => {
+    if ((e.key === 'e' || e.key === 'E') && !e.metaKey && !e.ctrlKey && !e.altKey && !e.target.closest?.('input, textarea')) {
+      setTool(tool === 'erase' ? 'paint' : 'erase');
     }
   });
 

@@ -630,6 +630,8 @@ main.subpage { padding-top: 5rem; }
 .wall-scroll { overflow: auto; max-height: min(80vh, 52rem); aspect-ratio: 1; overscroll-behavior: contain; }
 #wall { display: block; width: 100%; max-width: none; aspect-ratio: 1; height: auto; image-rendering: pixelated; cursor: crosshair; touch-action: none; background: var(--paper); }
 #wall[data-tool="pick"] { cursor: copy; }
+#wall[data-tool="erase"] { cursor: cell; }
+.tool-btn[data-tool="erase"][aria-pressed="true"] { background: var(--tomato); color: var(--paper); }
 #wall[data-tool="pan"] { cursor: grab; }
 #wall:focus-visible { outline: 3px dashed var(--gold); outline-offset: 4px; }
 .wall-panel { padding: 1.1rem 1.2rem; position: sticky; top: 6.5rem; }
