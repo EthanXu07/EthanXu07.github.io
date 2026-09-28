@@ -158,7 +158,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 })();
 
 // =====================================================================
-//  Quest filter
+//  Experience / side-quest filters
 // =====================================================================
 $$('.chip').forEach((chip) => {
   chip.addEventListener('click', () => {
@@ -185,8 +185,8 @@ $$('.chip').forEach((chip) => {
     $('#skillName').textContent = s.name;
     $('#skillLevel').textContent = `${s.branch} · Level ${s.level} / 5 ${'■'.repeat(s.level)}${'□'.repeat(5 - s.level)}`;
     $('#skillHint').textContent = s.used.length
-      ? `Used in ${s.used.length} ${s.used.length === 1 ? 'quest or project' : 'quests and projects'}:`
-      : 'Not used on a quest yet.';
+      ? `Used in ${s.used.length} ${s.used.length === 1 ? 'role or project' : 'roles and projects'}:`
+      : 'Not used in a role or project yet.';
     const list = $('#skillUsed');
     list.replaceChildren(...s.used.map((u) => {
       const li = document.createElement('li');

@@ -4,8 +4,8 @@
 //
 //   src/layout.html           shared nav, footer, résumé pop-up (game pages)
 //   src/pages/*.html          page bodies
-//   src/data/experience.json  quests (jobs + research)   ┐ one source of truth for the
-//   src/data/projects.json    loot (projects + trophies) │ quest log, loot, skill tree,
+//   src/data/experience.json  experience (jobs + research) ┐ one source of truth for
+//   src/data/projects.json    projects + trophies          │ experience, projects and the skill tree
 //   src/data/skills.json      skill tree branches        │
 //   src/interests.json        side quests                ┘
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -35,8 +35,8 @@ const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 // Keys 1–6 follow this order. Contact is the Save Point at the bottom of every page.
 const WORLDS = [
   { key: 'home', label: 'Home', href: '/' },
-  { key: 'quests', label: 'Quests', href: '/quests/' },
-  { key: 'loot', label: 'Loot', href: '/loot/' },
+  { key: 'experience', label: 'Experience', href: '/experience/' },
+  { key: 'projects', label: 'Projects', href: '/projects/' },
   { key: 'skills', label: 'Skills', href: '/skills/' },
   { key: 'interests', label: 'Interests', href: '/interests/' },
   { key: 'contact', label: 'Contact', href: '#contact' },
@@ -45,8 +45,8 @@ const WORLDS = [
 // 10×10 pixel icons for the nav ('#' = filled). Rendered as crisp SVG in currentColor.
 const ICONS = {
   home: ['....##....', '...####...', '..######..', '.########.', '##########', '.########.', '.###..###.', '.##....##.', '.##....##.', '.##....##.'],
-  quests: ['.########.', '##......##', '.#.####.#.', '.#......#.', '.#.####.#.', '.#......#.', '.#.###..#.', '.#......#.', '##......##', '.########.'],
-  loot: ['..........', '.########.', '#........#', '#........#', '##########', '#...##...#', '#...##...#', '#........#', '##########', '..........'],
+  experience: ['.########.', '##......##', '.#.####.#.', '.#......#.', '.#.####.#.', '.#......#.', '.#.###..#.', '.#......#.', '##......##', '.########.'],
+  projects: ['..........', '.########.', '#........#', '#........#', '##########', '#...##...#', '#...##...#', '#........#', '##########', '..........'],
   skills: ['....##....', '....##....', '...####...', '##########', '.########.', '..######..', '..######..', '.###..###.', '.##....##.', '##......##'],
   interests: ['..........', '.##....##.', '####..####', '##########', '##########', '.########.', '..######..', '...####...', '....##....', '..........'],
   contact: ['..........', '##########', '##......##', '#.#....#.#', '#..#..#..#', '#...##...#', '#........#', '#........#', '##########', '..........'],
@@ -97,17 +97,17 @@ for (const b of branches) for (const s of b.skills) skillIndex[s.id] = { ...s, b
 const usedIn = Object.fromEntries(Object.keys(skillIndex).map((id) => [id, []]));
 for (const q of experience) for (const id of q.skills) {
   if (!usedIn[id]) throw new Error(`experience.json "${q.id}" uses unknown skill "${id}"`);
-  usedIn[id].push({ label: q.title, sub: `${q.org} · ${q.when}`, href: `/quests/#quest-${q.id}`, kind: 'Quest' });
+  usedIn[id].push({ label: q.title, sub: `${q.org} · ${q.when}`, href: `/experience/#exp-${q.id}`, kind: 'Experience' });
 }
 for (const p of projects) for (const id of p.skills) {
   if (!usedIn[id]) throw new Error(`projects.json "${p.id}" uses unknown skill "${id}"`);
-  usedIn[id].push({ label: p.title, sub: p.type, href: `/loot/#loot-${p.id}`, kind: 'Loot' });
+  usedIn[id].push({ label: p.title, sub: p.type, href: `/projects/#project-${p.id}`, kind: 'Project' });
 }
 const level = (id) => Math.min(5, usedIn[id].length);
 const skillName = (id) => skillIndex[id].name;
 
 // ---------------------------------------------------------------- Renderers
-const renderQuest = (q) => `        <li class="quest px-box paper" id="quest-${q.id}" data-status="${q.status}">
+const renderQuest = (q) => `        <li class="quest px-box paper" id="exp-${q.id}" data-status="${q.status}">
           <div class="quest-top">
             ${q.status === 'active' ? '<span class="badge badge-active">● Active</span>' : '<span class="badge badge-done">★ Complete</span>'}
             <span class="quest-when">${esc(q.when)}</span>
@@ -120,7 +120,7 @@ ${q.bullets.map((b) => `            <li>${b}</li>`).join('\n')}
           <p class="reward"><span>Rewards</span> ${esc(q.rewards)}</p>
         </li>`;
 
-const renderProject = (p) => `        <article class="item px-box" id="loot-${p.id}">
+const renderProject = (p) => `        <article class="item px-box" id="project-${p.id}">
           <div class="item-icon" aria-hidden="true" style="--c:${p.color}">${p.icon}</div>
           <p class="item-type">${esc(p.type)}</p>
           <h3>${esc(p.title)}</h3>
@@ -158,13 +158,13 @@ page({
 });
 
 page({
-  out: 'quests/index.html', path: '/quests/', page: 'quests', title: 'Quest log · Ethan Xu', description: 'Experience and research: Ethan Xu.',
-  content: fill(src('pages/quests.html'), { quests: experience.map(renderQuest).join('\n\n') }),
+  out: 'experience/index.html', path: '/experience/', page: 'experience', title: 'Experience · Ethan Xu', description: 'Experience and research: Ethan Xu.',
+  content: fill(src('pages/experience.html'), { experience: experience.map(renderQuest).join('\n\n') }),
 });
 
 page({
-  out: 'loot/index.html', path: '/loot/', page: 'loot', title: 'Loot & trophies · Ethan Xu', description: 'Projects, publications and awards: Ethan Xu.',
-  content: fill(src('pages/loot.html'), {
+  out: 'projects/index.html', path: '/projects/', page: 'projects', title: 'Projects · Ethan Xu', description: 'Projects, publications and awards: Ethan Xu.',
+  content: fill(src('pages/projects.html'), {
     projects: projects.map(renderProject).join('\n\n'),
     trophies: trophies.map((t) => `        <li><span class="trophy" aria-hidden="true">${t.icon}</span>${esc(t.label)}</li>`).join('\n'),
   }),
@@ -230,6 +230,16 @@ interests.forEach((it, i) => {
     }),
   });
 });
+
+// Old URLs → new ones (old #quest-x / #loot-x anchors map to #exp-x / #project-x)
+const redirect = (from, to, anchorFrom, anchorTo) => write(`${from}/index.html`, `<!doctype html><meta charset="utf-8"><title>Moved · Ethan Xu</title>
+<link rel="canonical" href="https://ethanxu.dev/${to}/">
+<script>location.replace('/${to}/' + location.hash.replace('#${anchorFrom}-', '#${anchorTo}-'));</script>
+<noscript><meta http-equiv="refresh" content="0; url=/${to}/"></noscript>
+<a href="/${to}/">This page moved to /${to}/</a>
+`);
+redirect('quests', 'experience', 'quest', 'exp');
+redirect('loot', 'projects', 'loot', 'project');
 
 // Old /contact/ URL → the Save Point section
 write('contact/index.html', `<!doctype html><meta charset="utf-8"><title>Contact · Ethan Xu</title>
