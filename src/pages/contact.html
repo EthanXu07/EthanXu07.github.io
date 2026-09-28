@@ -1,4 +1,5 @@
     <!-- ============ SAVE POINT (contact): on every page, above the credits ============ -->
+    <!-- The {{logo_*}} pixel logos are defined in tools/build.mjs (LOGOS). Links come from site-config.js. -->
     <section id="contact" class="world save" data-checkpoint="Save point">
       <header class="world-head">
         <p class="world-num">SAVE POINT</p>
@@ -6,20 +7,48 @@
       </header>
 
       <div class="save-box px-box">
-        <canvas id="fire" width="16" height="16" aria-hidden="true"></canvas>
-        <div>
+        <div class="save-intro">
+          <canvas id="fire" width="72" height="44" role="img" aria-label="Pixel art of me roasting a marshmallow over a campfire next to a tent, under the stars"></canvas>
           <p class="save-lead">Rest here and say hi.</p>
           <p class="save-sub">I'm open to internships, research roles, and interesting collaborations.</p>
-          <div class="save-actions">
-            <button class="btn btn-gold" id="copyEmail" data-email="ethan_xu@berkeley.edu">
-              <span id="emailLabel">ethan_xu@berkeley.edu</span>
-              <span class="copy-tag" id="copyTag">copy</span>
-            </button>
-            <a class="btn btn-paper" data-link="linkedin" href="https://www.linkedin.com/in/EthanXu07/" target="_blank" rel="noopener">LinkedIn ↗</a>
-            <a class="btn btn-paper" data-link="instagram" href="https://www.instagram.com/" target="_blank" rel="noopener" hidden>Instagram ↗</a>
-            <a class="btn btn-paper" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
-            <a class="btn btn-tomato" data-link="resume" href="/resume/">Resume <span class="tri" aria-hidden="true"></span></a>
-          </div>
         </div>
+
+        <ul class="contact-list">
+          <li>
+            <button class="contact-row" id="copyEmail" data-email="ethan_xu@berkeley.edu">
+              <span class="contact-tile">{{logo_email}}</span>
+              <span class="contact-text"><strong>Email</strong><small id="emailLabel">ethan_xu@<wbr>berkeley.edu</small></span>
+              <span class="contact-go" id="copyTag">Copy</span>
+            </button>
+          </li>
+          <li>
+            <a class="contact-row" data-link="linkedin" href="https://www.linkedin.com/in/EthanXu07/" target="_blank" rel="noopener">
+              <span class="contact-tile">{{logo_linkedin}}</span>
+              <span class="contact-text"><strong>LinkedIn</strong><small data-handle="linkedin">in/EthanXu07</small></span>
+              <span class="contact-go" aria-hidden="true">Open</span>
+            </a>
+          </li>
+          <li hidden>
+            <a class="contact-row" data-link="instagram" href="https://www.instagram.com/" target="_blank" rel="noopener">
+              <span class="contact-tile">{{logo_instagram}}</span>
+              <span class="contact-text"><strong>Instagram</strong><small data-handle="instagram"></small></span>
+              <span class="contact-go" aria-hidden="true">Open</span>
+            </a>
+          </li>
+          <li>
+            <a class="contact-row" data-link="github" href="https://github.com/EthanXu07" target="_blank" rel="noopener">
+              <span class="contact-tile">{{logo_github}}</span>
+              <span class="contact-text"><strong>GitHub</strong><small data-handle="github">EthanXu07</small></span>
+              <span class="contact-go" aria-hidden="true">Open</span>
+            </a>
+          </li>
+          <li>
+            <a class="contact-row" data-link="resume" href="/resume/">
+              <span class="contact-tile">{{logo_resume}}</span>
+              <span class="contact-text"><strong>Résumé</strong><small>Preview, then download</small></span>
+              <span class="contact-go" aria-hidden="true">View</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </section>

@@ -66,6 +66,54 @@ const pixelIcon = (rows) => {
   return `<svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
 };
 
+
+// ---------------------------------------------------------------- Contact logos
+// 16×16 pixel-art app logos. Each letter maps to a colour; a function colour
+// is evaluated per pixel (used for Instagram's gradient).
+const igGradient = (x, y) => ['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5'][Math.min(4, Math.floor((x - y + 15) / 6.2))];
+const LOGOS = {
+  email: { label: 'Email', pal: { D: '#d4553a', P: '#fffaf0' }, rows: [
+    '................', '................', 'DDDDDDDDDDDDDDDD', 'DDPPPPPPPPPPPPDD', 'DPDPPPPPPPPPPDPD', 'DPPDPPPPPPPPDPPD',
+    'DPPPDPPPPPPDPPPD', 'DPPPPDPPPPDPPPPD', 'DPPPPPDDDDPPPPPD', 'DPPPPPPPPPPPPPPD', 'DPPPPPPPPPPPPPPD', 'DPPPPPPPPPPPPPPD',
+    'DPPPPPPPPPPPPPPD', 'DDDDDDDDDDDDDDDD', '................', '................'] },
+  linkedin: { label: 'LinkedIn', pal: { B: '#0a66c2', W: '#ffffff' }, rows: [
+    '.BBBBBBBBBBBBBB.', 'BBBBBBBBBBBBBBBB', 'BBBBBBBBBBBBBBBB', 'BBBWWBBBBBBBBBBB', 'BBBWWBBBBBBBBBBB', 'BBBBBBBBBBBBBBBB',
+    'BBBWWBBWWBWWWBBB', 'BBBWWBBWWWWWWWBB', 'BBBWWBBWWWBBWWBB', 'BBBWWBBWWBBBWWBB', 'BBBWWBBWWBBBWWBB', 'BBBWWBBWWBBBWWBB',
+    'BBBWWBBWWBBBWWBB', 'BBBBBBBBBBBBBBBB', 'BBBBBBBBBBBBBBBB', '.BBBBBBBBBBBBBB.'] },
+  instagram: { label: 'Instagram', pal: { G: igGradient, W: '#ffffff' }, rows: [
+    '..GGGGGGGGGGGG..', '.GGGGGGGGGGGGGG.', 'GGGWWWWWWWWWWGGG', 'GGWGGGGGGGGGGWGG', 'GGWGGGGGGGGWGWGG', 'GGWGGGGWWGGGGWGG',
+    'GGWGGGWGGWGGGWGG', 'GGWGGWGGGGWGGWGG', 'GGWGGWGGGGWGGWGG', 'GGWGGGWGGWGGGWGG', 'GGWGGGGWWGGGGWGG', 'GGWGGGGGGGGGGWGG',
+    'GGWGGGGGGGGGGWGG', 'GGGWWWWWWWWWWGGG', '.GGGGGGGGGGGGGG.', '..GGGGGGGGGGGG..'] },
+  github: { label: 'GitHub', pal: { K: '#181717', W: '#ffffff' }, rows: [
+    '.....KKKKKK.....', '...KKKKKKKKKK...', '..KKWKKKKKKWKK..', '.KKKWWKKKKWWKKK.', '.KKKWWWWWWWWKKK.', 'KKKWWWWWWWWWWKKK',
+    'KKKWWWWWWWWWWKKK', 'KKKWWWWWWWWWWKKK', 'KKKWWWWWWWWWWKKK', 'KKKKWWWWWWWWKKKK', '.KKKKKWWWWKKKKK.', '.KWKKKWWWWKKKKK.',
+    '..KWWWWWWWKKKK..', '...KKKWWWWKKK...', '.....KWWWWK.....', '.....KKKKKK.....'] },
+  resume: { label: 'Résumé', pal: { D: '#0f1714', P: '#fffaf0', L: '#d4553a' }, rows: [
+    '................', '..DDDDDDDDD.....', '..DPPPPPPPDD....', '..DPPPPPPPDPD...', '..DPPPPPPPDDDD..', '..DPPPPPPPPPPD..',
+    '..DPLLLLLLLPPD..', '..DPPPPPPPPPPD..', '..DPLLLLLLLLPD..', '..DPPPPPPPPPPD..', '..DPLLLLLLLLPD..', '..DPPPPPPPPPPD..',
+    '..DPLLLLLPPPPD..', '..DPPPPPPPPPPD..', '..DDDDDDDDDDDD..', '................'] },
+};
+for (const [k, { rows }] of Object.entries(LOGOS)) {
+  if (rows.length !== 16 || rows.some((r) => r.length !== 16)) throw new Error(`logo "${k}" must be 16×16`);
+}
+const logoSvg = (key) => {
+  const { pal, rows } = LOGOS[key];
+  let rects = '';
+  rows.forEach((row, y) => {
+    for (let x = 0; x < row.length; x++) {
+      const ch = row[x];
+      if (ch === '.') continue;
+      const colour = (c, cx) => (typeof pal[c] === 'function' ? pal[c](cx, y) : pal[c]);
+      let w = 1;
+      while (row[x + w] === ch && colour(ch, x + w) === colour(ch, x)) w++;
+      rects += `<rect x="${x}" y="${y}" width="${w}" height="1" fill="${colour(ch, x)}"/>`;
+      x += w - 1;
+    }
+  });
+  return `<svg class="contact-logo" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${rects}</svg>`;
+};
+const contactHtml = fill(src('pages/contact.html'), Object.fromEntries(Object.keys(LOGOS).map((k) => [`logo_${k}`, logoSvg(k)])));
+
 const nav = (active) => WORLDS.map((w) => {
   const current = w.key === active;
   return `        <a href="${w.href}" title="${w.label}"${current ? ' class="active" aria-current="page"' : ''}>${pixelIcon(ICONS[w.key])}<span class="nav-label">${w.label}</span></a>`;
@@ -77,7 +125,7 @@ function page({ out, path, page, title, description, content, sub = true, script
     nav: nav(page),
     mainClass: sub ? 'subpage' : 'home',
     content,
-    contact: src('pages/contact.html'),
+    contact: contactHtml,
     resumeModal: src('pages/_resume-modal.html'),
     scripts,
   });
