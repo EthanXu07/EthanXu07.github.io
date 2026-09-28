@@ -7,10 +7,11 @@ const $$ = (sel) => [...document.querySelectorAll(sel)];
 //  Apply site-config.js (headshot + links)
 // =====================================================================
 if (SITE.headshot && $('#headshot')) $('#headshot').src = SITE.headshot;
-const links = { github: SITE.github, linkedin: SITE.linkedin };
+const links = { github: SITE.github, linkedin: SITE.linkedin, instagram: SITE.instagram };
 $$('[data-link]').forEach((a) => {
   const url = links[a.dataset.link];
   if (url && a.dataset.link !== 'resume') a.href = url;
+  if (a.dataset.link === 'instagram') a.hidden = !url;
 });
 $('#resumeDownload').href = SITE.resumeFile || '/assets/resume.pdf';
 if (SITE.resumeDownloadName) $('#resumeDownload').download = SITE.resumeDownloadName;
@@ -19,12 +20,6 @@ if (SITE.email && $('#copyEmail')) {
   $('#emailLabel').textContent = SITE.email;
 }
 $('#year').textContent = new Date().getFullYear();
-
-// Finish the warp-pipe iris opening (the class is added in <head> before first paint)
-if (document.documentElement.classList.contains('warp-in')) {
-  try { sessionStorage.removeItem('warpIn'); } catch { /* ignore */ }
-  setTimeout(() => document.documentElement.classList.remove('warp-in'), 1000);
-}
 
 // =====================================================================
 //  Pixel sprite helpers

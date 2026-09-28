@@ -190,12 +190,6 @@ page({
   scripts: '  <script src="/play.js"></script>\n',
 });
 
-page({
-  out: 'guestbook/index.html', path: '/guestbook/', page: 'guestbook', title: 'Guestbook · Ethan Xu', description: 'A shared pixel wall anyone can paint on.',
-  content: src('pages/guestbook.html'),
-  scripts: '  <script src="/pixelwall.js"></script>\n',
-});
-
 // ---------------------------------------------------------------- Interests
 const objectivesList = (it) => it.objectives.map((o) => `              <li>${esc(o)}</li>`).join('\n');
 const cards = interests.map((it, i) => `        <li class="quest side-quest px-box paper" data-type="${slugify(it.type)}">
