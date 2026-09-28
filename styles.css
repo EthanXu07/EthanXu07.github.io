@@ -613,66 +613,6 @@ main.subpage { padding-top: 5rem; }
 }
 .play-world .hint { margin-top: 1rem; color: var(--text-light-2); font-size: .85rem; }
 
-/* ---------- Guestbook pixel wall ---------- */
-.wall-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem); gap: 1.75rem; align-items: start; }
-@media (max-width: 52rem) { .wall-layout { grid-template-columns: 1fr; } }
-.wall-frame { padding: .6rem; background: var(--edge); }
-.wall-toolbar { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin: 0 0 .9rem; }
-.tool-group { display: flex; }
-.tool-btn { padding: .45rem .6rem; border: 0; font: .55rem var(--pixel); color: var(--text-light-2); background: var(--ink-2); box-shadow: inset 0 0 0 2px var(--ink-3); cursor: pointer; }
-.tool-btn + .tool-btn { margin-left: -2px; }
-.tool-btn:hover { color: var(--paper); }
-.tool-btn[aria-pressed="true"] { color: var(--text-dark); background: var(--gold); box-shadow: inset 0 0 0 2px var(--edge); }
-.wall-warning { display: flex; align-items: flex-start; gap: .9rem; max-width: 52rem; margin: 0 0 1.75rem; padding: .9rem 1.1rem; background: #3a2413; color: var(--paper); box-shadow: 0 0 0 3px var(--gold), 5px 5px 0 rgba(0,0,0,.35); }
-.wall-warning p { margin: 0; line-height: 1.5; }
-.wall-warning strong { color: var(--gold); }
-.wall-warning-icon { flex: none; display: grid; place-items: center; width: 1.8rem; height: 1.8rem; font: 1rem var(--pixel); color: var(--text-dark); background: var(--gold); box-shadow: 0 0 0 2px var(--edge); }
-.wall-scroll { overflow: auto; max-height: min(80vh, 52rem); aspect-ratio: 1; overscroll-behavior: contain; }
-#wall { display: block; width: 100%; max-width: none; aspect-ratio: 1; height: auto; image-rendering: pixelated; cursor: crosshair; touch-action: none; background: var(--paper); }
-#wall[data-tool="pick"] { cursor: copy; }
-#wall[data-tool="erase"] { cursor: cell; }
-.tool-btn[data-tool="erase"][aria-pressed="true"] { background: var(--tomato); color: var(--paper); }
-#wall[data-tool="pan"] { cursor: grab; }
-#wall:focus-visible { outline: 3px dashed var(--gold); outline-offset: 4px; }
-.wall-panel { padding: 1.1rem 1.2rem; position: sticky; top: 6.5rem; }
-@media (max-width: 52rem) { .wall-panel { position: static; } }
-.wall-status { display: flex; align-items: center; gap: .5rem; margin: 0 0 .9rem; font: .5rem/1.6 var(--pixel); text-transform: uppercase; color: var(--text-dark-2); }
-.live-dot { width: 10px; height: 10px; flex: none; background: var(--stone, #b9b39c); box-shadow: 0 0 0 2px var(--text-dark); }
-.live-dot[data-state="live"] { background: #37b24d; animation: blink 1.4s steps(1) infinite; }
-.live-dot[data-state="local"] { background: var(--gold); }
-.live-dot[data-state="error"] { background: var(--tomato); }
-.wall-palette { display: grid; grid-template-columns: repeat(8, 1fr); gap: .35rem; }
-.swatch { aspect-ratio: 1; border: 0; background: var(--c); cursor: pointer; box-shadow: 0 0 0 2px var(--text-dark); }
-.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--text-dark), 0 0 0 5px var(--tomato); transform: translateY(-2px); }
-.wall-selected { display: flex; align-items: center; gap: .5rem; margin: .8rem 0 0; font-size: .9rem; }
-.wall-chip { width: 1.1rem; height: 1.1rem; box-shadow: 0 0 0 2px var(--text-dark); }
-.wall-coords { margin-left: auto; font: .5rem var(--pixel); color: var(--text-dark-2); }
-.wall-message { min-height: 1.3em; margin: .4rem 0 0; font-size: .85rem; }
-.wall-message[data-kind="warn"] { color: var(--tomato-dark); }
-.wall-message[data-kind="ok"] { color: #3f7a5a; }
-.wall-stats { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin: .9rem 0; }
-.wall-stats div { padding: .5rem; background: var(--paper-2); }
-.wall-stats dt { font: .45rem var(--pixel); color: var(--text-dark-2); text-transform: uppercase; }
-.wall-stats dd { margin: .3rem 0 0; font: 700 1.2rem var(--title); }
-.wall-help { margin: 0; font-size: .8rem; color: var(--text-dark-2); }
-.wall-help kbd { margin-right: 2px; }
-
-/* ---------- Warp-pipe iris transition ---------- */
-@property --iris { syntax: '<length>'; inherits: false; initial-value: 0px; }
-.warp {
-  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent var(--iris), #0f1714 calc(var(--iris) + 1px));
-}
-.warp-out { animation: iris-close .6s steps(10, end) forwards; }
-html.warp-in::after {
-  content: ""; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
-  background: radial-gradient(circle at 50% 45%, transparent var(--iris), #0f1714 calc(var(--iris) + 1px));
-  animation: iris-open .75s .1s steps(10, end) both;
-}
-@keyframes iris-close { from { --iris: 150vmax; } to { --iris: 0px; } }
-@keyframes iris-open { from { --iris: 0px; } to { --iris: 150vmax; } }
-@media (prefers-reduced-motion: reduce) { html.warp-in::after { display: none; } }
-
 /* ---------- Toast ---------- */
 .toast {
   position: fixed; left: 50%; bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); z-index: 60;

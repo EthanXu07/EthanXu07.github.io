@@ -3,7 +3,7 @@
 //  Run right from the Campanile, bump "?" blocks (coins, coffee = +1 heart,
 //  star = invincibility, coin magnet, double jump, a hidden 1-up), stomp bugs, dodge
 //  spiky viruses, cross pits and a moving platform, then climb the stairs to
-//  the flag. Finishing raises the Guestbook pipe (Enter or ↓ to go in).
+//  the flag and into the castle for the fireworks.
 //  Run out of hearts and it's game over. Before Start only the scenery shows;
 //  on Start the level drops into place and the name + bio card slides into
 //  the corner.
@@ -45,7 +45,6 @@
   const MID_CHECKPOINT = 540;
   const FLAG_X = 1230;
   const CASTLE_X = 1270;
-  const GB_PIPE = { x: 1352, w: 22, h: 0, maxH: 28, kind: 'pipe', guestbook: true };
   const DOOR_X = 1295; // castle door (CASTLE_X + 25)
   const WORLD_W = 1430;
 
@@ -81,14 +80,14 @@
   ];
 
   function solidList() {
-    return [...ground, ...pipes, ...stairs, ...blocks.filter((b) => !b.hidden), ...(GB_PIPE.h > 0 ? [{ ...GB_PIPE, y: -GB_PIPE.h }] : [])];
+    return [...ground, ...pipes, ...stairs, ...blocks.filter((b) => !b.hidden)];
   }
   const hitTest = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   const solidAt = (x, y, list) => list.some((s) => x >= s.x && x < s.x + s.w && y >= s.y && y < s.y + s.h);
 
   // ---------- State ----------
   const keys = { left: false, right: false, jump: false, down: false };
-  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, checkpoint, popups, particles, winT, entering, near, phase, phaseT, hidePlayer;
+  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, checkpoint, popups, particles, winT, near, phase, phaseT, hidePlayer;
   let stars = [], clouds = [];
 
   function newGame() {
@@ -103,13 +102,12 @@
     coins = coinSpots.map(([x, y]) => ({ x, y, taken: false }));
     blocks.forEach((b) => { b.used = false; b.hits = b.content === 'multi' ? 5 : 1; b.bump = 0; b.hidden = b.content === 'heart'; });
     movers.forEach((m) => { m.x = m.minX + 2; m.vx = 0.5; });
-    GB_PIPE.h = 0;
     cam = 0; t = 0;
     state = 'play'; // play | won | over
     hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0; magnet = 0; feather = 0; airJumps = 0;
     checkpoint = START_X;
     popups = []; particles = [];
-    winT = 0; entering = null; near = null; phase = null; phaseT = 0; hidePlayer = false;
+    winT = 0; near = null; phase = null; phaseT = 0; hidePlayer = false;
     overEl.hidden = true;
     prompt.el.hidden = true;
   }
@@ -150,7 +148,7 @@
     const onControl = e.target.closest?.('a, button');
     if (e.key === 'Enter' && !onControl && playing) {
       if (state === 'over') { e.preventDefault(); newGame(); return; }
-      if (state === 'won') { e.preventDefault(); enterPipe(); return; }
+      if (state === 'won' && phase === 'ready') { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); return; }
     }
     const k = KEYMAP[e.key];
     if (!k) return;
@@ -184,44 +182,12 @@
     if (kind === near) return;
     near = kind;
     if (!kind) { prompt.el.hidden = true; return; }
-    if (kind === 'clear') {
-      prompt.label.textContent = 'Level clear!';
-      prompt.title.textContent = `Score ${score}`;
-      prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Something is happening at the castle…`;
-      prompt.go.href = '#contact';
-      prompt.go.firstChild.textContent = 'Contact ';
-    } else if (kind === GB_PIPE) {
-      prompt.label.textContent = 'Secret pipe · press Enter';
-      prompt.title.textContent = 'Guestbook';
-      prompt.desc.textContent = 'Paint a pixel on the shared wall before you go!';
-      prompt.go.href = '/guestbook/';
-      prompt.go.firstChild.textContent = 'Enter ';
-    }
+    prompt.label.textContent = 'Level clear!';
+    prompt.title.textContent = `Score ${score}`;
+    prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Thanks for playing! Press Enter to get in touch.`;
+    prompt.go.href = '#contact';
+    prompt.go.firstChild.textContent = 'Contact ';
     prompt.el.hidden = false;
-  }
-
-  function enterPipe() {
-    if (entering || phase !== 'ready') return;
-    if (reduceMotion) { warpToGuestbook(); return; }
-    // Hop onto the pipe, then sink into it
-    p.x = GB_PIPE.x + GB_PIPE.w / 2 - PW / 2;
-    p.y = -GB_PIPE.h - PH;
-    p.vx = 0; p.vy = 0; p.onGround = true; p.dir = 1;
-    entering = { frames: 30 };
-    prompt.el.hidden = true;
-  }
-
-  // Pixel iris-wipe closing on the pipe, then load the guestbook (which irises open)
-  function warpToGuestbook() {
-    try { sessionStorage.setItem('warpIn', '1'); } catch { /* storage blocked */ }
-    if (reduceMotion) { window.location.href = '/guestbook/'; return; }
-    const r = canvas.getBoundingClientRect();
-    const wipe = document.createElement('div');
-    wipe.className = 'warp warp-out';
-    wipe.style.setProperty('--x', `${r.left + (GB_PIPE.x + GB_PIPE.w / 2 - Math.round(cam)) * (r.width / W)}px`);
-    wipe.style.setProperty('--y', `${r.top + (G - GB_PIPE.h) * (r.height / H)}px`);
-    document.body.appendChild(wipe);
-    setTimeout(() => { window.location.href = '/guestbook/'; }, 650);
   }
 
   // ---------- Damage, death, game over ----------
@@ -306,11 +272,6 @@
     blocks.forEach((b) => { if (b.bump > 0) b.bump--; });
     clouds.forEach((c) => { c.x += 0.05; });
 
-    if (entering) {
-      p.y += 0.8;
-      if (--entering.frames === 0) warpToGuestbook();
-      return;
-    }
     if (!playing || state === 'over') return;
 
     const solids = solidList();
@@ -322,7 +283,7 @@
 
     for (const m of movers) { m.x += m.vx; if (m.x < m.minX || m.x > m.maxX) m.vx *= -1; }
 
-    // Ending: walk into the castle door → fireworks → step out → Guestbook pipe rises
+    // Ending: walk into the castle door → fireworks → step back out
     let autoRight = false;
     if (state === 'won') {
       if (phase === 'walk') {
@@ -336,8 +297,8 @@
         }
         if (dt > 60) { phase = 'out'; phaseT = t; hidePlayer = false; }
       } else if (phase === 'out') {
-        autoRight = p.x < GB_PIPE.x - 20;
-        if (!autoRight && GB_PIPE.h >= GB_PIPE.maxH) phase = 'ready';
+        autoRight = p.x < DOOR_X + 30;
+        if (!autoRight) phase = 'ready';
       }
     }
     const auto = state === 'won' && phase !== 'ready';
@@ -446,7 +407,7 @@
       if (!c.taken && Math.abs(p.x + PW / 2 - c.x) < 8 && Math.abs(p.y + PH / 2 - c.y) < 11) { c.taken = true; addCoin(c.x, c.y - 6); }
     }
 
-    // Flag → castle → the Guestbook pipe rises
+    // Flag → castle → thanks for playing
     if (state === 'play' && p.x + PW >= FLAG_X) {
       state = 'won';
       winT = t;
@@ -456,9 +417,7 @@
       popup(FLAG_X, -72, 'Level clear!', 120, true);
     }
     if (state === 'won') {
-      if ((phase === 'out' || phase === 'ready') && GB_PIPE.h < GB_PIPE.maxH) GB_PIPE.h = Math.min(GB_PIPE.maxH, GB_PIPE.h + 0.8);
-      setPrompt(phase === 'ready' ? GB_PIPE : 'clear');
-      if (keys.down && phase === 'ready') enterPipe();
+      setPrompt('clear');
     }
   }
 
@@ -491,19 +450,8 @@
     ctx.fillStyle = '#3f7a5a'; ctx.fillRect(pp.x + 1, y + 6, pp.w - 2, h - 6);
     ctx.fillStyle = '#7aa35a'; ctx.fillRect(pp.x + 4, y + 6, 3, h - 6);
     ctx.fillStyle = '#1f3a2d'; ctx.fillRect(pp.x - 3, y - 1, pp.w + 6, 7);
-    ctx.fillStyle = pp.guestbook ? '#e8a93a' : '#4f9a6f'; ctx.fillRect(pp.x - 2, y, pp.w + 4, 5);
-    ctx.fillStyle = pp.guestbook ? '#fff3c4' : '#8fd19a'; ctx.fillRect(pp.x + 1, y + 1, 3, 3);
-  }
-  function drawSign(x, y, text, lit) {
-    ctx.font = SIGN_FONT;
-    const tw = Math.ceil(ctx.measureText(text).width) + 8;
-    const sx = Math.round(x - tw / 2);
-    ctx.fillStyle = '#6b4630'; ctx.fillRect(Math.round(x) - 1, y + 10, 2, 14);
-    ctx.fillStyle = '#0f1714'; ctx.fillRect(sx - 1, y - 1, tw + 2, 12);
-    ctx.fillStyle = lit ? '#e8a93a' : '#f1e6cc'; ctx.fillRect(sx, y, tw, 10);
-    ctx.fillStyle = '#2a1f1a'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText(text, Math.round(x), y + 1);
-    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#4f9a6f'; ctx.fillRect(pp.x - 2, y, pp.w + 4, 5);
+    ctx.fillStyle = '#8fd19a'; ctx.fillRect(pp.x + 1, y + 1, 3, 3);
   }
   function drawEnemy(e) {
     const x = Math.round(e.x), y = Math.round(e.y);
@@ -667,8 +615,6 @@
       const flagDrop = state === 'won' ? Math.min(66, Math.round((t - winT) * 1.5)) : 0;
       ctx.fillStyle = '#d4553a'; ctx.fillRect(FLAG_X - 14, -78 + flagDrop, 14, 10 - (Math.floor(t / 10) % 2));
       drawCastle(CASTLE_X);
-      drawPipe(GB_PIPE, Math.round(GB_PIPE.h));
-      if (GB_PIPE.h >= GB_PIPE.maxH) drawSign(GB_PIPE.x + GB_PIPE.w / 2, -GB_PIPE.h - 26, 'GUESTBOOK', near === GB_PIPE);
       ctx.restore();
       if (drop === 0) {
         for (const c of coins) {
@@ -690,7 +636,6 @@
       drawSprite(ctx, frame, Math.round(p.x - 1), Math.round(p.y) + breathe, p.dir < 0);
       if (star > 0 && Math.floor(t / 3) % 2) { ctx.fillStyle = 'rgba(255,243,196,0.55)'; ctx.fillRect(Math.round(p.x - 1), Math.round(p.y), 12, 16); }
     }
-    if (entering) drawPipe(GB_PIPE, Math.round(GB_PIPE.h)); // pipe front covers the sinking player
 
     for (const q of particles) { ctx.fillStyle = q.color; ctx.fillRect(Math.round(q.x), Math.round(q.y), 1, 1); }
     ctx.textAlign = 'center';
@@ -725,16 +670,10 @@
     if (running && !was) { last = performance.now(); requestAnimationFrame(loop); }
   }).observe(section);
 
-  // Back button after warping into the pipe: don't stay mid-sink
-  window.addEventListener('pageshow', () => {
-    document.querySelectorAll('.warp').forEach((w) => w.remove());
-    if (entering) { entering = null; p.y = -GB_PIPE.h - PH; prompt.el.hidden = true; near = null; }
-  });
-
   // Test hook: ?debug exposes state for automated play-testing
   if (new URLSearchParams(location.search).has('debug')) {
     window.__mover = () => movers[0].x;
-    window.__explorer = () => ({ phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, GB_PIPE, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, entering, near });
+    window.__explorer = () => ({ phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, near });
   }
 
   let resizeTimer;
