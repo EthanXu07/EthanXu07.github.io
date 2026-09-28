@@ -103,7 +103,7 @@ for (const p of projects) for (const id of p.skills) {
   if (!usedIn[id]) throw new Error(`projects.json "${p.id}" uses unknown skill "${id}"`);
   usedIn[id].push({ label: p.title, sub: p.type, href: `/projects/#project-${p.id}`, kind: 'Project' });
 }
-const level = (id) => Math.min(5, usedIn[id].length);
+const usedBadge = (n) => (n ? `Used ×${n}` : 'On résumé');
 const skillName = (id) => skillIndex[id].name;
 
 // ---------------------------------------------------------------- Renderers
@@ -135,12 +135,12 @@ const renderBranch = (b) => `          <section class="branch" style="--c:${b.co
             <h2 class="branch-name">${esc(b.name)}</h2>
             <ol class="branch-nodes">
 ${b.skills.map((s) => {
-  const lv = level(s.id);
+  const n = usedIn[s.id].length;
   return `              <li class="${s.requires ? 'child' : 'root'}">
-                <button class="skill-node${lv ? '' : ' locked'}" data-skill="${s.id}" aria-pressed="false">
+                <button class="skill-node${n ? ' used' : ''}" data-skill="${s.id}" aria-pressed="false">
                   <span class="slot-icon" style="--c:${b.color}">${esc(s.code)}</span>
                   <span class="skill-name">${esc(s.name)}</span>
-                  <span class="pips" aria-label="Level ${lv} of 5">${'■'.repeat(lv)}${'□'.repeat(5 - lv)}</span>
+                  <span class="pips">${usedBadge(n)}</span>
                 </button>
               </li>`;
 }).join('\n')}
@@ -170,7 +170,7 @@ page({
   }),
 });
 
-const skillData = Object.fromEntries(Object.keys(skillIndex).map((id) => [id, { name: skillName(id), branch: skillIndex[id].branch.name, level: level(id), used: usedIn[id] }]));
+const skillData = Object.fromEntries(Object.keys(skillIndex).map((id) => [id, { name: skillName(id), branch: skillIndex[id].branch.name, used: usedIn[id] }]));
 page({
   out: 'skills/index.html', path: '/skills/', page: 'skills', title: 'Skill tree · Ethan Xu', description: 'Skills Ethan Xu has used on real projects and jobs.',
   content: fill(src('pages/skills.html'), { branches: branches.map(renderBranch).join('\n'), skillData: inlineJson(skillData) }),

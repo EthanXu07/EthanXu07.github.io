@@ -183,10 +183,10 @@ $$('.chip').forEach((chip) => {
     if (!s) return;
     nodes.forEach((n) => n.setAttribute('aria-pressed', String(n.dataset.skill === id)));
     $('#skillName').textContent = s.name;
-    $('#skillLevel').textContent = `${s.branch} · Level ${s.level} / 5 ${'■'.repeat(s.level)}${'□'.repeat(5 - s.level)}`;
+    $('#skillLevel').textContent = s.branch;
     $('#skillHint').textContent = s.used.length
       ? `Used in ${s.used.length} ${s.used.length === 1 ? 'role or project' : 'roles and projects'}:`
-      : 'Not used in a role or project yet.';
+      : 'Listed on my résumé. Not tied to a role or project on this site yet.';
     const list = $('#skillUsed');
     list.replaceChildren(...s.used.map((u) => {
       const li = document.createElement('li');
@@ -206,7 +206,7 @@ $$('.chip').forEach((chip) => {
 
   nodes.forEach((n) => n.addEventListener('click', () => select(n.dataset.skill, true)));
   // Start on the most-used skill
-  const top = Object.entries(skills).sort((a, b) => b[1].level - a[1].level)[0];
+  const top = Object.entries(skills).sort((a, b) => b[1].used.length - a[1].used.length)[0];
   if (top) select(top[0], false);
 })();
 

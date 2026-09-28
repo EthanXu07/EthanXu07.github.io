@@ -44,12 +44,12 @@
     ],
     "rewards": "TensorFlow · Keras · Backtesting · NLP",
     "skills": [
-      "python",
       "tensorflow",
+      "keras",
+      "beautiful-soup",
       "nlp",
       "forecasting",
-      "backtesting",
-      "web-scraping"
+      "backtesting"
     ]
   },
   {
@@ -82,8 +82,7 @@
     ],
     "rewards": "Research writing · Emissions analysis",
     "skills": [
-      "research-writing",
-      "data-viz"
+      "research-writing"
     ]
   },
   {
@@ -99,9 +98,7 @@
     ],
     "rewards": "Leadership · Teaching",
     "skills": [
-      "python",
-      "teaching",
-      "leadership"
+      "python"
     ]
   },
   {
@@ -117,9 +114,7 @@
     "rewards": "Python · Java · Scratch",
     "skills": [
       "python",
-      "java",
-      "scratch",
-      "teaching"
+      "java"
     ]
   }
 ]

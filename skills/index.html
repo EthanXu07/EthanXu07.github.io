@@ -55,152 +55,398 @@
         <p class="world-num">WORLD 4</p>
         <h1 class="world-title">Skill tree</h1>
       </header>
-      <p class="section-lede">Every skill here comes from real experience or projects. Level = how many roles and projects used it. Pick a skill to see where.</p>
+      <p class="section-lede">The first six branches match the Technical Skills section of my résumé. Specialties come from the work itself. “Used ×N” counts the roles and projects that show a skill. Pick one to see where.</p>
 
       <div class="skill-layout">
         <div class="skill-tree">
-          <section class="branch" style="--c:#d4553a">
-            <h2 class="branch-name">Machine learning</h2>
+          <section class="branch" style="--c:#e8a93a">
+            <h2 class="branch-name">Languages</h2>
             <ol class="branch-nodes">
               <li class="root">
-                <button class="skill-node" data-skill="tensorflow" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#d4553a">Tf</span>
-                  <span class="skill-name">TensorFlow · Keras</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
-                </button>
-              </li>
-              <li class="child">
-                <button class="skill-node" data-skill="computer-vision" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#d4553a">Cv</span>
-                  <span class="skill-name">Computer vision</span>
-                  <span class="pips" aria-label="Level 2 of 5">■■□□□</span>
+                <button class="skill-node used" data-skill="python" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">Py</span>
+                  <span class="skill-name">Python</span>
+                  <span class="pips">Used ×4</span>
                 </button>
               </li>
               <li class="root">
-                <button class="skill-node" data-skill="huggingface" aria-pressed="false">
+                <button class="skill-node used" data-skill="java" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">Jv</span>
+                  <span class="skill-name">Java</span>
+                  <span class="pips">Used ×1</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="cpp" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">C+</span>
+                  <span class="skill-name">C++</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="javascript" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">JS</span>
+                  <span class="skill-name">JavaScript</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="child">
+                <button class="skill-node" data-skill="typescript" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">TS</span>
+                  <span class="skill-name">TypeScript</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="sql" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">SQ</span>
+                  <span class="skill-name">SQL</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="matlab" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">Mt</span>
+                  <span class="skill-name">MATLAB</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="html-css" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#e8a93a">&lt;&gt;</span>
+                  <span class="skill-name">HTML/CSS</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+            </ol>
+          </section>
+          <section class="branch" style="--c:#d4553a">
+            <h2 class="branch-name">Frameworks</h2>
+            <ol class="branch-nodes">
+              <li class="root">
+                <button class="skill-node" data-skill="react" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">Re</span>
+                  <span class="skill-name">React</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="child">
+                <button class="skill-node" data-skill="nextjs" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">Nx</span>
+                  <span class="skill-name">Next.js</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="nodejs" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">No</span>
+                  <span class="skill-name">Node.js</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="flask" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">Fl</span>
+                  <span class="skill-name">Flask</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="fastapi" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">FA</span>
+                  <span class="skill-name">FastAPI</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="tensorflow" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">Tf</span>
+                  <span class="skill-name">TensorFlow</span>
+                  <span class="pips">Used ×1</span>
+                </button>
+              </li>
+              <li class="child">
+                <button class="skill-node used" data-skill="keras" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">Ke</span>
+                  <span class="skill-name">Keras</span>
+                  <span class="pips">Used ×1</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="pytorch" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#d4553a">Pt</span>
+                  <span class="skill-name">PyTorch</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="huggingface" aria-pressed="false">
                   <span class="slot-icon" style="--c:#d4553a">Hf</span>
-                  <span class="skill-name">Hugging Face</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
-                </button>
-              </li>
-              <li class="child">
-                <button class="skill-node" data-skill="nlp" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#d4553a">Nl</span>
-                  <span class="skill-name">NLP · Sentiment</span>
-                  <span class="pips" aria-label="Level 3 of 5">■■■□□</span>
-                </button>
-              </li>
-              <li class="child">
-                <button class="skill-node" data-skill="llms" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#d4553a">Lm</span>
-                  <span class="skill-name">LLMs</span>
-                  <span class="pips" aria-label="Level 2 of 5">■■□□□</span>
+                  <span class="skill-name">Hugging Face Transformers</span>
+                  <span class="pips">Used ×1</span>
                 </button>
               </li>
             </ol>
           </section>
           <section class="branch" style="--c:#5f9c8f">
-            <h2 class="branch-name">Data</h2>
+            <h2 class="branch-name">Libraries</h2>
             <ol class="branch-nodes">
               <li class="root">
-                <button class="skill-node" data-skill="pandas" aria-pressed="false">
+                <button class="skill-node used" data-skill="pandas" aria-pressed="false">
                   <span class="slot-icon" style="--c:#5f9c8f">Pd</span>
-                  <span class="skill-name">Pandas</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
+                  <span class="skill-name">pandas</span>
+                  <span class="pips">Used ×1</span>
                 </button>
               </li>
               <li class="root">
-                <button class="skill-node" data-skill="web-scraping" aria-pressed="false">
+                <button class="skill-node" data-skill="numpy" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#5f9c8f">Np</span>
+                  <span class="skill-name">NumPy</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="scikit-learn" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#5f9c8f">Sk</span>
+                  <span class="skill-name">scikit-learn</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="matplotlib" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#5f9c8f">Mp</span>
+                  <span class="skill-name">Matplotlib</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="opencv" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#5f9c8f">Cv</span>
+                  <span class="skill-name">OpenCV</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="beautiful-soup" aria-pressed="false">
                   <span class="slot-icon" style="--c:#5f9c8f">Bs</span>
-                  <span class="skill-name">Web scraping</span>
-                  <span class="pips" aria-label="Level 3 of 5">■■■□□</span>
-                </button>
-              </li>
-              <li class="child">
-                <button class="skill-node" data-skill="rest-apis" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#5f9c8f">Ap</span>
-                  <span class="skill-name">REST APIs</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
-                </button>
-              </li>
-              <li class="root">
-                <button class="skill-node" data-skill="forecasting" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#5f9c8f">Ts</span>
-                  <span class="skill-name">Time series · Forecasting</span>
-                  <span class="pips" aria-label="Level 2 of 5">■■□□□</span>
-                </button>
-              </li>
-              <li class="child">
-                <button class="skill-node" data-skill="backtesting" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#5f9c8f">Bt</span>
-                  <span class="skill-name">Backtesting</span>
-                  <span class="pips" aria-label="Level 2 of 5">■■□□□</span>
-                </button>
-              </li>
-              <li class="root">
-                <button class="skill-node" data-skill="geospatial" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#5f9c8f">Geo</span>
-                  <span class="skill-name">Geospatial data</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
+                  <span class="skill-name">Beautiful Soup</span>
+                  <span class="pips">Used ×3</span>
                 </button>
               </li>
             </ol>
           </section>
-          <section class="branch" style="--c:#e8a93a">
-            <h2 class="branch-name">Programming</h2>
+          <section class="branch" style="--c:#9c6b8e">
+            <h2 class="branch-name">AI &amp; agentic tools</h2>
             <ol class="branch-nodes">
               <li class="root">
-                <button class="skill-node" data-skill="python" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#e8a93a">Py</span>
-                  <span class="skill-name">Python</span>
-                  <span class="pips" aria-label="Level 5 of 5">■■■■■</span>
+                <button class="skill-node" data-skill="claude-code" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#9c6b8e">Cc</span>
+                  <span class="skill-name">Claude Code</span>
+                  <span class="pips">On résumé</span>
                 </button>
               </li>
               <li class="root">
-                <button class="skill-node" data-skill="java" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#e8a93a">Jv</span>
-                  <span class="skill-name">Java</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
+                <button class="skill-node" data-skill="codex" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#9c6b8e">Cx</span>
+                  <span class="skill-name">OpenAI Codex</span>
+                  <span class="pips">On résumé</span>
                 </button>
               </li>
               <li class="root">
-                <button class="skill-node" data-skill="scratch" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#e8a93a">Sc</span>
-                  <span class="skill-name">Scratch</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
+                <button class="skill-node" data-skill="cursor" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#9c6b8e">Cu</span>
+                  <span class="skill-name">Cursor</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="copilot" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#9c6b8e">Gc</span>
+                  <span class="skill-name">GitHub Copilot</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="openrouter" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#9c6b8e">Or</span>
+                  <span class="skill-name">OpenRouter</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="fireworks" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#9c6b8e">Fw</span>
+                  <span class="skill-name">Fireworks AI</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+            </ol>
+          </section>
+          <section class="branch" style="--c:#6f93d6">
+            <h2 class="branch-name">Databases &amp; cloud</h2>
+            <ol class="branch-nodes">
+              <li class="root">
+                <button class="skill-node" data-skill="postgresql" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">Pg</span>
+                  <span class="skill-name">PostgreSQL</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="child">
+                <button class="skill-node" data-skill="supabase" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">Sb</span>
+                  <span class="skill-name">Supabase</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="mongodb" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">Mg</span>
+                  <span class="skill-name">MongoDB</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="redis" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">Rd</span>
+                  <span class="skill-name">Redis</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="firebase" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">Fb</span>
+                  <span class="skill-name">Firebase</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="aws" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">Aw</span>
+                  <span class="skill-name">AWS</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="docker" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">Dk</span>
+                  <span class="skill-name">Docker</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="child">
+                <button class="skill-node" data-skill="kubernetes" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#6f93d6">K8</span>
+                  <span class="skill-name">Kubernetes</span>
+                  <span class="pips">On résumé</span>
                 </button>
               </li>
             </ol>
           </section>
           <section class="branch" style="--c:#8fb8c9">
-            <h2 class="branch-name">Research &amp; teaching</h2>
+            <h2 class="branch-name">Developer tools</h2>
             <ol class="branch-nodes">
               <li class="root">
-                <button class="skill-node" data-skill="research-writing" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#8fb8c9">Rw</span>
-                  <span class="skill-name">Research writing</span>
-                  <span class="pips" aria-label="Level 2 of 5">■■□□□</span>
+                <button class="skill-node" data-skill="git" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#8fb8c9">Gt</span>
+                  <span class="skill-name">Git</span>
+                  <span class="pips">On résumé</span>
                 </button>
               </li>
               <li class="child">
-                <button class="skill-node" data-skill="data-viz" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#8fb8c9">Dv</span>
-                  <span class="skill-name">Tables &amp; figures</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
+                <button class="skill-node" data-skill="github" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#8fb8c9">Gh</span>
+                  <span class="skill-name">GitHub</span>
+                  <span class="pips">On résumé</span>
                 </button>
               </li>
               <li class="root">
-                <button class="skill-node" data-skill="teaching" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#8fb8c9">Te</span>
-                  <span class="skill-name">Teaching</span>
-                  <span class="pips" aria-label="Level 2 of 5">■■□□□</span>
+                <button class="skill-node" data-skill="vscode" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#8fb8c9">Vs</span>
+                  <span class="skill-name">VS Code</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="jupyter" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#8fb8c9">Jp</span>
+                  <span class="skill-name">Jupyter</span>
+                  <span class="pips">On résumé</span>
                 </button>
               </li>
               <li class="child">
-                <button class="skill-node" data-skill="leadership" aria-pressed="false">
-                  <span class="slot-icon" style="--c:#8fb8c9">Ld</span>
-                  <span class="skill-name">Leadership</span>
-                  <span class="pips" aria-label="Level 1 of 5">■□□□□</span>
+                <button class="skill-node" data-skill="colab" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#8fb8c9">Co</span>
+                  <span class="skill-name">Google Colab</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node" data-skill="figma" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#8fb8c9">Fg</span>
+                  <span class="skill-name">Figma</span>
+                  <span class="pips">On résumé</span>
+                </button>
+              </li>
+            </ol>
+          </section>
+          <section class="branch" style="--c:#7aa35a">
+            <h2 class="branch-name">Specialties (from my work)</h2>
+            <ol class="branch-nodes">
+              <li class="root">
+                <button class="skill-node used" data-skill="computer-vision" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">CV</span>
+                  <span class="skill-name">Computer vision</span>
+                  <span class="pips">Used ×2</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="nlp" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">Nl</span>
+                  <span class="skill-name">NLP · Sentiment</span>
+                  <span class="pips">Used ×3</span>
+                </button>
+              </li>
+              <li class="child">
+                <button class="skill-node used" data-skill="llms" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">Lm</span>
+                  <span class="skill-name">LLMs</span>
+                  <span class="pips">Used ×2</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="forecasting" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">Ts</span>
+                  <span class="skill-name">Time-series forecasting</span>
+                  <span class="pips">Used ×2</span>
+                </button>
+              </li>
+              <li class="child">
+                <button class="skill-node used" data-skill="backtesting" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">Bt</span>
+                  <span class="skill-name">Backtesting</span>
+                  <span class="pips">Used ×2</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="geospatial" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">Ge</span>
+                  <span class="skill-name">Geospatial data</span>
+                  <span class="pips">Used ×1</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="rest-apis" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">Ap</span>
+                  <span class="skill-name">REST APIs</span>
+                  <span class="pips">Used ×1</span>
+                </button>
+              </li>
+              <li class="root">
+                <button class="skill-node used" data-skill="research-writing" aria-pressed="false">
+                  <span class="slot-icon" style="--c:#7aa35a">Rw</span>
+                  <span class="skill-name">Research writing</span>
+                  <span class="pips">Used ×2</span>
                 </button>
               </li>
             </ol>
@@ -214,7 +460,7 @@
           <ul class="quest-list skill-used" id="skillUsed"></ul>
         </aside>
       </div>
-      <script type="application/json" id="skillData">{"tensorflow":{"name":"TensorFlow · Keras","branch":"Machine learning","level":1,"used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"}]},"computer-vision":{"name":"Computer vision","branch":"Machine learning","level":2,"used":[{"label":"Software Engineering Intern","sub":"Coupang · Sep 2026 – Now","href":"/experience/#exp-coupang","kind":"Experience"},{"label":"Lab Assistant, Dr. Christoph Eick","sub":"Data Analysis & Intelligent Systems Lab · University of Houston · Jun 2025 – Sep 2025","href":"/experience/#exp-uh-lab","kind":"Experience"}]},"huggingface":{"name":"Hugging Face","branch":"Machine learning","level":1,"used":[{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"nlp":{"name":"NLP · Sentiment","branch":"Machine learning","level":3,"used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"},{"label":"SENTINEL","sub":"Publication · NeurIPS 2025","href":"/projects/#project-sentinel","kind":"Project"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"llms":{"name":"LLMs","branch":"Machine learning","level":2,"used":[{"label":"Software Engineering Intern","sub":"Coupang · Sep 2026 – Now","href":"/experience/#exp-coupang","kind":"Experience"},{"label":"SENTINEL","sub":"Publication · NeurIPS 2025","href":"/projects/#project-sentinel","kind":"Project"}]},"pandas":{"name":"Pandas","branch":"Data","level":1,"used":[{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"web-scraping":{"name":"Web scraping","branch":"Data","level":3,"used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"},{"label":"AER Citation Tracker","sub":"Project · In progress","href":"/projects/#project-aer-tracker","kind":"Project"}]},"rest-apis":{"name":"REST APIs","branch":"Data","level":1,"used":[{"label":"AER Citation Tracker","sub":"Project · In progress","href":"/projects/#project-aer-tracker","kind":"Project"}]},"forecasting":{"name":"Time series · Forecasting","branch":"Data","level":2,"used":[{"label":"Data Science Intern","sub":"Climformatics · Sep 2026 – Now","href":"/experience/#exp-climformatics","kind":"Experience"},{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"}]},"backtesting":{"name":"Backtesting","branch":"Data","level":2,"used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"geospatial":{"name":"Geospatial data","branch":"Data","level":1,"used":[{"label":"Lab Assistant, Dr. Christoph Eick","sub":"Data Analysis & Intelligent Systems Lab · University of Houston · Jun 2025 – Sep 2025","href":"/experience/#exp-uh-lab","kind":"Experience"}]},"python":{"name":"Python","branch":"Programming","level":5,"used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"},{"label":"Program Coordinator, Board Member & Instructor","sub":"Appropriate Development Technology (ADTech) Inc. · May 2022 – Jul 2026","href":"/experience/#exp-adtech","kind":"Experience"},{"label":"Code Instructor","sub":"Beaumont Code Wiz · Jun 2024 – Feb 2025","href":"/experience/#exp-codewiz","kind":"Experience"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"},{"label":"AER Citation Tracker","sub":"Project · In progress","href":"/projects/#project-aer-tracker","kind":"Project"}]},"java":{"name":"Java","branch":"Programming","level":1,"used":[{"label":"Code Instructor","sub":"Beaumont Code Wiz · Jun 2024 – Feb 2025","href":"/experience/#exp-codewiz","kind":"Experience"}]},"scratch":{"name":"Scratch","branch":"Programming","level":1,"used":[{"label":"Code Instructor","sub":"Beaumont Code Wiz · Jun 2024 – Feb 2025","href":"/experience/#exp-codewiz","kind":"Experience"}]},"research-writing":{"name":"Research writing","branch":"Research & teaching","level":2,"used":[{"label":"Research Assistant, Dr. Melissa Baldo","sub":"College of Business · Lamar University · Apr 2025 – Sep 2025","href":"/experience/#exp-lamar","kind":"Experience"},{"label":"SENTINEL","sub":"Publication · NeurIPS 2025","href":"/projects/#project-sentinel","kind":"Project"}]},"data-viz":{"name":"Tables & figures","branch":"Research & teaching","level":1,"used":[{"label":"Research Assistant, Dr. Melissa Baldo","sub":"College of Business · Lamar University · Apr 2025 – Sep 2025","href":"/experience/#exp-lamar","kind":"Experience"}]},"teaching":{"name":"Teaching","branch":"Research & teaching","level":2,"used":[{"label":"Program Coordinator, Board Member & Instructor","sub":"Appropriate Development Technology (ADTech) Inc. · May 2022 – Jul 2026","href":"/experience/#exp-adtech","kind":"Experience"},{"label":"Code Instructor","sub":"Beaumont Code Wiz · Jun 2024 – Feb 2025","href":"/experience/#exp-codewiz","kind":"Experience"}]},"leadership":{"name":"Leadership","branch":"Research & teaching","level":1,"used":[{"label":"Program Coordinator, Board Member & Instructor","sub":"Appropriate Development Technology (ADTech) Inc. · May 2022 – Jul 2026","href":"/experience/#exp-adtech","kind":"Experience"}]}}</script>
+      <script type="application/json" id="skillData">{"python":{"name":"Python","branch":"Languages","used":[{"label":"Program Coordinator, Board Member & Instructor","sub":"Appropriate Development Technology (ADTech) Inc. · May 2022 – Jul 2026","href":"/experience/#exp-adtech","kind":"Experience"},{"label":"Code Instructor","sub":"Beaumont Code Wiz · Jun 2024 – Feb 2025","href":"/experience/#exp-codewiz","kind":"Experience"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"},{"label":"AER Citation Tracker","sub":"Project · In progress","href":"/projects/#project-aer-tracker","kind":"Project"}]},"java":{"name":"Java","branch":"Languages","used":[{"label":"Code Instructor","sub":"Beaumont Code Wiz · Jun 2024 – Feb 2025","href":"/experience/#exp-codewiz","kind":"Experience"}]},"cpp":{"name":"C++","branch":"Languages","used":[]},"javascript":{"name":"JavaScript","branch":"Languages","used":[]},"typescript":{"name":"TypeScript","branch":"Languages","used":[]},"sql":{"name":"SQL","branch":"Languages","used":[]},"matlab":{"name":"MATLAB","branch":"Languages","used":[]},"html-css":{"name":"HTML/CSS","branch":"Languages","used":[]},"react":{"name":"React","branch":"Frameworks","used":[]},"nextjs":{"name":"Next.js","branch":"Frameworks","used":[]},"nodejs":{"name":"Node.js","branch":"Frameworks","used":[]},"flask":{"name":"Flask","branch":"Frameworks","used":[]},"fastapi":{"name":"FastAPI","branch":"Frameworks","used":[]},"tensorflow":{"name":"TensorFlow","branch":"Frameworks","used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"}]},"keras":{"name":"Keras","branch":"Frameworks","used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"}]},"pytorch":{"name":"PyTorch","branch":"Frameworks","used":[]},"huggingface":{"name":"Hugging Face Transformers","branch":"Frameworks","used":[{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"pandas":{"name":"pandas","branch":"Libraries","used":[{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"numpy":{"name":"NumPy","branch":"Libraries","used":[]},"scikit-learn":{"name":"scikit-learn","branch":"Libraries","used":[]},"matplotlib":{"name":"Matplotlib","branch":"Libraries","used":[]},"opencv":{"name":"OpenCV","branch":"Libraries","used":[]},"beautiful-soup":{"name":"Beautiful Soup","branch":"Libraries","used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"},{"label":"AER Citation Tracker","sub":"Project · In progress","href":"/projects/#project-aer-tracker","kind":"Project"}]},"claude-code":{"name":"Claude Code","branch":"AI & agentic tools","used":[]},"codex":{"name":"OpenAI Codex","branch":"AI & agentic tools","used":[]},"cursor":{"name":"Cursor","branch":"AI & agentic tools","used":[]},"copilot":{"name":"GitHub Copilot","branch":"AI & agentic tools","used":[]},"openrouter":{"name":"OpenRouter","branch":"AI & agentic tools","used":[]},"fireworks":{"name":"Fireworks AI","branch":"AI & agentic tools","used":[]},"postgresql":{"name":"PostgreSQL","branch":"Databases & cloud","used":[]},"supabase":{"name":"Supabase","branch":"Databases & cloud","used":[]},"mongodb":{"name":"MongoDB","branch":"Databases & cloud","used":[]},"redis":{"name":"Redis","branch":"Databases & cloud","used":[]},"firebase":{"name":"Firebase","branch":"Databases & cloud","used":[]},"aws":{"name":"AWS","branch":"Databases & cloud","used":[]},"docker":{"name":"Docker","branch":"Databases & cloud","used":[]},"kubernetes":{"name":"Kubernetes","branch":"Databases & cloud","used":[]},"git":{"name":"Git","branch":"Developer tools","used":[]},"github":{"name":"GitHub","branch":"Developer tools","used":[]},"vscode":{"name":"VS Code","branch":"Developer tools","used":[]},"jupyter":{"name":"Jupyter","branch":"Developer tools","used":[]},"colab":{"name":"Google Colab","branch":"Developer tools","used":[]},"figma":{"name":"Figma","branch":"Developer tools","used":[]},"computer-vision":{"name":"Computer vision","branch":"Specialties (from my work)","used":[{"label":"Software Engineering Intern","sub":"Coupang · Sep 2026 – Now","href":"/experience/#exp-coupang","kind":"Experience"},{"label":"Lab Assistant, Dr. Christoph Eick","sub":"Data Analysis & Intelligent Systems Lab · University of Houston · Jun 2025 – Sep 2025","href":"/experience/#exp-uh-lab","kind":"Experience"}]},"nlp":{"name":"NLP · Sentiment","branch":"Specialties (from my work)","used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"},{"label":"SENTINEL","sub":"Publication · NeurIPS 2025","href":"/projects/#project-sentinel","kind":"Project"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"llms":{"name":"LLMs","branch":"Specialties (from my work)","used":[{"label":"Software Engineering Intern","sub":"Coupang · Sep 2026 – Now","href":"/experience/#exp-coupang","kind":"Experience"},{"label":"SENTINEL","sub":"Publication · NeurIPS 2025","href":"/projects/#project-sentinel","kind":"Project"}]},"forecasting":{"name":"Time-series forecasting","branch":"Specialties (from my work)","used":[{"label":"Data Science Intern","sub":"Climformatics · Sep 2026 – Now","href":"/experience/#exp-climformatics","kind":"Experience"},{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"}]},"backtesting":{"name":"Backtesting","branch":"Specialties (from my work)","used":[{"label":"Software Engineering Intern","sub":"IPMD Inc. · ASTAI Group · Oct 2024 – Dec 2025","href":"/experience/#exp-ipmd","kind":"Experience"},{"label":"Fintrax","sub":"Project · ML","href":"/projects/#project-fintrax","kind":"Project"}]},"geospatial":{"name":"Geospatial data","branch":"Specialties (from my work)","used":[{"label":"Lab Assistant, Dr. Christoph Eick","sub":"Data Analysis & Intelligent Systems Lab · University of Houston · Jun 2025 – Sep 2025","href":"/experience/#exp-uh-lab","kind":"Experience"}]},"rest-apis":{"name":"REST APIs","branch":"Specialties (from my work)","used":[{"label":"AER Citation Tracker","sub":"Project · In progress","href":"/projects/#project-aer-tracker","kind":"Project"}]},"research-writing":{"name":"Research writing","branch":"Specialties (from my work)","used":[{"label":"Research Assistant, Dr. Melissa Baldo","sub":"College of Business · Lamar University · Apr 2025 – Sep 2025","href":"/experience/#exp-lamar","kind":"Experience"},{"label":"SENTINEL","sub":"Publication · NeurIPS 2025","href":"/projects/#project-sentinel","kind":"Project"}]}}</script>
     </section>
 
   </main>
