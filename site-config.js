@@ -10,13 +10,14 @@ window.SITE = {
   // Résumé: a PDF stored on this site. "Résumé" buttons open a preview
   // with a Download button; ethanxu.dev/resume shows the same preview.
   // To swap in a new version, run ./update-resume.sh (grabs the newest
-  // Ethan_Xu_Resume*.pdf from Downloads) or just replace assets/resume.pdf.
-  resumeFile: "/assets/resume.pdf",
+  // Ethan_Xu_Resume*.pdf from Downloads and bumps ?v= below). If you replace
+  // assets/resume.pdf by hand, change ?v= too so browsers don't show a cached copy.
+  resumeFile: "/assets/resume.pdf?v=03d92342",
   resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename when they click Download
 
   email: "ethan_xu@berkeley.edu",
   github: "https://github.com/EthanXu07",
   linkedin: "https://www.linkedin.com/in/EthanXu07/",
   // Instagram profile URL, e.g. "https://www.instagram.com/yourhandle/" (the button hides while empty)
-  instagram: "",
+  instagram: "https://www.instagram.com/ethan_xu__/",
 };
