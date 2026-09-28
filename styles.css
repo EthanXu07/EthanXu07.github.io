@@ -144,6 +144,7 @@ kbd {
 .hud-resume { padding: .6rem .8rem; font-size: .6rem; }
 /* Narrow screens: the logo already links home, so drop "Home" to fit six links */
 @media (max-width: 30rem) { .hud-nav a:first-child { display: none; } .hud-nav { justify-content: space-around; } }
+@media (max-width: 24rem) { .hud .hud-nav a { padding-inline: .1rem; font-size: .38rem; } .hud .nav-icon { width: 16px; height: 16px; } }
 
 .xp { display: flex; align-items: center; gap: .6rem; max-width: 76rem; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem) .5rem; }
 .xp-label { font: .5rem var(--pixel); color: var(--gold); }

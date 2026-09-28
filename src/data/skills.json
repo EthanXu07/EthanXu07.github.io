@@ -1,5 +1,5 @@
 {
-  "_note": "Each skill's level = how many quests/projects list it (see the \"skills\" arrays in experience.json and projects.json). \"requires\" draws the branch lines.",
+  "_note": "Each skill's level = how many experience entries/projects list it (see the \"skills\" arrays in experience.json and projects.json). \"requires\" draws the branch lines.",
   "branches": [
     {
       "id": "ml",
