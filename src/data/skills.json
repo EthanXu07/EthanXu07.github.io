@@ -1,50 +1,317 @@
 {
-  "_note": "Each skill's level = how many experience entries/projects list it (see the \"skills\" arrays in experience.json and projects.json). \"requires\" draws the branch lines.",
+  "_note": "Branches 1–6 mirror the Technical Skills section of my résumé. 'Specialties' come from my experience bullets. Each skill links to the roles/projects that list it in their \"skills\" arrays (experience.json, projects.json); skills with none are shown as 'On résumé'. \"requires\" draws the branch lines.",
   "branches": [
     {
-      "id": "ml",
-      "name": "Machine learning",
-      "color": "#d4553a",
-      "skills": [
-        { "id": "tensorflow", "name": "TensorFlow · Keras", "code": "Tf" },
-        { "id": "computer-vision", "name": "Computer vision", "code": "Cv", "requires": "tensorflow" },
-        { "id": "huggingface", "name": "Hugging Face", "code": "Hf" },
-        { "id": "nlp", "name": "NLP · Sentiment", "code": "Nl", "requires": "huggingface" },
-        { "id": "llms", "name": "LLMs", "code": "Lm", "requires": "nlp" }
-      ]
-    },
-    {
-      "id": "data",
-      "name": "Data",
-      "color": "#5f9c8f",
-      "skills": [
-        { "id": "pandas", "name": "Pandas", "code": "Pd" },
-        { "id": "web-scraping", "name": "Web scraping", "code": "Bs" },
-        { "id": "rest-apis", "name": "REST APIs", "code": "Ap", "requires": "web-scraping" },
-        { "id": "forecasting", "name": "Time series · Forecasting", "code": "Ts" },
-        { "id": "backtesting", "name": "Backtesting", "code": "Bt", "requires": "forecasting" },
-        { "id": "geospatial", "name": "Geospatial data", "code": "Geo" }
-      ]
-    },
-    {
-      "id": "code",
-      "name": "Programming",
+      "id": "languages",
+      "name": "Languages",
       "color": "#e8a93a",
       "skills": [
-        { "id": "python", "name": "Python", "code": "Py" },
-        { "id": "java", "name": "Java", "code": "Jv" },
-        { "id": "scratch", "name": "Scratch", "code": "Sc" }
+        {
+          "id": "python",
+          "name": "Python",
+          "code": "Py"
+        },
+        {
+          "id": "java",
+          "name": "Java",
+          "code": "Jv"
+        },
+        {
+          "id": "cpp",
+          "name": "C++",
+          "code": "C+"
+        },
+        {
+          "id": "javascript",
+          "name": "JavaScript",
+          "code": "JS"
+        },
+        {
+          "id": "typescript",
+          "name": "TypeScript",
+          "code": "TS",
+          "requires": "javascript"
+        },
+        {
+          "id": "sql",
+          "name": "SQL",
+          "code": "SQ"
+        },
+        {
+          "id": "matlab",
+          "name": "MATLAB",
+          "code": "Mt"
+        },
+        {
+          "id": "html-css",
+          "name": "HTML/CSS",
+          "code": "<>"
+        }
       ]
     },
     {
-      "id": "people",
-      "name": "Research & teaching",
+      "id": "frameworks",
+      "name": "Frameworks",
+      "color": "#d4553a",
+      "skills": [
+        {
+          "id": "react",
+          "name": "React",
+          "code": "Re"
+        },
+        {
+          "id": "nextjs",
+          "name": "Next.js",
+          "code": "Nx",
+          "requires": "react"
+        },
+        {
+          "id": "nodejs",
+          "name": "Node.js",
+          "code": "No"
+        },
+        {
+          "id": "flask",
+          "name": "Flask",
+          "code": "Fl"
+        },
+        {
+          "id": "fastapi",
+          "name": "FastAPI",
+          "code": "FA"
+        },
+        {
+          "id": "tensorflow",
+          "name": "TensorFlow",
+          "code": "Tf"
+        },
+        {
+          "id": "keras",
+          "name": "Keras",
+          "code": "Ke",
+          "requires": "tensorflow"
+        },
+        {
+          "id": "pytorch",
+          "name": "PyTorch",
+          "code": "Pt"
+        },
+        {
+          "id": "huggingface",
+          "name": "Hugging Face Transformers",
+          "code": "Hf"
+        }
+      ]
+    },
+    {
+      "id": "libraries",
+      "name": "Libraries",
+      "color": "#5f9c8f",
+      "skills": [
+        {
+          "id": "pandas",
+          "name": "pandas",
+          "code": "Pd"
+        },
+        {
+          "id": "numpy",
+          "name": "NumPy",
+          "code": "Np"
+        },
+        {
+          "id": "scikit-learn",
+          "name": "scikit-learn",
+          "code": "Sk"
+        },
+        {
+          "id": "matplotlib",
+          "name": "Matplotlib",
+          "code": "Mp"
+        },
+        {
+          "id": "opencv",
+          "name": "OpenCV",
+          "code": "Cv"
+        },
+        {
+          "id": "beautiful-soup",
+          "name": "Beautiful Soup",
+          "code": "Bs"
+        }
+      ]
+    },
+    {
+      "id": "ai-tools",
+      "name": "AI & agentic tools",
+      "color": "#9c6b8e",
+      "skills": [
+        {
+          "id": "claude-code",
+          "name": "Claude Code",
+          "code": "Cc"
+        },
+        {
+          "id": "codex",
+          "name": "OpenAI Codex",
+          "code": "Cx"
+        },
+        {
+          "id": "cursor",
+          "name": "Cursor",
+          "code": "Cu"
+        },
+        {
+          "id": "copilot",
+          "name": "GitHub Copilot",
+          "code": "Gc"
+        },
+        {
+          "id": "openrouter",
+          "name": "OpenRouter",
+          "code": "Or"
+        },
+        {
+          "id": "fireworks",
+          "name": "Fireworks AI",
+          "code": "Fw"
+        }
+      ]
+    },
+    {
+      "id": "data-cloud",
+      "name": "Databases & cloud",
+      "color": "#6f93d6",
+      "skills": [
+        {
+          "id": "postgresql",
+          "name": "PostgreSQL",
+          "code": "Pg"
+        },
+        {
+          "id": "supabase",
+          "name": "Supabase",
+          "code": "Sb",
+          "requires": "postgresql"
+        },
+        {
+          "id": "mongodb",
+          "name": "MongoDB",
+          "code": "Mg"
+        },
+        {
+          "id": "redis",
+          "name": "Redis",
+          "code": "Rd"
+        },
+        {
+          "id": "firebase",
+          "name": "Firebase",
+          "code": "Fb"
+        },
+        {
+          "id": "aws",
+          "name": "AWS",
+          "code": "Aw"
+        },
+        {
+          "id": "docker",
+          "name": "Docker",
+          "code": "Dk"
+        },
+        {
+          "id": "kubernetes",
+          "name": "Kubernetes",
+          "code": "K8",
+          "requires": "docker"
+        }
+      ]
+    },
+    {
+      "id": "dev-tools",
+      "name": "Developer tools",
       "color": "#8fb8c9",
       "skills": [
-        { "id": "research-writing", "name": "Research writing", "code": "Rw" },
-        { "id": "data-viz", "name": "Tables & figures", "code": "Dv", "requires": "research-writing" },
-        { "id": "teaching", "name": "Teaching", "code": "Te" },
-        { "id": "leadership", "name": "Leadership", "code": "Ld", "requires": "teaching" }
+        {
+          "id": "git",
+          "name": "Git",
+          "code": "Gt"
+        },
+        {
+          "id": "github",
+          "name": "GitHub",
+          "code": "Gh",
+          "requires": "git"
+        },
+        {
+          "id": "vscode",
+          "name": "VS Code",
+          "code": "Vs"
+        },
+        {
+          "id": "jupyter",
+          "name": "Jupyter",
+          "code": "Jp"
+        },
+        {
+          "id": "colab",
+          "name": "Google Colab",
+          "code": "Co",
+          "requires": "jupyter"
+        },
+        {
+          "id": "figma",
+          "name": "Figma",
+          "code": "Fg"
+        }
+      ]
+    },
+    {
+      "id": "specialties",
+      "name": "Specialties (from my work)",
+      "color": "#7aa35a",
+      "skills": [
+        {
+          "id": "computer-vision",
+          "name": "Computer vision",
+          "code": "CV"
+        },
+        {
+          "id": "nlp",
+          "name": "NLP · Sentiment",
+          "code": "Nl"
+        },
+        {
+          "id": "llms",
+          "name": "LLMs",
+          "code": "Lm",
+          "requires": "nlp"
+        },
+        {
+          "id": "forecasting",
+          "name": "Time-series forecasting",
+          "code": "Ts"
+        },
+        {
+          "id": "backtesting",
+          "name": "Backtesting",
+          "code": "Bt",
+          "requires": "forecasting"
+        },
+        {
+          "id": "geospatial",
+          "name": "Geospatial data",
+          "code": "Ge"
+        },
+        {
+          "id": "rest-apis",
+          "name": "REST APIs",
+          "code": "Ap"
+        },
+        {
+          "id": "research-writing",
+          "name": "Research writing",
+          "code": "Rw"
+        }
       ]
     }
   ]

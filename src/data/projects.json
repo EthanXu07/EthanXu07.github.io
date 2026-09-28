@@ -43,10 +43,10 @@
       ],
       "skills": [
         "python",
+        "pandas",
+        "beautiful-soup",
         "huggingface",
         "nlp",
-        "pandas",
-        "web-scraping",
         "backtesting"
       ]
     },
@@ -61,7 +61,7 @@
       "links": [],
       "skills": [
         "python",
-        "web-scraping",
+        "beautiful-soup",
         "rest-apis"
       ]
     }
