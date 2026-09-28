@@ -191,25 +191,9 @@ page({
 });
 
 page({
-  out: 'guestbook/index.html', path: '/guestbook/', page: 'guestbook', title: 'Guestbook · Ethan Xu', description: 'Leave a note for Ethan Xu.',
-  content: fill(src('pages/guestbook.html'), {
-    giscus: `      <script src="https://giscus.app/client.js"
-        data-repo="EthanXu07/EthanXu07.github.io"
-        data-repo-id="R_kgDOUmrubg"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOUmrubs4DGhr1"
-        data-mapping="specific"
-        data-term="Guestbook"
-        data-strict="1"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="https://ethanxu.dev/assets/giscus-theme.css"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async></script>`,
-  }),
+  out: 'guestbook/index.html', path: '/guestbook/', page: 'guestbook', title: 'Guestbook · Ethan Xu', description: 'A shared pixel wall anyone can paint on.',
+  content: src('pages/guestbook.html'),
+  scripts: '  <script src="/pixelwall.js"></script>\n',
 });
 
 // ---------------------------------------------------------------- Interests

@@ -1,20 +1,33 @@
-    <!-- ============ GUESTBOOK ============ -->
-    <!-- Powered by giscus: entries are stored as a GitHub Discussion on this site's repo -->
+    <!-- ============ GUESTBOOK: shared pixel wall (pixelwall.js) ============ -->
     <section id="guestbook" class="world" data-checkpoint="Guestbook">
       <header class="world-head">
         <p class="world-num">GUESTBOOK</p>
-        <h1 class="world-title">Sign the guestbook</h1>
+        <h1 class="world-title">The pixel wall</h1>
       </header>
+      <p class="section-lede">Leave your mark: a shared 64×64 canvas anyone can paint on. Pick a color and click a square. One pixel every 5 seconds, no sign-in.</p>
 
-      <div class="dialog px-box guestbook-intro">
-        <span class="dialog-name">ETHAN</span>
-        <p>Thanks for visiting! Leave a note: say hi, share a trail or restaurant recommendation, or tell me what you're building. React with an emoji if you're just passing through.</p>
-      </div>
+      <div class="wall-layout">
+        <div class="wall-frame px-box">
+          <canvas id="wall" tabindex="0" aria-label="Shared pixel wall. Use arrow keys to move and Enter to paint."></canvas>
+        </div>
 
-      <div class="guestbook-frame px-box paper">
-        <div class="giscus"></div>
-        <noscript><p>The guestbook needs JavaScript. You can also email me instead.</p></noscript>
+        <aside class="wall-panel px-box paper">
+          <p class="wall-status"><span class="live-dot" id="wallLive" data-state="loading"></span> <span id="wallMode">Connecting…</span></p>
+
+          <p class="objectives-label">Pick a color</p>
+          <div class="wall-palette" id="wallPalette" role="group" aria-label="Colors"></div>
+          <p class="wall-selected"><span class="wall-chip" id="wallColorChip"></span> <strong id="wallColorName"></strong> <span class="wall-coords" id="wallCoords"></span></p>
+
+          <p class="objectives-label">Cooldown</p>
+          <div class="wall-cooldown"><div id="wallCooldownBar"></div></div>
+          <p class="wall-cd-text" id="wallCooldownText">Ready to paint!</p>
+          <p class="wall-message" id="wallMessage" aria-live="polite"></p>
+
+          <dl class="wall-stats">
+            <div><dt>Pixels painted</dt><dd id="wallCount">0</dd></div>
+            <div><dt>Canvas</dt><dd>64 × 64</dd></div>
+          </dl>
+          <p class="wall-help">Keyboard: focus the wall, move with <kbd class="arrow">←</kbd><kbd class="arrow">↑</kbd><kbd class="arrow">→</kbd><kbd class="arrow">↓</kbd>, paint with <kbd>Enter</kbd>.</p>
+        </aside>
       </div>
-      <p class="hint">Signing uses your GitHub account. Entries are public and moderated.</p>
-{{giscus}}
     </section>

@@ -613,11 +613,54 @@ main.subpage { padding-top: 5rem; }
 }
 .play-world .hint { margin-top: 1rem; color: var(--text-light-2); font-size: .85rem; }
 
-/* ---------- Guestbook ---------- */
-.guestbook-intro { max-width: 40rem; margin: 0 0 2rem; }
-.guestbook-intro p { margin: 0; color: var(--paper); }
-.guestbook-frame { padding: clamp(.75rem, 3vw, 1.5rem); min-height: 12rem; }
-#guestbook .hint { margin-top: 1rem; color: var(--text-light-2); font-size: .85rem; }
+/* ---------- Guestbook pixel wall ---------- */
+.wall-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem); gap: 1.75rem; align-items: start; }
+@media (max-width: 52rem) { .wall-layout { grid-template-columns: 1fr; } }
+.wall-frame { padding: .6rem; background: var(--edge); }
+#wall { display: block; width: 100%; aspect-ratio: 1; image-rendering: pixelated; cursor: crosshair; touch-action: manipulation; background: var(--paper); }
+#wall.cooling { cursor: wait; }
+#wall:focus-visible { outline: 3px dashed var(--gold); outline-offset: 4px; }
+.wall-panel { padding: 1.1rem 1.2rem; position: sticky; top: 6.5rem; }
+@media (max-width: 52rem) { .wall-panel { position: static; } }
+.wall-status { display: flex; align-items: center; gap: .5rem; margin: 0 0 .9rem; font: .5rem/1.6 var(--pixel); text-transform: uppercase; color: var(--text-dark-2); }
+.live-dot { width: 10px; height: 10px; flex: none; background: var(--stone, #b9b39c); box-shadow: 0 0 0 2px var(--text-dark); }
+.live-dot[data-state="live"] { background: #37b24d; animation: blink 1.4s steps(1) infinite; }
+.live-dot[data-state="local"] { background: var(--gold); }
+.live-dot[data-state="error"] { background: var(--tomato); }
+.wall-palette { display: grid; grid-template-columns: repeat(8, 1fr); gap: .35rem; }
+.swatch { aspect-ratio: 1; border: 0; background: var(--c); cursor: pointer; box-shadow: 0 0 0 2px var(--text-dark); }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--text-dark), 0 0 0 5px var(--tomato); transform: translateY(-2px); }
+.wall-selected { display: flex; align-items: center; gap: .5rem; margin: .8rem 0 0; font-size: .9rem; }
+.wall-chip { width: 1.1rem; height: 1.1rem; box-shadow: 0 0 0 2px var(--text-dark); }
+.wall-coords { margin-left: auto; font: .5rem var(--pixel); color: var(--text-dark-2); }
+.wall-cooldown { height: 10px; background: var(--paper-2); box-shadow: 0 0 0 2px var(--text-dark); }
+.wall-cooldown div { height: 100%; width: 100%; background: repeating-linear-gradient(90deg, #7aa35a 0 8px, #5c8a44 8px 10px); }
+.wall-cd-text { margin: .5rem 0 0; font-size: .85rem; color: var(--text-dark-2); }
+.wall-message { min-height: 1.3em; margin: .4rem 0 0; font-size: .85rem; }
+.wall-message[data-kind="warn"] { color: var(--tomato-dark); }
+.wall-message[data-kind="ok"] { color: #3f7a5a; }
+.wall-stats { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin: .9rem 0; }
+.wall-stats div { padding: .5rem; background: var(--paper-2); }
+.wall-stats dt { font: .45rem var(--pixel); color: var(--text-dark-2); text-transform: uppercase; }
+.wall-stats dd { margin: .3rem 0 0; font: 700 1.2rem var(--title); }
+.wall-help { margin: 0; font-size: .8rem; color: var(--text-dark-2); }
+.wall-help kbd { margin-right: 2px; }
+
+/* ---------- Warp-pipe iris transition ---------- */
+@property --iris { syntax: '<length>'; inherits: false; initial-value: 0px; }
+.warp {
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent var(--iris), #0f1714 calc(var(--iris) + 1px));
+}
+.warp-out { animation: iris-close .6s steps(10, end) forwards; }
+html.warp-in::after {
+  content: ""; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  background: radial-gradient(circle at 50% 45%, transparent var(--iris), #0f1714 calc(var(--iris) + 1px));
+  animation: iris-open .75s .1s steps(10, end) both;
+}
+@keyframes iris-close { from { --iris: 150vmax; } to { --iris: 0px; } }
+@keyframes iris-open { from { --iris: 0px; } to { --iris: 150vmax; } }
+@media (prefers-reduced-motion: reduce) { html.warp-in::after { display: none; } }
 
 /* ---------- Toast ---------- */
 .toast {
