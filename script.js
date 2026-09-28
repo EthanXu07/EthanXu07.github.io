@@ -261,7 +261,7 @@ document.addEventListener('keydown', (e) => {
   const link = $$('.hud-nav a')[Number(e.key) - 1];
   if (/^[1-6]$/.test(e.key) && link) {
     location.href = link.href;
-  } else if (e.key.toLowerCase() === 'r' && document.body.dataset.page !== 'play') {
+  } else if (e.key.toLowerCase() === 'r') {
     openResume();
   }
 });

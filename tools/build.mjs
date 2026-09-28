@@ -6,7 +6,7 @@
 //   src/pages/*.html          page bodies
 //   src/data/experience.json  quests (jobs + research)   ┐ one source of truth for the
 //   src/data/projects.json    loot (projects + trophies) │ quest log, loot, skill tree,
-//   src/data/skills.json      skill tree branches        │ and bonus level
+//   src/data/skills.json      skill tree branches        │
 //   src/interests.json        side quests                ┘
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -174,20 +174,6 @@ const skillData = Object.fromEntries(Object.keys(skillIndex).map((id) => [id, { 
 page({
   out: 'skills/index.html', path: '/skills/', page: 'skills', title: 'Skill tree · Ethan Xu', description: 'Skills Ethan Xu has used on real projects and jobs.',
   content: fill(src('pages/skills.html'), { branches: branches.map(renderBranch).join('\n'), skillData: inlineJson(skillData) }),
-});
-
-// Bonus level: quests in chronological order become platforms; their skills become coins
-// "?" blocks pop out trophies and project names as fun facts
-const levelData = {
-  quests: [...experience].sort((a, b) => a.start.localeCompare(b.start)).map((q) => ({
-    title: q.title, org: q.org, when: q.when, skills: q.skills.map(skillName),
-  })),
-  facts: [...trophies.map((t) => t.label), ...projects.map((p) => `${p.title} unlocked`)],
-};
-page({
-  out: 'play/index.html', path: '/play/', page: 'play', title: 'Bonus level · Ethan Xu', description: 'A tiny platformer through Ethan Xu\'s career.',
-  content: fill(src('pages/play.html'), { levelData: inlineJson(levelData) }),
-  scripts: '  <script src="/play.js"></script>\n',
 });
 
 // ---------------------------------------------------------------- Interests

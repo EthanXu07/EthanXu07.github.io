@@ -11,7 +11,7 @@ node tools/build.mjs
 
 | File | What it controls |
 |---|---|
-| `src/data/experience.json` | Quest log entries → also the Bonus level and skill tree links |
+| `src/data/experience.json` | Quest log entries → also the skill tree links |
 | `src/data/projects.json` | Loot (projects, publications) and trophies |
 | `src/data/skills.json` | Skill tree branches. A skill's level = how many quests/projects list it in their `skills` |
 | `src/interests.json` | Side quests: one card + one page each, with photos and text |
