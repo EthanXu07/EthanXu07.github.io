@@ -20,6 +20,12 @@ if (SITE.email && $('#copyEmail')) {
 }
 $('#year').textContent = new Date().getFullYear();
 
+// Finish the warp-pipe iris opening (the class is added in <head> before first paint)
+if (document.documentElement.classList.contains('warp-in')) {
+  try { sessionStorage.removeItem('warpIn'); } catch { /* ignore */ }
+  setTimeout(() => document.documentElement.classList.remove('warp-in'), 1000);
+}
+
 // =====================================================================
 //  Pixel sprite helpers
 // =====================================================================

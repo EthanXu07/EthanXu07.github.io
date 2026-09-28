@@ -45,7 +45,8 @@
   const MID_CHECKPOINT = 540;
   const FLAG_X = 1230;
   const CASTLE_X = 1270;
-  const GB_PIPE = { x: 1372, w: 22, h: 0, maxH: 28, kind: 'pipe', guestbook: true };
+  const GB_PIPE = { x: 1352, w: 22, h: 0, maxH: 28, kind: 'pipe', guestbook: true };
+  const DOOR_X = 1295; // castle door (CASTLE_X + 25)
   const WORLD_W = 1430;
 
   // Ground with three gaps (the middle one has a moving platform)
@@ -87,7 +88,7 @@
 
   // ---------- State ----------
   const keys = { left: false, right: false, jump: false, down: false };
-  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, checkpoint, popups, particles, winT, entering, near;
+  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, checkpoint, popups, particles, winT, entering, near, phase, phaseT, hidePlayer;
   let stars = [], clouds = [];
 
   function newGame() {
@@ -108,7 +109,7 @@
     hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0; magnet = 0; feather = 0; airJumps = 0;
     checkpoint = START_X;
     popups = []; particles = [];
-    winT = 0; entering = null; near = null;
+    winT = 0; entering = null; near = null; phase = null; phaseT = 0; hidePlayer = false;
     overEl.hidden = true;
     prompt.el.hidden = true;
   }
@@ -149,7 +150,7 @@
     const onControl = e.target.closest?.('a, button');
     if (e.key === 'Enter' && !onControl && playing) {
       if (state === 'over') { e.preventDefault(); newGame(); return; }
-      if (near === GB_PIPE) { e.preventDefault(); enterPipe(); return; }
+      if (state === 'won') { e.preventDefault(); enterPipe(); return; }
     }
     const k = KEYMAP[e.key];
     if (!k) return;
@@ -186,13 +187,13 @@
     if (kind === 'clear') {
       prompt.label.textContent = 'Level clear!';
       prompt.title.textContent = `Score ${score}`;
-      prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. A secret pipe just opened →`;
+      prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Something is happening at the castle…`;
       prompt.go.href = '#contact';
       prompt.go.firstChild.textContent = 'Contact ';
     } else if (kind === GB_PIPE) {
       prompt.label.textContent = 'Secret pipe · press Enter';
       prompt.title.textContent = 'Guestbook';
-      prompt.desc.textContent = 'Sign it before you go!';
+      prompt.desc.textContent = 'Paint a pixel on the shared wall before you go!';
       prompt.go.href = '/guestbook/';
       prompt.go.firstChild.textContent = 'Enter ';
     }
@@ -200,12 +201,27 @@
   }
 
   function enterPipe() {
-    if (entering) return;
-    const onTop = p.onGround && Math.abs(p.y + PH + GB_PIPE.h) < 1 && p.x + PW > GB_PIPE.x && p.x < GB_PIPE.x + GB_PIPE.w;
-    if (!onTop || reduceMotion) { window.location.href = '/guestbook/'; return; }
+    if (entering || phase !== 'ready') return;
+    if (reduceMotion) { warpToGuestbook(); return; }
+    // Hop onto the pipe, then sink into it
     p.x = GB_PIPE.x + GB_PIPE.w / 2 - PW / 2;
-    p.vx = 0;
-    entering = { frames: 26 };
+    p.y = -GB_PIPE.h - PH;
+    p.vx = 0; p.vy = 0; p.onGround = true; p.dir = 1;
+    entering = { frames: 30 };
+    prompt.el.hidden = true;
+  }
+
+  // Pixel iris-wipe closing on the pipe, then load the guestbook (which irises open)
+  function warpToGuestbook() {
+    try { sessionStorage.setItem('warpIn', '1'); } catch { /* storage blocked */ }
+    if (reduceMotion) { window.location.href = '/guestbook/'; return; }
+    const r = canvas.getBoundingClientRect();
+    const wipe = document.createElement('div');
+    wipe.className = 'warp warp-out';
+    wipe.style.setProperty('--x', `${r.left + (GB_PIPE.x + GB_PIPE.w / 2 - Math.round(cam)) * (r.width / W)}px`);
+    wipe.style.setProperty('--y', `${r.top + (G - GB_PIPE.h) * (r.height / H)}px`);
+    document.body.appendChild(wipe);
+    setTimeout(() => { window.location.href = '/guestbook/'; }, 650);
   }
 
   // ---------- Damage, death, game over ----------
@@ -292,7 +308,7 @@
 
     if (entering) {
       p.y += 0.8;
-      if (--entering.frames <= 0) { window.location.href = '/guestbook/'; entering.frames = Infinity; }
+      if (--entering.frames === 0) warpToGuestbook();
       return;
     }
     if (!playing || state === 'over') return;
@@ -306,14 +322,31 @@
 
     for (const m of movers) { m.x += m.vx; if (m.x < m.minX || m.x > m.maxX) m.vx *= -1; }
 
-    // Player controls (auto-walk toward the castle right after touching the flag)
-    const auto = state === 'won' && t - winT < 70;
-    const left = !auto && keys.left, right = auto || keys.right;
+    // Ending: walk into the castle door → fireworks → step out → Guestbook pipe rises
+    let autoRight = false;
+    if (state === 'won') {
+      if (phase === 'walk') {
+        autoRight = p.x < DOOR_X;
+        if (!autoRight && p.onGround) { phase = 'inside'; phaseT = t; hidePlayer = true; p.vx = 0; }
+      } else if (phase === 'inside') {
+        const dt = t - phaseT;
+        if (dt === 12 || dt === 28 || dt === 44) {
+          const fx = CASTLE_X + 10 + ((dt * 7) % 40), fy = -95 - (dt % 20);
+          burst(fx, fy, ['#e8a93a', '#d4553a', '#8fb8c9'][dt % 3], 14);
+        }
+        if (dt > 60) { phase = 'out'; phaseT = t; hidePlayer = false; }
+      } else if (phase === 'out') {
+        autoRight = p.x < GB_PIPE.x - 20;
+        if (!autoRight && GB_PIPE.h >= GB_PIPE.maxH) phase = 'ready';
+      }
+    }
+    const auto = state === 'won' && phase !== 'ready';
+    const left = !auto && keys.left, right = auto ? autoRight : keys.right;
     const accel = p.onGround ? 0.22 : 0.15;
     if (left && !right) { p.vx -= accel; p.dir = -1; }
     else if (right && !left) { p.vx += accel; p.dir = 1; }
     else p.vx *= p.onGround ? 0.75 : 0.95;
-    const maxV = auto ? 1.2 : 2;
+    const maxV = auto ? 1.1 : 2;
     p.vx = Math.max(-maxV, Math.min(maxV, p.vx));
     if (Math.abs(p.vx) < 0.02) p.vx = 0;
     if (!auto && keys.jump && !p.jumpHeld) {
@@ -417,15 +450,15 @@
     if (state === 'play' && p.x + PW >= FLAG_X) {
       state = 'won';
       winT = t;
+      phase = 'walk';
       score += hearts * 500;
       burst(FLAG_X, -60, '#e8a93a', 16);
       popup(FLAG_X, -72, 'Level clear!', 120, true);
     }
     if (state === 'won') {
-      if (t - winT > 70 && GB_PIPE.h < GB_PIPE.maxH) GB_PIPE.h = Math.min(GB_PIPE.maxH, GB_PIPE.h + 0.7);
-      const atPipe = GB_PIPE.h >= GB_PIPE.maxH && p.x + PW > GB_PIPE.x - 18 && p.x < GB_PIPE.x + GB_PIPE.w + 18;
-      setPrompt(atPipe ? GB_PIPE : 'clear');
-      if (keys.down && atPipe) enterPipe();
+      if ((phase === 'out' || phase === 'ready') && GB_PIPE.h < GB_PIPE.maxH) GB_PIPE.h = Math.min(GB_PIPE.maxH, GB_PIPE.h + 0.8);
+      setPrompt(phase === 'ready' ? GB_PIPE : 'clear');
+      if (keys.down && phase === 'ready') enterPipe();
     }
   }
 
@@ -530,7 +563,7 @@
     for (let i = 0; i < 3; i++) ctx.fillRect(x + 18 + i * 9, -75, 6, 5);
     ctx.fillStyle = '#1c2a25'; ctx.fillRect(x + 24, -20, 12, 20); ctx.fillRect(x + 26, -62, 8, 8);
     ctx.fillStyle = '#d4553a'; ctx.fillRect(x + 30, -88, 1, 13);
-    if (state === 'won' && t - winT > 70) ctx.fillRect(x + 31, -88, 7, 5); // castle flag goes up
+    if (state === 'won' && phase !== 'walk') ctx.fillRect(x + 31, -88, 7, 5); // castle flag goes up
   }
   function drawHud() {
     const narrow = window.innerWidth <= 832;
@@ -650,7 +683,7 @@
       }
     }
 
-    if (state !== 'over' && !(invuln > 0 && Math.floor(t / 4) % 2)) {
+    if (state !== 'over' && !hidePlayer && !(invuln > 0 && Math.floor(t / 4) % 2)) {
       const moving = Math.abs(p.vx) > 0.3 && p.onGround;
       const frame = !p.onGround || (moving && Math.floor(t / 7) % 2) ? SPRITE.walk : SPRITE.stand;
       const breathe = !playing && !reduceMotion && Math.floor(t / 40) % 2 ? 1 : 0;
@@ -693,12 +726,15 @@
   }).observe(section);
 
   // Back button after warping into the pipe: don't stay mid-sink
-  window.addEventListener('pageshow', () => { if (entering) { entering = null; p.y = -GB_PIPE.h - PH; } });
+  window.addEventListener('pageshow', () => {
+    document.querySelectorAll('.warp').forEach((w) => w.remove());
+    if (entering) { entering = null; p.y = -GB_PIPE.h - PH; prompt.el.hidden = true; near = null; }
+  });
 
   // Test hook: ?debug exposes state for automated play-testing
   if (new URLSearchParams(location.search).has('debug')) {
     window.__mover = () => movers[0].x;
-    window.__explorer = () => ({ keys, movers, magnet, feather, p, enemies, blocks, items, GB_PIPE, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, entering, near });
+    window.__explorer = () => ({ phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, GB_PIPE, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, entering, near });
   }
 
   let resizeTimer;

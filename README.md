@@ -20,4 +20,4 @@ node tools/build.mjs
 
 Edit, rebuild, then commit the generated `index.html` files along with `src/`.
 
-The guestbook uses [giscus](https://giscus.app): entries are GitHub Discussions on this repo (Announcements → "Guestbook").
+The guestbook is a shared pixel wall (`pixelwall.js`). To make it shared, create a free [Supabase](https://supabase.com) project, run `supabase/pixel-wall.sql` in its SQL Editor, and paste the project URL + anon key into `site-config.js` → `pixelWall`. Until then it runs in "this browser only" preview mode.

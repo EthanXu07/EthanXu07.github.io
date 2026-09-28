@@ -14,6 +14,14 @@ window.SITE = {
   resumeFile: "/assets/resume.pdf",
   resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename when they click Download
 
+  // Guestbook pixel wall: paste your Supabase project URL + anon (public) key
+  // to make it shared. Run supabase/pixel-wall.sql once first. Leave blank to
+  // keep the wall in "this browser only" preview mode.
+  pixelWall: {
+    supabaseUrl: "",
+    supabaseAnonKey: "",
+  },
+
   email: "ethan_xu@berkeley.edu",
   github: "https://github.com/EthanXu07",
   linkedin: "https://www.linkedin.com/in/EthanXu07/",
