@@ -11,13 +11,19 @@ const links = { github: SITE.github, linkedin: SITE.linkedin, instagram: SITE.in
 $$('[data-link]').forEach((a) => {
   const url = links[a.dataset.link];
   if (url && a.dataset.link !== 'resume') a.href = url;
-  if (a.dataset.link === 'instagram') a.hidden = !url;
+  if (a.dataset.link === 'instagram') (a.closest('li') || a).hidden = !url;
+  // Show the handle under each contact row, e.g. "@ethan_xu__"
+  const handle = a.querySelector('[data-handle]');
+  if (handle && url) {
+    const tail = url.replace(/\/+$/, '').split('/').pop();
+    handle.textContent = { linkedin: `in/${tail}`, instagram: `@${tail}` }[a.dataset.link] || tail;
+  }
 });
 $('#resumeDownload').href = SITE.resumeFile || '/assets/resume.pdf';
 if (SITE.resumeDownloadName) $('#resumeDownload').download = SITE.resumeDownloadName;
 if (SITE.email && $('#copyEmail')) {
   $('#copyEmail').dataset.email = SITE.email;
-  $('#emailLabel').textContent = SITE.email;
+  $('#emailLabel').replaceChildren(...SITE.email.split('@').flatMap((part, i) => (i ? [document.createElement('wbr'), '@' + part] : [part])));
 }
 $('#year').textContent = new Date().getFullYear();
 
@@ -226,9 +232,9 @@ $('#copyEmail')?.addEventListener('click', async (e) => {
   const email = e.currentTarget.dataset.email;
   try {
     await navigator.clipboard.writeText(email);
-    $('#copyTag').textContent = 'copied';
+    $('#copyTag').textContent = 'Copied';
     toast('★ Email copied!');
-    setTimeout(() => { $('#copyTag').textContent = 'copy'; }, 1800);
+    setTimeout(() => { $('#copyTag').textContent = 'Copy'; }, 1800);
   } catch (err) {
     window.location.href = `mailto:${email}`;
   }
@@ -314,31 +320,125 @@ document.addEventListener('keydown', (e) => {
 })();
 
 // =====================================================================
-//  Save-point campfire
+//  Save-point campfire: me roasting a marshmallow by the fire, a tent,
+//  pines and a night sky. 72×44 canvas, scaled up with pixelated CSS.
 // =====================================================================
 (() => {
   const c = $('#fire');
   if (!c) return;
   const g = c.getContext('2d');
-  const FLAME = ['#f3c969', '#e8a93a', '#d4553a', '#9c3423'];
-  function draw() {
-    g.clearRect(0, 0, 16, 16);
-    // Logs
-    g.fillStyle = '#6b4630'; g.fillRect(3, 13, 10, 2);
-    g.fillStyle = '#4a2f20'; g.fillRect(2, 14, 3, 2); g.fillRect(11, 14, 3, 2);
-    // Flames: taller in the middle, randomly flickering
-    for (let x = 4; x < 12; x++) {
-      const mid = 4 - Math.abs(x - 7.5);
-      const h = Math.max(1, Math.round(mid * 2.2 + Math.random() * 3));
+  const W = c.width, H = c.height, GROUND = 32;
+  const FLAME = ['#fff1b8', '#f3c969', '#e8a93a', '#d4553a', '#9c3423'];
+  const FIRE_X = 36, FIRE_Y = 35;
+  const px = (x, y, col, w = 1, h = 1) => { g.fillStyle = col; g.fillRect(x, y, w, h); };
+  const line = (x0, y0, x1, y1, col, t = 1) => {
+    const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+    for (let i = 0; i <= n; i++) px(Math.round(x0 + ((x1 - x0) * i) / n), Math.round(y0 + ((y1 - y0) * i) / n), col, t, t);
+  };
+  const STARS = [[4, 3], [11, 8], [17, 2], [24, 6], [30, 3], [38, 9], [44, 4], [49, 11], [55, 2], [66, 10], [69, 3], [8, 14], [27, 12], [41, 15]];
+  const sparks = [];
+  let frame = 0;
+
+  function sky() {
+    for (let y = 0; y < GROUND; y++) {
+      const t = y / GROUND;
+      px(0, y, `rgb(${Math.round(14 + t * 20)},${Math.round(24 + t * 26)},${Math.round(36 + t * 20)})`, W, 1);
+    }
+    STARS.forEach(([x, y], i) => px(x, y, (frame + i * 7) % 23 < 2 ? '#5b6f78' : '#f1e6cc'));
+    // Crescent moon
+    for (let y = -3; y <= 3; y++) for (let x = -3; x <= 3; x++) {
+      if (x * x + y * y <= 10 && (x - 2) ** 2 + (y + 1) ** 2 > 7) px(60 + x, 7 + y, '#f3e7c4');
+    }
+  }
+  function pine(x, base, h) {
+    px(x, base - 2, '#2a1c14', 1, 2);
+    for (let i = 0; i < h; i++) { const w = Math.floor((i * 5) / h) + 1; px(x - w + 1, base - 2 - h + i, '#12201a', w * 2 - 1, 1); }
+  }
+  function ground() {
+    px(0, GROUND, '#24382a', W, H - GROUND);
+    px(0, GROUND, '#2f4a34', W, 1);
+    [[3, 36], [14, 41], [23, 38], [46, 42], [52, 38], [66, 40], [8, 42], [30, 42]].forEach(([x, y]) => { px(x, y, '#3d5e3f'); px(x + 1, y - 1, '#3d5e3f'); px(x + 2, y, '#3d5e3f'); });
+  }
+  function tent() {
+    for (let y = 22; y <= 35; y++) {
+      const hw = Math.round((y - 22) * 0.85);
+      px(60 - hw, y, '#b8894f', hw, 1);          // shaded side
+      px(60, y, '#d9ae6c', hw + 1, 1);          // lit side
+      if (y >= 27) { const dw = Math.round((y - 27) * 0.55); px(60 - dw, y, '#2b1d14', dw * 2 + 1, 1); } // door
+    }
+    line(60, 20, 60, 22, '#6b4630');           // pole tip
+    px(59, 21, '#d4553a', 1, 1);               // pennant
+    px(58, 21, '#d4553a', 1, 1);
+  }
+  function glow(strength) {
+    const r = g.createRadialGradient(FIRE_X, FIRE_Y - 3, 1, FIRE_X, FIRE_Y - 3, 22);
+    r.addColorStop(0, `rgba(243,169,58,${strength})`);
+    r.addColorStop(1, 'rgba(243,169,58,0)');
+    g.fillStyle = r; g.fillRect(0, 0, W, H);
+  }
+  function stones() {
+    [[28, 36], [31, 37], [35, 38], [39, 37], [42, 36], [29, 34], [43, 34]].forEach(([x, y]) => { px(x, y, '#6f7470', 2, 2); px(x, y, '#9aa09a'); });
+  }
+  function logs() {
+    line(30, 36, 41, 32, '#5a3a26', 2);
+    line(31, 32, 42, 36, '#6b4630', 2);
+    px(30, 36, '#c9a66b'); px(42, 36, '#c9a66b');
+  }
+  function flames() {
+    for (let x = FIRE_X - 5; x <= FIRE_X + 5; x++) {
+      const mid = 5.5 - Math.abs(x - FIRE_X);
+      const h = Math.max(1, Math.round(mid * 1.9 + Math.random() * 3.5));
       for (let y = 0; y < h; y++) {
-        const k = Math.min(FLAME.length - 1, Math.floor((y / h) * FLAME.length));
-        g.fillStyle = FLAME[k];
-        g.fillRect(x, 12 - y, 1, 1);
+        const k = Math.min(FLAME.length - 1, Math.floor(((h - y) / h) * FLAME.length * 0.95));
+        px(x, FIRE_Y - 2 - y, FLAME[FLAME.length - 1 - k]);
       }
     }
-    // Sparks
-    if (Math.random() > 0.5) { g.fillStyle = '#f3c969'; g.fillRect(5 + Math.floor(Math.random() * 6), 1 + Math.floor(Math.random() * 3), 1, 1); }
+  }
+  function camper() {
+    // Seat log
+    px(9, 33, '#5a3a26', 16, 3); px(9, 33, '#6b4630', 16, 1); px(9, 33, '#c9a66b', 1, 3); px(24, 33, '#c9a66b', 1, 3);
+    // Me: head + hoodie from the site sprite, blinking now and then
+    const blink = frame % 38 === 0;
+    const rows = HEAD.map((r) => (blink ? r.replace(/e/g, 's') : r));
+    drawSprite(g, rows, 11, 20);
+    drawSprite(g, ['..pppppppp..', '..ppp..ppp..', '..ppp..ppp..', '.kkkk..kkkk.'], 11, 33);
+    // Roasting stick + marshmallow (toasts over time)
+    line(22, 30, 29, 25, '#8a5a3a');
+    const toast = Math.min(3, Math.floor(frame / 40) % 4);
+    px(29, 23, ['#fffaf0', '#f5dfb0', '#d9a066', '#8a5a3a'][toast], 3, 3);
+    px(29, 23, '#fffaf0');
+  }
+  function updateSparks() {
+    if (Math.random() > 0.45) sparks.push({ x: FIRE_X - 3 + Math.random() * 6, y: FIRE_Y - 8, vx: Math.random() * 0.6 - 0.3, life: 10 + Math.random() * 10 });
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      s.x += s.vx; s.y -= 0.9; s.life--;
+      if (s.life <= 0 || s.y < 2) { sparks.splice(i, 1); continue; }
+      px(Math.round(s.x), Math.round(s.y), s.life > 8 ? '#f3c969' : '#d4553a');
+    }
+  }
+  function smoke() {
+    for (let i = 0; i < 4; i++) {
+      const y = ((frame * 0.5 + i * 5) % 20);
+      const x = FIRE_X + Math.round(Math.sin((frame + i * 9) / 6) * 1.5 + y * 0.25);
+      g.fillStyle = `rgba(185,179,156,${0.28 * (1 - y / 20)})`;
+      g.fillRect(x, FIRE_Y - 14 - y, 2, 1);
+    }
+  }
+  function draw() {
+    frame++;
+    sky();
+    pine(4, GROUND + 1, 13); pine(47, GROUND + 1, 10); pine(69, GROUND + 1, 14);
+    ground();
+    tent();
+    glow(0.2 + Math.random() * 0.08);
+    stones();
+    logs();
+    camper();
+    smoke();
+    flames();
+    updateSparks();
   }
   draw();
-  if (!reduceMotion) setInterval(draw, 140);
+  if (!reduceMotion) setInterval(draw, 120);
 })();
