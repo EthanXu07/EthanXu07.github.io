@@ -484,7 +484,21 @@
 
   // ---------- Drawing ----------
   const SIGN_FONT = '8px "Press Start 2P", monospace';
-  const SKY = ['#22303f', '#2b3f50', '#3b5263', '#5d6670', '#96766c', '#c98b6b', '#e6ad74'];
+  // Dusk sky: colour stops from the top of the screen down to the horizon
+  const SKY_STOPS = [[0, '#1b2437'], [0.3, '#2b3c52'], [0.52, '#4b586d'], [0.7, '#86697a'], [0.85, '#c7826c'], [1, '#efb074']];
+  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+  function skyColor(k) {
+    for (let i = 1; i < SKY_STOPS.length; i++) {
+      const [k1, c1] = SKY_STOPS[i];
+      if (k <= k1) { const [k0, c0] = SKY_STOPS[i - 1]; const c = mix(hex(c0), hex(c1), (k - k0) / (k1 - k0)); return `rgb(${c[0]},${c[1]},${c[2]})`; }
+    }
+    return SKY_STOPS[SKY_STOPS.length - 1][1];
+  }
+  let skyRows = [], skyRowsH = 0;
+  // Far mountains: jagged ridge with snow on the tallest peaks
+  const ridge = (x) => 18 + 8 * Math.sin(x * 0.011 + 0.7) + 7 * Math.abs(Math.sin(x * 0.037 + 2.1)) + 3 * Math.abs(Math.sin(x * 0.083 + 0.3));
+  const birds = Array.from({ length: 5 }, (_, i) => ({ x: i * 97 + 20, y: 30 + ((i * 23) % 40), v: 0.12 + (i % 3) * 0.04, ph: i * 1.7 }));
   const hill = (x, amp, base, f, seed) => base - amp * (0.55 + 0.45 * Math.sin(x * f + seed) * Math.sin(x * f * 2.3 + seed * 1.7));
 
   function drawBrick(x, y) {
@@ -637,25 +651,64 @@
 
     // --- Screen-space background ---
     const skyH = G - 20;
-    const band = skyH / SKY.length;
-    SKY.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(0, Math.floor(i * band), W, Math.ceil(band) + 1); });
+    // Smooth vertical gradient, one colour per pixel row (cached per screen size)
+    if (skyRowsH !== G) { skyRows = Array.from({ length: G }, (_, y) => skyColor(Math.min(1, y / skyH))); skyRowsH = G; }
+    for (let y = 0; y < G; y++) { ctx.fillStyle = skyRows[y]; ctx.fillRect(0, y, W, 1); }
     for (const s of stars) {
-      if (s.y > skyH * 0.45) continue;
-      if (reduceMotion || Math.sin(t * 0.03 + s.p) > 0.2) { ctx.fillStyle = '#f1e6cc'; ctx.fillRect(((s.x - cx * 0.05) % W + W) % W, s.y, 1, 1); }
+      if (s.y > skyH * 0.42) continue;
+      if (reduceMotion || Math.sin(t * 0.03 + s.p) > 0.2) { ctx.fillStyle = s.y < skyH * 0.2 ? '#f1e6cc' : '#b9b3b8'; ctx.fillRect(((s.x - cx * 0.05) % W + W) % W, s.y, 1, 1); }
     }
-    ctx.fillStyle = '#f3c969';
-    const sunX = W * 0.74 - cx * 0.03, sunY = skyH - 18;
-    for (let yy = -13; yy <= 13; yy++) { const half = Math.floor(Math.sqrt(169 - yy * yy)); ctx.fillRect(Math.round(sunX - half), sunY + yy, half * 2, 1); }
+    // Setting sun with a soft halo
+    const sunX = Math.round(W * 0.74 - cx * 0.03), sunY = skyH - 30;
+    for (const [r, a] of [[30, 0.07], [23, 0.09], [17, 0.12]]) {
+      ctx.fillStyle = `rgba(255,214,150,${a})`;
+      for (let yy = -r; yy <= r; yy++) { const half = Math.floor(Math.sqrt(r * r - yy * yy)); ctx.fillRect(sunX - half, sunY + yy, half * 2, 1); }
+    }
+    ctx.fillStyle = '#f7cf78';
+    for (let yy = -13; yy <= 13; yy++) { const half = Math.floor(Math.sqrt(169 - yy * yy)); ctx.fillRect(sunX - half, sunY + yy, half * 2, 1); }
+    ctx.fillStyle = '#fbe3a4';
+    for (let yy = -9; yy <= 3; yy++) { const half = Math.floor(Math.sqrt(81 - yy * yy) * 0.6); ctx.fillRect(sunX - half - 3, sunY + yy, half, 1); }
     for (const c of clouds) {
       const x = Math.round(((c.x - cx * 0.2) % (W + 200) + W + 200) % (W + 200) - 100);
       ctx.fillStyle = '#e9c9a8'; ctx.fillRect(x, c.y + 2, c.w, 3); ctx.fillRect(x + 2, c.y, Math.round(c.w * 0.45), 2); ctx.fillRect(x + Math.round(c.w * 0.4), c.y - 1, Math.round(c.w * 0.35), 3);
       ctx.fillStyle = '#c99f86'; ctx.fillRect(x + 1, c.y + 4, c.w - 2, 1);
     }
+    // Birds drifting across the sky
+    {
+      ctx.fillStyle = '#3a3346';
+      for (const b of birds) {
+        const bx = Math.round((((b.x + t * b.v - cx * 0.1) % (W + 40)) + W + 40) % (W + 40) - 20);
+        const by = Math.round(b.y + Math.sin(t * 0.02 + b.ph) * 3);
+        const up = !reduceMotion && Math.floor(t / 12 + b.ph) % 2;
+        ctx.fillRect(bx, by, 1, 1);
+        ctx.fillRect(bx - 1, by - (up ? 1 : 0), 1, 1); ctx.fillRect(bx + 1, by - (up ? 1 : 0), 1, 1);
+        ctx.fillRect(bx - 2, by - (up ? 2 : 0), 1, 1); ctx.fillRect(bx + 2, by - (up ? 2 : 0), 1, 1);
+      }
+    }
+    // Distant snow-capped mountains (hazy, close to the sky colour)
+    for (let sx = 0; sx < W; sx++) {
+      const wx = sx + cx * 0.06;
+      const h = ridge(wx), top = Math.round(G - 22 - h);
+      ctx.fillStyle = '#76687d'; ctx.fillRect(sx, top, 1, G - top);
+      if (h > 29) { ctx.fillStyle = '#a99aa8'; ctx.fillRect(sx, top, 1, Math.round((h - 29) * 1.2)); }      // snow only on the tallest peaks
+      ctx.fillStyle = 'rgba(239,176,116,0.14)'; ctx.fillRect(sx, top, 1, G - top);                  // warm haze from the sunset
+    }
+    // Golden Gate Bridge, far off in the haze (appears once, slow parallax)
+    const bx0 = Math.round(W * 0.2 + 260 - cx * 0.12);
+    if (bx0 > -140 && bx0 < W + 20) {
+      const deck = G - 44, span = 90, tw = 30;
+      ctx.fillStyle = '#9a6a6a';
+      ctx.fillRect(bx0 - 30, deck, span + 60, 1);                                    // road deck
+      for (const tx of [bx0, bx0 + span]) { ctx.fillRect(tx - 1, deck - tw, 3, tw + 8); ctx.fillRect(tx - 2, deck - tw + 6, 5, 1); ctx.fillRect(tx - 2, deck - tw + 16, 5, 1); }
+      for (let x = 0; x <= span; x++) { const k = x / span - 0.5; ctx.fillRect(bx0 + x, Math.round(deck - tw + 2 + (1 - 4 * k * k) * (tw - 4)), 1, 1); } // main cable
+      for (let x = 0; x <= 30; x++) { ctx.fillRect(bx0 - x, Math.round(deck - tw + 2 + (x / 30) * (tw - 4)), 1, 1); ctx.fillRect(bx0 + span + x, Math.round(deck - tw + 2 + (x / 30) * (tw - 4)), 1, 1); }
+      ctx.fillStyle = 'rgba(118,104,125,0.35)'; for (let x = 6; x < span; x += 6) { const k = x / span - 0.5; const cy = Math.round(deck - tw + 2 + (1 - 4 * k * k) * (tw - 4)); ctx.fillRect(bx0 + x, cy, 1, deck - cy); } // suspenders
+    }
     const layer = (color, amp, base, f, seed, speed) => {
       ctx.fillStyle = color;
       for (let sx = 0; sx < W; sx++) { const top = Math.round(hill(sx + cx * speed, amp, base, f, seed)); ctx.fillRect(sx, top, 1, G - top); }
     };
-    layer('#5a6269', 34, G - 30, 0.018, 1.3, 0.15);
+    layer('#5d6170', 34, G - 30, 0.018, 1.3, 0.15);
     layer('#3d5a4c', 22, G - 12, 0.03, 4.1, 0.35);
     ctx.fillStyle = '#1f3a2d';
     for (let i = 0; i < 44; i++) {
