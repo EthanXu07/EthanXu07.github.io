@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Ethan Xu · by the fire</title>
-  <meta name="description" content="Ethan Xu: CS at UC Berkeley. You found the campfire.">
+  <meta name="description" content="Ethan Xu: Computer Science at UC Berkeley.">
   <!-- The secret card: reached from the campfire past the castle in the title-screen level. Not linked in the nav. -->
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#07060c">
@@ -51,11 +51,6 @@
     @keyframes flicker { 0%, 100% { opacity: 1; } 45% { opacity: .93; } 52% { opacity: 1; } 70% { opacity: .96; } }
     @keyframes arrive { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
 
-    .found {
-      position: fixed; top: calc(1.1rem + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
-      margin: 0; font: italic 400 .95rem "Fraunces", Georgia, serif; color: rgba(245, 230, 207, .7);
-      white-space: nowrap; animation: arrive 2.4s 1.4s ease-out both;
-    }
     .back {
       position: fixed; left: calc(1rem + env(safe-area-inset-left, 0px)); bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
       font-size: .78rem; color: rgba(245, 230, 207, .55); text-decoration: none;
@@ -67,7 +62,7 @@
     .intro { position: fixed; inset: 0; background: #07060c; pointer-events: none; animation: introFade 1.8s .15s ease-out forwards; }
     @keyframes introFade { to { opacity: 0; visibility: hidden; } }
     .card { animation-delay: 0s, .9s; }
-    @media (prefers-reduced-motion: reduce) { .card, .grain, .found { animation: none; } .intro { display: none; } }
+    @media (prefers-reduced-motion: reduce) { .card, .grain { animation: none; } .intro { display: none; } }
   </style>
 </head>
 <body>
@@ -76,7 +71,6 @@
   <div class="grain"></div>
 
   <div class="intro" aria-hidden="true"></div>
-  <p class="found">You found the campfire. Pull up a log.</p>
 
   <main class="card" id="card">
     <h1>Ethan Xu</h1>
@@ -272,7 +266,7 @@
       };
 
       // seat log
-      part(() => ctx.roundRect(x - 44, y + 8, 88, 16, 8), '#4a2c1c');
+      part(() => ctx.roundRect(x - 44, y + 8, 88, 16, 8), '#2a1a12');
       // legs (knees toward the fire) + shoes
       for (const sd of [-1, 1]) {
         part(() => ctx.roundRect(x + sd * 11 - 8, y - 8, 16, 32, 7), o.pants);
@@ -287,22 +281,14 @@
         ctx.quadraticCurveTo(x, y - 66, x - 23, y - 58);
       }, o.top);
       if (o.hood) {                                   // drawstrings + pocket
-        ctx.strokeStyle = 'rgba(240,230,210,0.55)'; ctx.lineWidth = 1.6;
+        ctx.strokeStyle = 'rgba(255,190,130,0.22)'; ctx.lineWidth = 1.4;
         ctx.beginPath(); ctx.moveTo(x - 5, y - 56); ctx.lineTo(x - 6, y - 44); ctx.moveTo(x + 5, y - 56); ctx.lineTo(x + 6, y - 44); ctx.stroke();
         ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.moveTo(x - 13, y - 22); ctx.lineTo(x + 13, y - 22); ctx.stroke();
       }
       // head + face
       part(() => ctx.arc(x, y - 77, 13.5, 0, 6.283), o.skin);
-      ctx.fillStyle = '#1d120d';
-      if (o.glasses) {
-        ctx.strokeStyle = '#1d120d'; ctx.lineWidth = 1.6;
-        ctx.beginPath(); ctx.arc(x - 5, y - 77, 3.6, 0, 6.283); ctx.moveTo(x + 8.6, y - 77); ctx.arc(x + 5, y - 77, 3.6, 0, 6.283); ctx.moveTo(x - 1.4, y - 77); ctx.lineTo(x + 1.4, y - 77); ctx.stroke();
-      }
-      ctx.beginPath(); ctx.arc(x - 5, y - 77, 1.6, 0, 6.283); ctx.arc(x + 5, y - 77, 1.6, 0, 6.283); ctx.fill();
-      ctx.strokeStyle = '#5a2a1c'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.arc(x, y - 73, 4, 0.25, Math.PI - 0.25); ctx.stroke();        // smile
-      ctx.fillStyle = 'rgba(255,120,110,0.35)';
-      ctx.beginPath(); ctx.arc(x - 8, y - 72, 2.6, 0, 6.283); ctx.arc(x + 8, y - 72, 2.6, 0, 6.283); ctx.fill();
+      ctx.fillStyle = 'rgba(255,170,110,0.18)';                                          // firelight on the face
+      ctx.beginPath(); ctx.ellipse(x, y - 75, 8, 7, 0, 0, 6.283); ctx.fill();
       // hair / hats
       if (o.hair === 'long') {
         part(() => { ctx.arc(x, y - 79, 15, Math.PI * 1.02, Math.PI * 1.98); ctx.lineTo(x + 16, y - 58); ctx.lineTo(x + 11, y - 58); ctx.lineTo(x + 11, y - 80); ctx.lineTo(x - 11, y - 80); ctx.lineTo(x - 11, y - 58); ctx.lineTo(x - 16, y - 58); ctx.closePath(); }, o.hairColor);
@@ -311,7 +297,7 @@
       }
       if (o.beanie) {
         part(() => { ctx.arc(x, y - 80, 14.5, Math.PI, 0); ctx.lineTo(x + 15, y - 78); ctx.lineTo(x - 15, y - 78); ctx.closePath(); }, o.beanie);
-        part(() => ctx.arc(x, y - 96, 4.5, 0, 6.283), '#f1e6cc');
+        part(() => ctx.arc(x, y - 96, 4.5, 0, 6.283), o.beanie);
         ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x - 14, y - 82); ctx.lineTo(x + 14, y - 82); ctx.stroke();
       }
 
@@ -322,14 +308,14 @@
         // neck + headstock
         part(() => ctx.rect(14, -4.5, 58, 9), '#5a3520');
         part(() => ctx.roundRect(70, -7, 14, 14, 3), '#3a2214');
-        ctx.fillStyle = '#e8d9b0'; for (let k = 0; k < 3; k++) { ctx.fillRect(73 + k * 3.5, -9, 2, 2.5); ctx.fillRect(73 + k * 3.5, 6.5, 2, 2.5); }
-        ctx.strokeStyle = 'rgba(230,220,190,0.6)'; ctx.lineWidth = 0.8;
+        ctx.fillStyle = '#6b5440'; for (let k = 0; k < 3; k++) { ctx.fillRect(73 + k * 3.5, -9, 2, 2.5); ctx.fillRect(73 + k * 3.5, 6.5, 2, 2.5); }
+        ctx.strokeStyle = 'rgba(230,200,160,0.25)'; ctx.lineWidth = 0.8;
         for (let k = 0; k < 6; k++) { ctx.beginPath(); ctx.moveTo(22 + k * 8, -4.5); ctx.lineTo(22 + k * 8, 4.5); ctx.stroke(); }           // frets
         // body: honey-coloured acoustic with a dark sound hole
-        part(() => { ctx.ellipse(-12, 0, 17, 15, 0, 0, 6.283); ctx.moveTo(18, 0); ctx.ellipse(8, 0, 12, 11, 0, 0, 6.283); }, '#d08a3e');
-        ctx.fillStyle = '#1a0f0a'; ctx.beginPath(); ctx.arc(2, 0, 5, 0, 6.283); ctx.fill();
+        part(() => { ctx.ellipse(-12, 0, 17, 15, 0, 0, 6.283); ctx.moveTo(18, 0); ctx.ellipse(8, 0, 12, 11, 0, 0, 6.283); }, '#3d2618');
+        ctx.fillStyle = '#0d0806'; ctx.beginPath(); ctx.arc(2, 0, 5, 0, 6.283); ctx.fill();
         ctx.fillStyle = '#3a2214'; ctx.fillRect(-20, -4, 4, 8);                                                                       // bridge
-        ctx.strokeStyle = 'rgba(250,240,215,0.75)'; ctx.lineWidth = 0.7;
+        ctx.strokeStyle = 'rgba(255,210,160,0.4)'; ctx.lineWidth = 0.7;
         for (let k = -2; k <= 2; k++) { ctx.beginPath(); ctx.moveTo(-18, k * 1.6); ctx.lineTo(72, k * 1.4); ctx.stroke(); }             // strings
         ctx.restore();
         limb([[x - 21, y - 52], [x - 24, y - 30], [x - 10, y - 18]], o.top);              // strumming arm
@@ -348,7 +334,7 @@
         limb([[x - 21, y - 52], [x - 16, y - 28], [x - 8, y - 12]], o.top);
         limb([[x + 21, y - 52], [x + 16, y - 28], [x + 8, y - 12]], o.top);
         part(() => { ctx.arc(x - 7, y - 11, 4, 0, 6.283); ctx.moveTo(x + 11, y - 11); ctx.arc(x + 7, y - 11, 4, 0, 6.283); }, o.skin);
-        if (o.mug) { part(() => ctx.roundRect(x - 6, y - 20, 12, 13, 2), o.mug); ctx.fillStyle = 'rgba(240,235,225,0.25)'; ctx.fillRect(x - 3, y - 27, 1.5, 5); ctx.fillRect(x + 1, y - 29, 1.5, 6); }
+        if (o.mug) { part(() => ctx.roundRect(x - 6, y - 20, 12, 13, 2), o.mug); ctx.fillStyle = 'rgba(240,235,225,0.15)'; ctx.fillRect(x - 3, y - 27, 1.5, 5); ctx.fillRect(x + 1, y - 29, 1.5, 6); }
       }
       ctx.restore();
     }
@@ -582,10 +568,10 @@
       const ry = baseW * 0.19;
       // friends across the fire (behind it), drawn first so the flames overlap them
       const side = Math.min(baseW * 1.05, W * 0.36);
-      person(fx - side, fy - ry * 1.7, pS, { top: '#2f7a78', pants: '#23263a', shoes: '#e6dccb', skin: '#e0a57c', hood: true, hair: 'long', hairColor: '#3a2014',
+      person(fx - side, fy - ry * 1.7, pS, { top: '#2b2224', pants: '#181318', shoes: '#231c1d', skin: '#3a2a26', hood: true, hair: 'long', hairColor: '#150f10',
         stick: { x: fx - Math.min(baseW * 0.64, side * 0.55), y: fy - flameH * 0.32 }, dir: 1, toast: 0.5 });
-      person(fx + baseW * 0.58, fy - ry * 2.3, pS * 0.85, { top: '#8c3a3a', pants: '#2c2622', shoes: '#1c1a1a', skin: '#c68a62', beanie: '#e2a53a', mug: '#dfe6ea', glasses: true });
-      person(fx + side, fy - ry * 1.5, pS, { top: '#3f5a92', pants: '#1e2230', shoes: '#b3432c', skin: '#9a6644', hair: 'curly', hairColor: '#1a110d', guitar: true });
+      person(fx + baseW * 0.58, fy - ry * 2.3, pS * 0.85, { top: '#2e2021', pants: '#171216', shoes: '#141012', skin: '#382824', beanie: '#241a1b', mug: '#3a3030' });
+      person(fx + side, fy - ry * 1.5, pS, { top: '#221e26', pants: '#151218', shoes: '#1d1719', skin: '#33241f', hair: 'curly', hairColor: '#120d0e', guitar: true });
       ctx.restore();
 
       ctx.save(); ctx.translate(-look * 26, 0);
