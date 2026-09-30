@@ -484,18 +484,21 @@
 
   // ---------- Drawing ----------
   const SIGN_FONT = '8px "Press Start 2P", monospace';
-  // Dusk sky: colour stops from the top of the screen down to the horizon
-  const SKY_STOPS = [[0, '#1b2437'], [0.3, '#2b3c52'], [0.52, '#4b586d'], [0.7, '#86697a'], [0.85, '#c7826c'], [1, '#efb074']];
-  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-  const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
-  function skyColor(k) {
-    for (let i = 1; i < SKY_STOPS.length; i++) {
-      const [k1, c1] = SKY_STOPS[i];
-      if (k <= k1) { const [k0, c0] = SKY_STOPS[i - 1]; const c = mix(hex(c0), hex(c1), (k - k0) / (k1 - k0)); return `rgb(${c[0]},${c[1]},${c[2]})`; }
-    }
-    return SKY_STOPS[SKY_STOPS.length - 1][1];
+  // Real-life dusk: deep blue overhead, lavender, then a warm glowing horizon, plus a
+  // soft bloom around the sun. Painted as CSS gradients (full resolution, no banding).
+  const SKY_CSS = [[0, '#0e1830'], [0.22, '#1b2c52'], [0.42, '#34497a'], [0.58, '#626b95'], [0.7, '#9c7b97'], [0.8, '#cf8d86'], [0.9, '#efa877'], [1, '#fbcf92']];
+  let skyKey = '';
+  function paintSky(sunX, sunY, skyH) {
+    const key = `${sunX},${sunY},${skyH},${W},${H}`;
+    if (key === skyKey) return;
+    skyKey = key;
+    const pct = (v) => `${((v / H) * 100).toFixed(2)}%`;
+    const stops = SKY_CSS.map(([k, c]) => `${c} ${pct(k * skyH)}`).join(', ');
+    const sx = `${((sunX / W) * 100).toFixed(2)}%`, sy = pct(sunY);
+    canvas.style.backgroundImage =
+      `radial-gradient(circle at ${sx} ${sy}, rgba(255,226,170,.75) 0, rgba(255,196,130,.4) 3.5%, rgba(255,170,110,.16) 10%, rgba(255,150,100,0) 24%), ` +
+      `linear-gradient(to bottom, ${stops}, ${SKY_CSS[SKY_CSS.length - 1][1]} 100%)`;
   }
-  let skyRows = [], skyRowsH = 0;
   // Far mountains: jagged ridge with snow on the tallest peaks
   const ridge = (x) => 18 + 8 * Math.sin(x * 0.011 + 0.7) + 7 * Math.abs(Math.sin(x * 0.037 + 2.1)) + 3 * Math.abs(Math.sin(x * 0.083 + 0.3));
   const birds = Array.from({ length: 5 }, (_, i) => ({ x: i * 97 + 20, y: 30 + ((i * 23) % 40), v: 0.12 + (i % 3) * 0.04, ph: i * 1.7 }));
@@ -651,27 +654,28 @@
 
     // --- Screen-space background ---
     const skyH = G - 20;
-    // Smooth vertical gradient, one colour per pixel row (cached per screen size)
-    if (skyRowsH !== G) { skyRows = Array.from({ length: G }, (_, y) => skyColor(Math.min(1, y / skyH))); skyRowsH = G; }
-    for (let y = 0; y < G; y++) { ctx.fillStyle = skyRows[y]; ctx.fillRect(0, y, W, 1); }
+    // The sky itself is a full-resolution CSS gradient behind the canvas (see paintSky),
+    // so it's perfectly smooth; the canvas only clears it and draws on top.
+    ctx.clearRect(0, 0, W, G);
     for (const s of stars) {
       if (s.y > skyH * 0.42) continue;
-      if (reduceMotion || Math.sin(t * 0.03 + s.p) > 0.2) { ctx.fillStyle = s.y < skyH * 0.2 ? '#f1e6cc' : '#b9b3b8'; ctx.fillRect(((s.x - cx * 0.05) % W + W) % W, s.y, 1, 1); }
+      if (reduceMotion || Math.sin(t * 0.03 + s.p) > 0.2) { ctx.fillStyle = `rgba(241,230,204,${(1 - s.y / (skyH * 0.42)) * 0.9})`; ctx.fillRect(((s.x - cx * 0.05) % W + W) % W, s.y, 1, 1); }
     }
     // Setting sun with a soft halo
     const sunX = Math.round(W * 0.74 - cx * 0.03), sunY = skyH - 30;
-    for (const [r, a] of [[30, 0.07], [23, 0.09], [17, 0.12]]) {
-      ctx.fillStyle = `rgba(255,214,150,${a})`;
-      for (let yy = -r; yy <= r; yy++) { const half = Math.floor(Math.sqrt(r * r - yy * yy)); ctx.fillRect(sunX - half, sunY + yy, half * 2, 1); }
-    }
+    paintSky(sunX, sunY, skyH);
     ctx.fillStyle = '#f7cf78';
     for (let yy = -13; yy <= 13; yy++) { const half = Math.floor(Math.sqrt(169 - yy * yy)); ctx.fillRect(sunX - half, sunY + yy, half * 2, 1); }
     ctx.fillStyle = '#fbe3a4';
     for (let yy = -9; yy <= 3; yy++) { const half = Math.floor(Math.sqrt(81 - yy * yy) * 0.6); ctx.fillRect(sunX - half - 3, sunY + yy, half, 1); }
     for (const c of clouds) {
       const x = Math.round(((c.x - cx * 0.2) % (W + 200) + W + 200) % (W + 200) - 100);
-      ctx.fillStyle = '#e9c9a8'; ctx.fillRect(x, c.y + 2, c.w, 3); ctx.fillRect(x + 2, c.y, Math.round(c.w * 0.45), 2); ctx.fillRect(x + Math.round(c.w * 0.4), c.y - 1, Math.round(c.w * 0.35), 3);
-      ctx.fillStyle = '#c99f86'; ctx.fillRect(x + 1, c.y + 4, c.w - 2, 1);
+      // lit from below by the sunset: cool lavender up high, warm peach near the horizon
+      const k = Math.min(1, c.y / (skyH * 0.75));
+      const lerp = (a, b) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+      const top = lerp([124, 126, 164], [240, 200, 164]), under = lerp([92, 88, 128], [214, 150, 128]);
+      ctx.fillStyle = `rgb(${top})`; ctx.fillRect(x, c.y + 2, c.w, 3); ctx.fillRect(x + 2, c.y, Math.round(c.w * 0.45), 2); ctx.fillRect(x + Math.round(c.w * 0.4), c.y - 1, Math.round(c.w * 0.35), 3);
+      ctx.fillStyle = `rgb(${under})`; ctx.fillRect(x + 1, c.y + 4, c.w - 2, 1);
     }
     // Birds drifting across the sky
     {
