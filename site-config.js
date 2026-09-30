@@ -16,6 +16,7 @@ window.SITE = {
   resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename when they click Download
 
   email: "ethan_xu@berkeley.edu",
+  phone: "409-867-3067",                    // shown on the campfire card (/card/)
   github: "https://github.com/EthanXu07",
   linkedin: "https://www.linkedin.com/in/EthanXu07/",
   // Instagram profile URL, e.g. "https://www.instagram.com/yourhandle/" (the button hides while empty)

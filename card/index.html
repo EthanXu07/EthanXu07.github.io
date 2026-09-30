@@ -83,9 +83,9 @@
     <p class="role">Computer Science · UC Berkeley</p>
     <p class="email"><a id="cEmail" href="mailto:ethan_xu@berkeley.edu">ethan_xu@berkeley.edu</a></p>
     <p class="links">
-      <a id="cLinkedin" href="https://www.linkedin.com/in/EthanXu07/" target="_blank" rel="noopener">LinkedIn</a>
+      <a id="cPhone" href="tel:+14098673067">409-867-3067</a>
       <span aria-hidden="true">·</span>
-      <a id="cGithub" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://ethanxu.dev">ethanxu.dev</a>
     </p>
   </main>
 
@@ -96,9 +96,7 @@
     // ---------- Links from site-config.js (same source as the main site) ----------
     const SITE = window.SITE || {};
     if (SITE.email) { const a = document.getElementById('cEmail'); a.href = `mailto:${SITE.email}`; a.textContent = SITE.email; }
-    for (const [id, key] of [['cLinkedin', 'linkedin'], ['cGithub', 'github']]) {
-      if (SITE[key]) document.getElementById(id).href = SITE[key];
-    }
+    if (SITE.phone) { const a = document.getElementById('cPhone'); a.href = `tel:+1${SITE.phone.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '')}`; a.textContent = SITE.phone; }
 
     // ---------- Scene ----------
     const canvas = document.getElementById('fire');
