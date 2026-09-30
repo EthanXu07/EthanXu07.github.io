@@ -195,13 +195,65 @@ ${b.skills.map((s) => {
             </ol>
           </section>`;
 
+// ---------------------------------------------------------------- Home overview cards
+// Each card previews a section with real content, so it stays current as the data changes.
+function exploreCards() {
+  const shortOrg = (org) => org.split(' · ')[0];
+  const allSkills = Object.keys(skillIndex);
+  const topSkills = allSkills
+    .filter((id) => usedIn[id].length)
+    .sort((a, b) => usedIn[b].length - usedIn[a].length || skillName(a).localeCompare(skillName(b)))
+    .slice(0, 6);
+  const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+  const list = (items) => `<ul class="explore-list">${items.map((i) => `<li><strong>${esc(i.title)}</strong><span>${esc(i.sub)}</span>${i.badge ? `<em class="explore-badge">${esc(i.badge)}</em>` : ''}</li>`).join('')}</ul>`;
+  const chips = (names) => `<ul class="explore-chips">${names.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>`;
+  const more = (shown, total, noun) => (total > shown ? `<p class="explore-more">+ ${plural(total - shown, noun)}</p>` : '');
+
+  const expShown = experience.slice(0, 3);
+  const cards = [
+    {
+      key: 'experience', href: '/experience/', title: 'Experience', count: plural(experience.length, 'role'),
+      summary: 'Software engineering, data science and research roles.',
+      body: list(expShown.map((q) => ({ title: q.title.split(',')[0], sub: shortOrg(q.org), badge: q.status === 'active' ? 'Current' : '' })))
+        + more(expShown.length, experience.length, 'role'),
+      link: 'View all experience',
+    },
+    {
+      key: 'projects', href: '/projects/', title: 'Projects', count: plural(projects.length, 'project'),
+      summary: 'Research, ML and data projects, plus publications and awards.',
+      body: list(projects.map((p) => ({ title: p.title, sub: p.type.replace(/^Project · /, '') }))),
+      link: 'View projects',
+    },
+    {
+      key: 'skills', href: '/skills/', title: 'Skills', count: plural(allSkills.length, 'skill'),
+      summary: `Grouped into ${plural(branches.length, 'area')} and linked to the work where I used them. Most used:`,
+      body: chips(topSkills.map(skillName)),
+      link: 'View skills',
+    },
+    {
+      key: 'interests', href: '/interests/', title: 'Interests', count: plural(interests.length, 'interest'),
+      summary: 'What I do when I’m not at a keyboard.',
+      body: chips(interests.map((i) => i.title)),
+      link: 'View interests',
+    },
+  ];
+  return cards.map((c) => `        <li>
+          <a class="explore-card px-box" href="${c.href}">
+            <span class="explore-head"><span class="explore-icon">${pixelIcon(ICONS[c.key])}</span><strong class="explore-title">${c.title}</strong><span class="explore-count">${c.count}</span></span>
+            <span class="explore-summary">${esc(c.summary)}</span>
+            ${c.body}
+            <span class="explore-link">${c.link} <span aria-hidden="true">→</span></span>
+          </a>
+        </li>`).join('\n');
+}
+
 // ---------------------------------------------------------------- Pages
 console.log('Building site:');
 const DESC = 'Ethan Xu: Computer Science at UC Berkeley. ML research, data pipelines, and projects.';
 
 page({
   out: 'index.html', path: '/', page: 'home', sub: false, title: 'Ethan Xu', description: DESC,
-  content: src('pages/home-title.html') + src('pages/home-player.html') + src('pages/home-levels.html'),
+  content: src('pages/home-title.html') + src('pages/home-player.html') + fill(src('pages/home-levels.html'), { exploreCards: exploreCards() }),
   scripts: '  <script src="/home.js"></script>\n',
 });
 

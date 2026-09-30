@@ -139,21 +139,48 @@
       </div>
     </section>
 
-    <!-- ============ LEVEL SELECT ============ -->
-    <section id="levels" class="world" data-checkpoint="Level select">
+    <!-- ============ OVERVIEW ============ -->
+    <!-- Cards are filled in by tools/build.mjs from src/data/*.json and src/interests.json -->
+    <section id="levels" class="world" data-checkpoint="Overview">
       <header class="world-head">
-        <p class="world-num">LEVEL SELECT</p>
-        <h2 class="world-title">Choose your world</h2>
+        <p class="world-num">OVERVIEW</p>
+        <h2 class="world-title">Explore my work</h2>
       </header>
-      <ul class="levels">
-        <li><a class="level px-box" href="/experience/"><span class="level-num">WORLD 2</span><strong>Experience</strong><span>Internships, research and teaching</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
-        <li><a class="level px-box" href="/projects/"><span class="level-num">WORLD 3</span><strong>Projects</strong><span>Projects, publications and awards</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
-        <li><a class="level px-box" href="/skills/"><span class="level-num">WORLD 4</span><strong>Skill tree</strong><span>Every skill, and where I earned it</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
-        <li><a class="level px-box" href="/interests/"><span class="level-num">WORLD 5</span><strong>Side quests</strong><span>Hiking, racket sports, soccer, swimming, eating</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
-        <li><a class="level px-box" href="#contact"><span class="level-num">SAVE POINT</span><strong>Contact</strong><span>Email, LinkedIn, GitHub</span><span class="level-go">Enter <span class="tri" aria-hidden="true"></span></span></a></li>
+      <ul class="explore">
+        <li>
+          <a class="explore-card px-box" href="/experience/">
+            <span class="explore-head"><span class="explore-icon"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 0h8v1h-8zM0 1h2v1h-2zM8 1h2v1h-2zM1 2h1v1h-1zM3 2h4v1h-4zM8 2h1v1h-1zM1 3h1v1h-1zM8 3h1v1h-1zM1 4h1v1h-1zM3 4h4v1h-4zM8 4h1v1h-1zM1 5h1v1h-1zM8 5h1v1h-1zM1 6h1v1h-1zM3 6h3v1h-3zM8 6h1v1h-1zM1 7h1v1h-1zM8 7h1v1h-1zM0 8h2v1h-2zM8 8h2v1h-2zM1 9h8v1h-8z"/></svg></span><strong class="explore-title">Experience</strong><span class="explore-count">7 roles</span></span>
+            <span class="explore-summary">Software engineering, data science and research roles.</span>
+            <ul class="explore-list"><li><strong>Software Engineering Intern</strong><span>Coupang</span><em class="explore-badge">Current</em></li><li><strong>Data Science Intern</strong><span>Climformatics</span><em class="explore-badge">Current</em></li><li><strong>Software Engineering Intern</strong><span>IPMD Inc.</span></li></ul><p class="explore-more">+ 4 roles</p>
+            <span class="explore-link">View all experience <span aria-hidden="true">→</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="explore-card px-box" href="/projects/">
+            <span class="explore-head"><span class="explore-icon"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1h8v1h-8zM0 2h1v1h-1zM9 2h1v1h-1zM0 3h1v1h-1zM9 3h1v1h-1zM0 4h10v1h-10zM0 5h1v1h-1zM4 5h2v1h-2zM9 5h1v1h-1zM0 6h1v1h-1zM4 6h2v1h-2zM9 6h1v1h-1zM0 7h1v1h-1zM9 7h1v1h-1zM0 8h10v1h-10z"/></svg></span><strong class="explore-title">Projects</strong><span class="explore-count">3 projects</span></span>
+            <span class="explore-summary">Research, ML and data projects, plus publications and awards.</span>
+            <ul class="explore-list"><li><strong>SENTINEL</strong><span>Publication · NeurIPS 2025</span></li><li><strong>Fintrax</strong><span>ML</span></li><li><strong>AER Citation Tracker</strong><span>Data</span></li></ul>
+            <span class="explore-link">View projects <span aria-hidden="true">→</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="explore-card px-box" href="/skills/">
+            <span class="explore-head"><span class="explore-icon"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M4 0h2v1h-2zM4 1h2v1h-2zM3 2h4v1h-4zM0 3h10v1h-10zM1 4h8v1h-8zM2 5h6v1h-6zM2 6h6v1h-6zM1 7h3v1h-3zM6 7h3v1h-3zM1 8h2v1h-2zM7 8h2v1h-2zM0 9h2v1h-2zM8 9h2v1h-2z"/></svg></span><strong class="explore-title">Skills</strong><span class="explore-count">51 skills</span></span>
+            <span class="explore-summary">Grouped into 7 areas and linked to the work where I used them. Most used:</span>
+            <ul class="explore-chips"><li>Python</li><li>Beautiful Soup</li><li>NLP · Sentiment</li><li>Backtesting</li><li>Computer vision</li><li>LLMs</li></ul>
+            <span class="explore-link">View skills <span aria-hidden="true">→</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="explore-card px-box" href="/interests/">
+            <span class="explore-head"><span class="explore-icon"><svg class="nav-icon" viewBox="0 0 10 10" aria-hidden="true" focusable="false"><path d="M1 1h2v1h-2zM7 1h2v1h-2zM0 2h4v1h-4zM6 2h4v1h-4zM0 3h10v1h-10zM0 4h10v1h-10zM1 5h8v1h-8zM2 6h6v1h-6zM3 7h4v1h-4zM4 8h2v1h-2z"/></svg></span><strong class="explore-title">Interests</strong><span class="explore-count">5 interests</span></span>
+            <span class="explore-summary">What I do when I’m not at a keyboard.</span>
+            <ul class="explore-chips"><li>Hiking</li><li>Racket sports</li><li>Soccer</li><li>Swimming</li><li>Eating</li></ul>
+            <span class="explore-link">View interests <span aria-hidden="true">→</span></span>
+          </a>
+        </li>
       </ul>
     </section>
-
 
   </main>
 
