@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ethan Xu · by the fire</title>
+  <meta name="description" content="Ethan Xu: CS at UC Berkeley. You found the campfire.">
+  <!-- The secret card: reached from the campfire past the castle in the title-screen level. Not linked in the nav. -->
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#07060c">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400;1,9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="/site-config.js"></script>
+  <style>
+    :root { color-scheme: dark; --ember: #3a1105; --ember-2: #6b2308; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #07060c; overflow: hidden; }
+    body { font: 400 1rem/1.5 "IBM Plex Mono", ui-monospace, monospace; color: #f5e6cf; }
+    canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+    /* Film grain + vignette so it reads like a photo, not a game */
+    .grain, .vignette { position: fixed; inset: 0; pointer-events: none; }
+    .vignette { background: radial-gradient(120% 90% at 50% 62%, transparent 45%, rgba(3, 2, 6, .75) 100%); }
+    .grain {
+      opacity: .13; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      animation: grain .6s steps(3) infinite;
+    }
+    @keyframes grain { 0% { transform: translate(0, 0); } 33% { transform: translate(-6px, 4px); } 66% { transform: translate(5px, -5px); } }
+
+    /* The card lives in the heart of the fire (positioned by script) */
+    .card {
+      position: fixed; left: var(--fx, 50%); top: var(--fy, 45%);
+      width: min(84vw, 23rem); transform: translate(-50%, -50%);
+      text-align: center; color: var(--ember);
+      animation: flicker 3.2s infinite, arrive 1.6s ease-out both;
+    }
+    .card h1 {
+      margin: 0; font: italic 600 clamp(2.4rem, 8.5vw, 3.5rem)/1 "Fraunces", Georgia, serif;
+      letter-spacing: -.01em; text-shadow: 0 0 18px rgba(255, 244, 214, .9);
+    }
+    .card .role { margin: .55rem 0 1rem; font: italic 400 clamp(1rem, 3.6vw, 1.15rem)/1.35 "Fraunces", Georgia, serif; color: var(--ember-2); }
+    .card ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; font-size: clamp(.8rem, 3vw, .9rem); font-weight: 500; }
+    .card a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(58, 17, 5, .35); padding-bottom: 1px; }
+    .card a:hover, .card a:focus-visible { border-bottom-color: currentColor; outline: none; }
+    .card a:focus-visible { background: rgba(255, 250, 235, .6); }
+    @keyframes flicker { 0%, 100% { opacity: 1; } 45% { opacity: .93; } 52% { opacity: 1; } 70% { opacity: .96; } }
+    @keyframes arrive { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
+
+    .found {
+      position: fixed; top: calc(1.1rem + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
+      margin: 0; font: italic 400 .95rem "Fraunces", Georgia, serif; color: rgba(245, 230, 207, .7);
+      white-space: nowrap; animation: arrive 2.4s .6s ease-out both;
+    }
+    .back {
+      position: fixed; left: calc(1rem + env(safe-area-inset-left, 0px)); bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+      font-size: .78rem; color: rgba(245, 230, 207, .55); text-decoration: none;
+    }
+    .back:hover, .back:focus-visible { color: #f5e6cf; }
+    .back-short { display: none; }
+    @media (max-width: 640px) { .back-long { display: none; } .back-short { display: inline; } }
+    @media (prefers-reduced-motion: reduce) { .card, .grain, .found { animation: none; } }
+  </style>
+</head>
+<body>
+  <canvas id="fire" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+
+  <p class="found">You found the campfire. Pull up a log.</p>
+
+  <main class="card" id="card">
+    <h1>Ethan Xu</h1>
+    <p class="role">Computer Science at UC Berkeley<br>machine learning &amp; data</p>
+    <ul>
+      <li><a id="cEmail" href="mailto:ethan_xu@berkeley.edu">ethan_xu@berkeley.edu</a></li>
+      <li><a href="https://ethanxu.dev">ethanxu.dev</a></li>
+      <li><a id="cLinkedin" href="https://www.linkedin.com/in/EthanXu07/" target="_blank" rel="noopener">linkedin.com/in/EthanXu07</a></li>
+      <li><a id="cGithub" href="https://github.com/EthanXu07" target="_blank" rel="noopener">github.com/EthanXu07</a></li>
+    </ul>
+  </main>
+
+  <a class="back" href="/">← <span class="back-long">back to the level</span><span class="back-short">back</span></a>
+
+  <script>
+  (() => {
+    // ---------- Links from site-config.js (same source as the main site) ----------
+    const SITE = window.SITE || {};
+    const pretty = (u) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+    if (SITE.email) { const a = document.getElementById('cEmail'); a.href = `mailto:${SITE.email}`; a.textContent = SITE.email; }
+    for (const [id, key] of [['cLinkedin', 'linkedin'], ['cGithub', 'github']]) {
+      if (SITE[key]) { const a = document.getElementById(id); a.href = SITE[key]; a.textContent = pretty(SITE[key]); }
+    }
+
+    // ---------- Scene ----------
+    const canvas = document.getElementById('fire');
+    const ctx = canvas.getContext('2d');
+    const card = document.getElementById('card');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let W, H, dpr, S, fx, fy, baseW, flameH, horizon, stars = [], trees = [], tongues = [];
+    let look = 0, lookTarget = 0, t = 0;
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const seeded = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+
+    // Soft round sprites, pre-rendered once per colour (fast to draw hundreds of times)
+    function sprite(r, g, b) {
+      const c = document.createElement('canvas'); c.width = c.height = 64;
+      const x = c.getContext('2d');
+      const grd = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grd.addColorStop(0, `rgba(${r},${g},${b},1)`);
+      grd.addColorStop(0.4, `rgba(${r},${g},${b},.55)`);
+      grd.addColorStop(1, `rgba(${r},${g},${b},0)`);
+      x.fillStyle = grd; x.fillRect(0, 0, 64, 64);
+      return c;
+    }
+    const FLAME = [sprite(255, 248, 225), sprite(255, 205, 90), sprite(255, 128, 36), sprite(196, 48, 20), sprite(90, 20, 14)];
+    const EMBER = sprite(255, 170, 70);
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = innerWidth; H = innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      S = Math.min(W / 1200, H / 800) * 1.1;        // scene scale
+      S = Math.max(S, Math.min(W, H) / 700);
+      horizon = H * 0.44;
+      fx = W / 2; fy = H * 0.7;                       // base of the fire
+      baseW = W < 640 ? W * 0.72 : Math.min(W * 0.52, 300 * S + 120);
+      flameH = Math.min(H * 0.56, baseW * (W < 640 ? 1.45 : 1.25));
+      tongues = Array.from({ length: 9 }, (_, i) => {
+        const u = i / 8 - 0.5;
+        return { u, h: flameH * (1 - Math.abs(u) * 1.25) * (0.78 + seeded(i + 21) * 0.3), w: baseW * 0.17 * (1 - Math.abs(u) * 0.45), ph: seeded(i + 40) * 6.28 };
+      }).sort((a, b) => a.h - b.h);
+      stars = Array.from({ length: Math.round(W * horizon / 2600) }, (_, i) => ({ x: seeded(i + 1) * W, y: seeded(i + 99) * horizon * 0.95, r: seeded(i + 7) * 1.1 + 0.3, p: seeded(i + 3) * 6.28 }));
+      trees = Array.from({ length: Math.ceil(W / 26) + 6 }, (_, i) => ({ x: i * 26 - 60 + seeded(i + 11) * 18, h: (40 + seeded(i + 5) * 70) * S + 20 }));
+      // Put the card in the white-hot core of the fire
+      card.style.setProperty('--fx', `${fx}px`);
+      card.style.setProperty('--fy', `${fy - flameH * 0.4}px`);
+    }
+
+    // ---------- Background ----------
+    function sky(off) {
+      const g = ctx.createLinearGradient(0, 0, 0, horizon);
+      g.addColorStop(0, '#05050d'); g.addColorStop(0.6, '#0f0c1d'); g.addColorStop(1, '#231526');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, horizon + 2);
+      for (const s of stars) {
+        const a = reduceMotion ? 0.8 : 0.45 + 0.45 * Math.sin(t * 0.02 + s.p);
+        ctx.fillStyle = `rgba(245,235,215,${a})`;
+        ctx.beginPath(); ctx.arc(s.x + off * 0.2, s.y, s.r, 0, 6.283); ctx.fill();
+      }
+      // Pine tree line
+      ctx.fillStyle = '#040409';
+      ctx.beginPath(); ctx.moveTo(-80, horizon + 4);
+      for (const tr of trees) {
+        const x = tr.x + off * 0.4;
+        ctx.lineTo(x - 13, horizon + 4); ctx.lineTo(x, horizon - tr.h); ctx.lineTo(x + 13, horizon + 4);
+      }
+      ctx.lineTo(W + 80, horizon + 4); ctx.lineTo(W + 80, horizon + 30); ctx.lineTo(-80, horizon + 30); ctx.fill();
+    }
+
+    function ground(glow) {
+      const g = ctx.createLinearGradient(0, horizon, 0, H);
+      g.addColorStop(0, '#0b080c'); g.addColorStop(1, '#140d0d');
+      ctx.fillStyle = g; ctx.fillRect(0, horizon + 2, W, H - horizon);
+      // Pool of firelight on the ground
+      ctx.save();
+      ctx.translate(fx, fy); ctx.scale(1, 0.38);
+      const r = baseW * 2.6;
+      const pool = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+      pool.addColorStop(0, `rgba(255,150,70,${0.42 * glow})`);
+      pool.addColorStop(0.45, `rgba(190,80,40,${0.16 * glow})`);
+      pool.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = pool; ctx.beginPath(); ctx.arc(0, 0, r, 0, 6.283); ctx.fill();
+      ctx.restore();
+    }
+
+    // ---------- Friends (seated silhouettes lit by the fire) ----------
+    function litFill(x, y) {
+      const lx = fx, ly = fy - flameH * 0.25;
+      const d = Math.hypot(x - lx, y - ly);
+      const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, d * 1.35);
+      g.addColorStop(0, '#e58a4c'); g.addColorStop(0.55, '#8a4128'); g.addColorStop(0.78, '#2a161a'); g.addColorStop(1, '#0c090f');
+      return g;
+    }
+
+    function person(x, y, s, o = {}) {
+      ctx.save();
+      ctx.translate(x, y); ctx.scale(s, s);
+      ctx.translate(-x, -y);
+      const fill = litFill(x, y - 40 * s);
+      // log seat
+      ctx.fillStyle = '#1c110d';
+      ctx.beginPath(); ctx.ellipse(x, y + 16, 46, 11, 0, 0, 6.283); ctx.fill();
+      ctx.fillStyle = litFill(x, y + 10 * s);
+      ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.ellipse(x, y + 13, 44, 7, 0, 0, 3.14); ctx.fill(); ctx.globalAlpha = 1;
+
+      ctx.fillStyle = fill;
+      // legs + feet (foreshortened: knees toward the fire)
+      for (const side of [-1, 1]) {
+        ctx.beginPath(); ctx.roundRect(x + side * 11 - 8, y - 6, 16, 30, 7); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(x + side * 12, y + 26, 10, 5, 0, 0, 6.283); ctx.fill();
+      }
+      // torso
+      ctx.beginPath();
+      ctx.moveTo(x - 24, y - 56); ctx.quadraticCurveTo(x - 27, y - 20, x - 20, y);
+      ctx.lineTo(x + 20, y); ctx.quadraticCurveTo(x + 27, y - 20, x + 24, y - 56);
+      ctx.quadraticCurveTo(x, y - 66, x - 24, y - 56); ctx.fill();
+      // head + hair / beanie
+      ctx.beginPath(); ctx.arc(x, y - 76, 14, 0, 6.283); ctx.fill();
+      if (o.beanie) { ctx.beginPath(); ctx.arc(x, y - 80, 14.5, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(x, y - 96, 4, 0, 6.283); ctx.fill(); }
+      if (o.hair) { ctx.beginPath(); ctx.ellipse(x, y - 72, 17, 20, 0, Math.PI * 1.05, Math.PI * 1.95); ctx.fill(); ctx.fillRect(x - 17, y - 76, 5, 26); ctx.fillRect(x + 12, y - 76, 5, 26); }
+      // warm glow on the face (they're looking at the fire)
+      ctx.fillStyle = 'rgba(255,190,130,0.14)';
+      ctx.beginPath(); ctx.arc(x, y - 74, 11, 0, 6.283); ctx.fill();
+
+      ctx.strokeStyle = fill; ctx.lineCap = 'round'; ctx.lineWidth = 9;
+      if (o.guitar) {
+        ctx.fillStyle = '#4a2413';
+        ctx.beginPath(); ctx.ellipse(x - 6, y - 16, 17, 13, -0.35, 0, 6.283); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(x + 8, y - 26, 12, 10, -0.35, 0, 6.283); ctx.fill();
+        ctx.fillStyle = 'rgba(255,160,90,0.35)'; ctx.beginPath(); ctx.ellipse(x - 6, y - 14, 12, 8, -0.35, 0, 3.14); ctx.fill();
+        ctx.strokeStyle = '#2c160c'; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(x + 12, y - 30); ctx.lineTo(x + 46, y - 50); ctx.stroke();
+        ctx.strokeStyle = fill; ctx.lineWidth = 9;
+        ctx.beginPath(); ctx.moveTo(x - 22, y - 50); ctx.lineTo(x - 12, y - 18); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + 22, y - 50); ctx.lineTo(x + 40, y - 46); ctx.stroke();
+      } else if (o.stick) {
+        // arms reach toward the fire holding a roasting stick
+        const tip = o.stick;
+        ctx.beginPath(); ctx.moveTo(x + 18 * o.dir, y - 50); ctx.lineTo(x + 30 * o.dir, y - 26); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x - 18 * o.dir, y - 50); ctx.lineTo(x + 20 * o.dir, y - 24); ctx.stroke();
+        ctx.restore(); ctx.save();
+        const hx = x + 30 * o.dir * s, hy = y - 26 * s;
+        ctx.strokeStyle = '#3b2415'; ctx.lineWidth = Math.max(1.5, 2.2 * s);
+        ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tip.x, tip.y); ctx.stroke();
+        marshmallow(tip.x, tip.y, 6 * s, o.toast || 0.3);
+      } else {
+        ctx.beginPath(); ctx.moveTo(x - 22, y - 50); ctx.lineTo(x - 14, y - 6); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + 22, y - 50); ctx.lineTo(x + 14, y - 6); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function marshmallow(x, y, r, toast) {
+      const c = toast > 0.6 ? '#c9853f' : toast > 0.3 ? '#f1d29a' : '#fff5e6';
+      ctx.fillStyle = c;
+      ctx.beginPath(); ctx.roundRect(x - r, y - r * 0.8, r * 2, r * 1.6, r * 0.5); ctx.fill();
+      ctx.fillStyle = 'rgba(255,200,120,0.5)'; ctx.beginPath(); ctx.arc(x, y, r * 1.8, 0, 6.283); ctx.fill();
+    }
+
+    // ---------- Fire ring, logs, flames ----------
+    function stones(front) {
+      const rx = baseW * 0.66, ry = rx * 0.3, n = 14;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * 6.283 + 0.1;
+        const isFront = Math.sin(a) > 0;
+        if (isFront !== front) continue;
+        const x = fx + Math.cos(a) * rx, y = fy + Math.sin(a) * ry + 6 * S;
+        const w = (20 + seeded(i) * 9) * S, h = (12 + seeded(i + 4) * 5) * S;
+        ctx.fillStyle = front ? '#2a2020' : '#1b1516';
+        ctx.beginPath(); ctx.ellipse(x, y, w, h, 0, 0, 6.283); ctx.fill();
+        // lit top edge, facing the fire
+        ctx.fillStyle = front ? 'rgba(255,150,80,0.22)' : 'rgba(255,160,90,0.55)';
+        ctx.beginPath(); ctx.ellipse(x, y - h * 0.35, w * 0.8, h * 0.45, 0, Math.PI, 0); ctx.fill();
+      }
+    }
+
+    function logs() {
+      const L = baseW * 0.5;
+      ctx.lineCap = 'round';
+      for (const [a, c] of [[0.32, '#3a2216'], [-0.32, '#301b12'], [0.05, '#2a1810']]) {
+        ctx.strokeStyle = c; ctx.lineWidth = 22 * S;
+        ctx.beginPath(); ctx.moveTo(fx - Math.cos(a) * L, fy - Math.sin(a) * L * 0.35); ctx.lineTo(fx + Math.cos(a) * L, fy + Math.sin(a) * L * 0.35); ctx.stroke();
+      }
+      // glowing embers on the logs
+      const g = ctx.createRadialGradient(fx, fy, 0, fx, fy, baseW * 0.45);
+      g.addColorStop(0, 'rgba(255,120,40,0.95)'); g.addColorStop(0.5, 'rgba(200,50,20,0.55)'); g.addColorStop(1, 'rgba(120,20,10,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(fx, fy, baseW * 0.45, baseW * 0.13, 0, 0, 6.283); ctx.fill();
+    }
+
+    const sparks = [], embers = [];
+    function spawn() {
+      // a few soft glints inside the flames + embers drifting up into the night
+      for (let i = 0; i < 3; i++) {
+        const u = (Math.random() + Math.random()) / 2 - 0.5;
+        sparks.push({ x: fx + u * baseW * 0.7, y: fy - rand(0, 0.2) * flameH, vy: -rand(2, 3.4) * (flameH / 330), life: 40, max: 40, size: baseW * rand(0.08, 0.16) });
+      }
+      if (Math.random() < 0.3) embers.push({ x: fx + rand(-0.25, 0.25) * baseW, y: fy - flameH * rand(0.5, 0.8), vx: rand(-0.6, 0.6), vy: -rand(0.8, 2), life: rand(80, 170), r: rand(1, 2.2) });
+    }
+
+    // One flame tongue: a teardrop that sways and stretches
+    function tongue(x, base, w, h, sway) {
+      ctx.beginPath();
+      ctx.moveTo(x - w, base);
+      ctx.bezierCurveTo(x - w * 1.15, base - h * 0.42, x + sway * 0.4 - w * 0.4, base - h * 0.72, x + sway, base - h);
+      ctx.bezierCurveTo(x + sway * 0.4 + w * 0.4, base - h * 0.72, x + w * 1.15, base - h * 0.42, x + w, base);
+      ctx.closePath(); ctx.fill();
+    }
+
+    const LAYERS = [['#b92f17', 1, 1], ['#e8561c', 0.84, 0.88], ['#ff8f2a', 0.68, 0.76], ['#ffc24a', 0.52, 0.64], ['#ffe79a', 0.38, 0.52], ['#fff8e4', 0.24, 0.4]];
+    function drawFire(glow) {
+      // big soft glow around the fire
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.translate(fx, fy - flameH * 0.4); ctx.scale(1, 0.85);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, flameH * 1.2);
+      g.addColorStop(0, `rgba(255,140,50,${0.4 * glow})`); g.addColorStop(1, 'rgba(255,90,30,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, flameH * 1.2, 0, 6.283); ctx.fill();
+      ctx.restore();
+
+      const base = fy + 4 * S;
+      const now = tongues.map((tg) => ({
+        x: fx + tg.u * baseW * 0.82,
+        w: tg.w,
+        h: tg.h * (reduceMotion ? 1 : 0.84 + 0.12 * Math.sin(t * 0.09 + tg.ph) + 0.07 * Math.sin(t * 0.23 + tg.ph * 2) + Math.random() * 0.03),
+        sway: reduceMotion ? 0 : Math.sin(t * 0.055 + tg.ph) * tg.w * 0.7,
+      }));
+      for (const [color, wm, hm] of LAYERS) {
+        ctx.fillStyle = color;
+        ctx.beginPath(); ctx.ellipse(fx, base - baseW * 0.04, baseW * 0.46 * wm, baseW * 0.12 * wm, 0, 0, 6.283); ctx.fill();
+        for (const f of now) tongue(f.x + f.sway * (1 - wm) * 0.3, base, f.w * wm, f.h * hm, f.sway * hm);
+      }
+
+      // White-hot heart behind the card so the lettering stays readable (elliptical, soft edge)
+      const cy = fy - flameH * 0.4, rx = Math.max(baseW * 0.62, 200), ryc = Math.max(flameH * 0.42, 150);
+      ctx.save();
+      ctx.translate(fx, cy); ctx.scale(1, ryc / rx);
+      const core = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+      core.addColorStop(0, `rgba(255,250,234,${0.92 * glow})`);
+      core.addColorStop(0.55, `rgba(255,236,190,${0.7 * glow})`);
+      core.addColorStop(0.8, `rgba(255,200,120,${0.22 * glow})`);
+      core.addColorStop(1, 'rgba(255,170,80,0)');
+      ctx.fillStyle = core; ctx.beginPath(); ctx.arc(0, 0, rx, 0, 6.283); ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const f = sparks[i];
+        f.y += f.vy; f.x += (fx - f.x) * 0.02 + Math.sin((t + i) * 0.2) * 0.3; f.life--;
+        if (f.life <= 0) { sparks.splice(i, 1); continue; }
+        const k = f.life / f.max;
+        ctx.globalAlpha = k * 0.35;
+        const sz = f.size * (0.4 + k * 0.6);
+        ctx.drawImage(FLAME[k > 0.5 ? 1 : 2], f.x - sz / 2, f.y - sz / 2, sz, sz);
+      }
+      for (let i = embers.length - 1; i >= 0; i--) {
+        const e = embers[i];
+        e.x += e.vx + Math.sin((t + i * 13) * 0.05) * 0.4; e.y += e.vy; e.life--;
+        if (e.life <= 0 || e.y < 0) { embers.splice(i, 1); continue; }
+        ctx.globalAlpha = Math.min(1, e.life / 50);
+        const sz = e.r * 6;
+        ctx.drawImage(EMBER, e.x - sz / 2, e.y - sz / 2, sz, sz);
+      }
+      ctx.restore();
+    }
+
+    // ---------- You (first person): sneakers + your roasting stick ----------
+    function you(off, toast) {
+      const s = S * 0.8;
+      for (const side of [-1, 1]) {
+        const x = W / 2 + side * (95 * s + 30) + off, y = H + 40 * s;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(side * 0.12);
+        // jeans
+        ctx.fillStyle = '#131722';
+        ctx.beginPath(); ctx.roundRect(-44 * s, -40 * s, 88 * s, 140 * s, 30 * s); ctx.fill();
+        // sneaker, toe toward the fire
+        ctx.fillStyle = '#e9e1d6';
+        ctx.beginPath(); ctx.ellipse(0, -95 * s, 46 * s, 78 * s, 0, 0, 6.283); ctx.fill();
+        ctx.fillStyle = '#b3432c';
+        ctx.beginPath(); ctx.ellipse(0, -80 * s, 38 * s, 50 * s, 0, 0, 6.283); ctx.fill();
+        ctx.fillStyle = '#e9e1d6';
+        for (let k = 0; k < 4; k++) ctx.fillRect(-16 * s, (-104 + k * 14) * s, 32 * s, 4 * s); // laces
+        // firelight on the toe
+        const lg = ctx.createLinearGradient(0, -175 * s, 0, -60 * s);
+        lg.addColorStop(0, 'rgba(255,170,90,0.55)'); lg.addColorStop(1, 'rgba(255,170,90,0)');
+        ctx.fillStyle = lg; ctx.beginPath(); ctx.ellipse(0, -95 * s, 46 * s, 78 * s, 0, 0, 6.283); ctx.fill();
+        // shadow at the bottom
+        const sg = ctx.createLinearGradient(0, -40 * s, 0, 60 * s);
+        sg.addColorStop(0, 'rgba(7,6,12,0)'); sg.addColorStop(1, 'rgba(7,6,12,0.9)');
+        ctx.fillStyle = sg; ctx.fillRect(-60 * s, -40 * s, 120 * s, 100 * s);
+        ctx.restore();
+      }
+      // Your arm from the bottom-right, holding a stick into the flames
+      const hx = W - 70 * s + off * 1.2, hy = H - 90 * s;
+      const tip = { x: fx + baseW * 0.42 + off * 0.6, y: fy - flameH * (W < 640 ? 0.06 : 0.18) };
+      ctx.strokeStyle = '#4a2c19'; ctx.lineWidth = Math.max(2.5, 4 * s); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tip.x, tip.y); ctx.stroke();
+      marshmallow(tip.x, tip.y, 12 * s, toast);
+      ctx.fillStyle = '#26324a'; // sleeve
+      ctx.beginPath(); ctx.moveTo(W + 10, H - 10 * s); ctx.lineTo(W - 60 * s + off * 1.2, H - 70 * s); ctx.lineTo(W - 20 * s + off * 1.2, H - 120 * s); ctx.lineTo(W + 10, H - 130 * s); ctx.fill();
+      ctx.fillStyle = '#d9a27b'; // hand
+      ctx.beginPath(); ctx.ellipse(hx, hy, 24 * s, 18 * s, -0.6, 0, 6.283); ctx.fill();
+      ctx.fillStyle = 'rgba(255,170,100,0.35)';
+      ctx.beginPath(); ctx.ellipse(hx - 6 * s, hy - 6 * s, 16 * s, 10 * s, -0.6, 0, 6.283); ctx.fill();
+    }
+
+    // ---------- Loop ----------
+    function frame() {
+      t++;
+      look += (lookTarget - look) * 0.05;
+      const glow = reduceMotion ? 1 : 0.86 + Math.sin(t * 0.11) * 0.06 + Math.sin(t * 0.37) * 0.04 + Math.random() * 0.04;
+      const toast = Math.min(0.9, 0.15 + (t % 1800) / 1800);
+
+      ctx.clearRect(0, 0, W, H);
+      sky(-look * 12);
+      ground(glow);
+
+      ctx.save(); ctx.translate(-look * 22, 0);
+      const narrow = W < 640;
+      const pS = S * (narrow ? 0.9 : 1.2);
+      const ry = baseW * 0.19;
+      // friends across the fire (behind it), drawn first so the flames overlap them
+      const side = Math.min(baseW * 1.05, W * 0.36);
+      person(fx - side, fy - ry * 1.7, pS, { hair: true, stick: { x: fx - baseW * 0.42, y: fy - flameH * 0.22 }, dir: 1, toast: 0.5 });
+      person(fx + baseW * 0.58, fy - ry * 2.3, pS * 0.85, { beanie: true });
+      person(fx + side, fy - ry * 1.5, pS, { guitar: true });
+      ctx.restore();
+
+      ctx.save(); ctx.translate(-look * 26, 0);
+      card.style.transform = `translate(calc(-50% + ${(-look * 26).toFixed(1)}px), -50%)`;
+      stones(false);
+      logs();
+      spawn();
+      drawFire(glow);
+      stones(true);
+      ctx.restore();
+
+      you(-look * 40, toast);
+      if (!reduceMotion) requestAnimationFrame(frame);
+    }
+
+    addEventListener('resize', resize);
+    // Turn your head a little with the mouse (or by tilting the phone)
+    addEventListener('pointermove', (e) => { lookTarget = (e.clientX / W - 0.5) * 2; });
+    addEventListener('deviceorientation', (e) => { if (e.gamma != null) lookTarget = Math.max(-1, Math.min(1, e.gamma / 30)); });
+
+    resize();
+    // Warm the fire up so it's already burning on the first frame
+    for (let i = 0; i < 40; i++) spawn();
+    frame();
+  })();
+  </script>
+</body>
+</html>

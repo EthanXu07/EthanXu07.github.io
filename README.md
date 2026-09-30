@@ -17,6 +17,7 @@ node tools/build.mjs
 | `src/interests.json` | Side quests: one card + one page each, with photos and text |
 | `src/pages/*.html` | Page bodies (home, contact, templates) |
 | `src/layout.html` | Nav bar, footer and résumé pop-up shared by every game page |
+| `card/index.html` | 🔥 Secret business card (hand-written, not generated). Reached by clearing the title-screen level and walking past the castle to the campfire, or directly at `/card/`. Links come from `site-config.js` |
 
 Edit, rebuild, then commit the generated `index.html` files along with `src/`.
 
