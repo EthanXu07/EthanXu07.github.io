@@ -119,7 +119,34 @@
 
   function seedSky() {
     stars = Array.from({ length: 60 }, (_, i) => ({ x: (i * 97) % 900, y: 6 + ((i * 53) % 70), p: i * 0.7 }));
-    clouds = Array.from({ length: 9 }, (_, i) => ({ x: i * 160 + ((i * 37) % 60), y: 24 + ((i * 29) % 50), w: 14 + ((i * 11) % 16) }));
+    // Clouds: five kinds (puffy, towering, long streak, wisp, small puff) on two depths
+    const rnd = (n) => { const v = Math.sin(n * 127.1 + 3.7) * 43758.5453; return v - Math.floor(v); };
+    const TYPES = ['puff', 'tower', 'streak', 'wisp', 'small', 'puff', 'streak', 'tower', 'small', 'wisp', 'puff', 'small', 'streak', 'puff'];
+    clouds = TYPES.map((type, i) => {
+      const far = i % 3 === 0;
+      const r = (k) => rnd(i * 10 + k);
+      let parts;
+      if (type === 'puff') {
+        const w = 16 + Math.round(r(1) * 14);
+        parts = [{ dx: 0, dy: 0, w, h: 3 }];
+        for (let b = 0; b < 2 + Math.round(r(2) * 2); b++) { const bw = Math.round(w * (0.25 + r(3 + b) * 0.25)), bh = 2 + Math.round(r(6 + b) * 2); parts.push({ dx: Math.round(r(9 + b) * (w - bw)), dy: -bh, w: bw, h: bh }); }
+      } else if (type === 'tower') {
+        const w = 18 + Math.round(r(1) * 10);
+        parts = [{ dx: 0, dy: 0, w, h: 3 }];
+        let y = 0, cw = w;
+        for (let lv = 0; lv < 3 + Math.round(r(2)); lv++) { const nw = Math.round(cw * (0.62 + r(3 + lv) * 0.15)), bh = 2 + Math.round(r(7 + lv) * 2); y -= bh; parts.push({ dx: Math.round((w - nw) / 2 + (r(11 + lv) - 0.5) * 4), dy: y, w: nw, h: bh + 1 }); cw = nw; }
+      } else if (type === 'streak') {
+        const w = 30 + Math.round(r(1) * 24);
+        parts = [{ dx: 0, dy: 0, w, h: 2 }, { dx: Math.round(w * 0.15), dy: -1, w: Math.round(w * 0.35), h: 1 }, { dx: Math.round(w * 0.6), dy: -1, w: Math.round(w * 0.2), h: 1 }];
+      } else if (type === 'wisp') {
+        const w = 20 + Math.round(r(1) * 16);
+        parts = [{ dx: 0, dy: 0, w, h: 1 }, { dx: Math.round(w * 0.25), dy: 2, w: Math.round(w * 0.6), h: 1 }, { dx: Math.round(w * 0.1), dy: -2, w: Math.round(w * 0.3), h: 1 }];
+      } else {
+        const w = 6 + Math.round(r(1) * 5);
+        parts = [{ dx: 0, dy: 0, w, h: 2 }, { dx: 2, dy: -1, w: w - 4, h: 1 }];
+      }
+      return { type, far, parts, x: Math.round(i * 113 + r(20) * 60), y: far ? 10 + Math.round(r(21) * 30) : 22 + Math.round(r(22) * 50) };
+    });
   }
 
   // ---------- Start / corner card ----------
@@ -523,6 +550,9 @@
   }
   // Far mountains: jagged ridge with snow on the tallest peaks
   const ridge = (x) => 18 + 8 * Math.sin(x * 0.011 + 0.7) + 7 * Math.abs(Math.sin(x * 0.037 + 2.1)) + 3 * Math.abs(Math.sin(x * 0.083 + 0.3));
+  let flock = null, nextFlock = 240;
+  const BIRD_UP = [[-3, -2], [-2, -1], [-1, 0], [0, 0], [1, 0], [2, -1], [3, -2], [0, 1]];
+  const BIRD_DOWN = [[-3, 1], [-2, 0], [-1, 0], [0, 0], [1, 0], [2, 0], [3, 1], [0, 1]];
   const birds = Array.from({ length: 5 }, (_, i) => ({ x: i * 97 + 20, y: 30 + ((i * 23) % 40), v: 0.12 + (i % 3) * 0.04, ph: i * 1.7 }));
   const hill = (x, amp, base, f, seed) => base - amp * (0.55 + 0.45 * Math.sin(x * f + seed) * Math.sin(x * f * 2.3 + seed * 1.7));
 
@@ -690,14 +720,42 @@
     for (let yy = -13; yy <= 13; yy++) { const half = Math.floor(Math.sqrt(169 - yy * yy)); ctx.fillRect(sunX - half, sunY + yy, half * 2, 1); }
     ctx.fillStyle = '#fbe3a4';
     for (let yy = -9; yy <= 3; yy++) { const half = Math.floor(Math.sqrt(81 - yy * yy) * 0.6); ctx.fillRect(sunX - half - 3, sunY + yy, half, 1); }
+    const wrapW = Math.max(W + 200, 1600);
     for (const c of clouds) {
-      const x = Math.round(((c.x - cx * 0.2) % (W + 200) + W + 200) % (W + 200) - 100);
+      const x = Math.round(((c.x - cx * (c.far ? 0.1 : 0.22)) % wrapW + wrapW) % wrapW - 100);
+      if (x > W + 60) continue;
       // lit from below by the sunset: cool lavender up high, warm peach near the horizon
       const k = Math.min(1, c.y / (skyH * 0.75));
       const lerp = (a, b) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
-      const top = lerp([124, 126, 164], [240, 200, 164]), under = lerp([92, 88, 128], [214, 150, 128]);
-      ctx.fillStyle = `rgb(${top})`; ctx.fillRect(x, c.y + 2, c.w, 3); ctx.fillRect(x + 2, c.y, Math.round(c.w * 0.45), 2); ctx.fillRect(x + Math.round(c.w * 0.4), c.y - 1, Math.round(c.w * 0.35), 3);
-      ctx.fillStyle = `rgb(${under})`; ctx.fillRect(x + 1, c.y + 4, c.w - 2, 1);
+      const top = lerp([124, 126, 164], [240, 200, 164]), under = lerp([92, 88, 128], [214, 150, 128]), hi = lerp([150, 150, 184], [252, 222, 190]);
+      ctx.globalAlpha = c.far ? 0.55 : 1;
+      for (const [i, pt] of c.parts.entries()) {
+        ctx.fillStyle = `rgb(${top})`; ctx.fillRect(x + pt.dx, c.y + pt.dy, pt.w, pt.h);
+        if (!c.far && pt.h > 1 && i > 0) { ctx.fillStyle = `rgb(${hi})`; ctx.fillRect(x + pt.dx + 1, c.y + pt.dy, Math.max(1, pt.w - 2), 1); }
+      }
+      const base = c.parts[0];
+      if (base.h > 1) { ctx.fillStyle = `rgb(${under})`; ctx.fillRect(x + base.dx + 1, c.y + base.h - 1, base.w - 2, 1); }
+      ctx.globalAlpha = 1;
+    }
+    // Flocks of birds cross the sky while you play
+    if (playing && !reduceMotion && state !== 'over') {
+      if (!flock && t > nextFlock) {
+        const dir = Math.random() < 0.5 ? 1 : -1, n = 3 + Math.floor(Math.random() * 4);
+        flock = { dir, x: dir > 0 ? -20 : W + 20, y: Math.round(skyH * (0.18 + Math.random() * 0.25)), cam0: cx,
+          birds: Array.from({ length: n }, (_, i) => { const k = Math.ceil(i / 2), side = i % 2 ? 1 : -1; return { ox: -dir * k * 7, oy: i ? side * k * 4 : 0, ph: Math.random() * 16 }; }) };
+        nextFlock = t + 420 + Math.random() * 480; // every ~7–15 s
+      }
+      if (flock) {
+        flock.x += flock.dir * 0.38;
+        const fx0 = flock.x - (cx - flock.cam0) * 0.3, bob = Math.sin(t * 0.05) * 2;
+        ctx.fillStyle = '#2b2536';
+        for (const b of flock.birds) {
+          const bx = Math.round(fx0 + b.ox), by = Math.round(flock.y + b.oy + bob + Math.sin((t + b.ph * 9) * 0.07));
+          const frame = Math.floor((t + b.ph) / 8) % 2 ? BIRD_UP : BIRD_DOWN;
+          for (const [dx, dy] of frame) ctx.fillRect(bx + dx, by + dy, 1, 1);
+        }
+        if (fx0 < -80 || fx0 > W + 80) flock = null;
+      }
     }
     // Birds drifting across the sky
     {
@@ -716,7 +774,15 @@
       const wx = sx + cx * 0.06;
       const h = ridge(wx), top = Math.round(G - 22 - h);
       ctx.fillStyle = '#76687d'; ctx.fillRect(sx, top, 1, G - top);
-      if (h > 29) { ctx.fillStyle = '#a99aa8'; ctx.fillRect(sx, top, 1, Math.round((h - 29) * 1.2)); }      // snow only on the tallest peaks
+      // snowcap: deeper on taller peaks, with a ragged, melting lower edge; lit on the sunset side
+      if (h > 25) {
+        const depth = Math.round((h - 25) * 0.55 + 1 + 1.1 * Math.sin(wx * 0.3) + 0.5 * Math.sin(wx * 0.75));
+        if (depth > 0) {
+          const litSide = ridge(wx + 6) < ridge(wx - 6); // broad slope facing the sun (to the right)
+          ctx.fillStyle = litSide ? '#c2b4c1' : '#9888a3'; ctx.fillRect(sx, top, 1, depth);
+          if (Math.sin(wx * 0.45) > 0.92) ctx.fillRect(sx, top + depth, 1, 2); // an occasional snow streak
+        }
+      }
       ctx.fillStyle = 'rgba(239,176,116,0.14)'; ctx.fillRect(sx, top, 1, G - top);                  // warm haze from the sunset
     }
     // Golden Gate Bridge, far off in the haze (appears once, slow parallax)
@@ -842,7 +908,7 @@
   // Test hook: ?debug exposes state for automated play-testing
   if (new URLSearchParams(location.search).has('debug')) {
     window.__mover = () => movers[0].x;
-    window.__explorer = () => ({ phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, near });
+    window.__explorer = () => ({ flock, phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, near });
   }
 
   let resizeTimer;
