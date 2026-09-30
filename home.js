@@ -147,13 +147,13 @@
   const inView = () => { const r = section.getBoundingClientRect(); return r.bottom > window.innerHeight * 0.35 && r.top < window.innerHeight * 0.5; };
   window.addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.('input, textarea, select, dialog')) return;
-    if (!inView()) return;
+    if (!inView() || leaving) return;
     const onControl = e.target.closest?.('a, button');
     if (e.key === 'Enter' && !onControl && playing) {
       if (state === 'over') { e.preventDefault(); newGame(); return; }
       if (state === 'won' && phase === 'ready') {
         e.preventDefault();
-        if (near === 'fire') { window.location.href = '/card/'; return; }
+        if (near === 'fire') { sitByFire(); return; }
         document.getElementById('contact')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
         return;
       }
@@ -205,6 +205,35 @@
     }
     prompt.el.hidden = false;
   }
+
+  // Secret: walk from the level into the campfire card (glow → darkness spreads from the fire → /card/)
+  let leaving = false;
+  function sitByFire() {
+    if (leaving) return;
+    leaving = true;
+    if (reduceMotion) { window.location.href = '/card/'; return; }
+    for (const k in keys) keys[k] = false;
+    prompt.el.hidden = true;
+    const r = canvas.getBoundingClientRect();
+    const x = r.left + (FIRE_X - Math.round(cam)) * (r.width / W);
+    const y = r.top + (G - 8) * (r.height / H);
+    const veil = document.createElement('div');
+    veil.className = 'fire-veil';
+    veil.style.setProperty('--x', `${x}px`);
+    veil.style.setProperty('--y', `${y}px`);
+    veil.innerHTML = '<div class="fire-veil-glow"></div><div class="fire-veil-dark"></div><p class="fire-veil-text">You pull up a log…</p>';
+    document.body.append(veil);
+    document.body.style.overflow = 'hidden';
+    // zoom origin is relative to the title section
+    const sr = section.getBoundingClientRect();
+    section.style.setProperty('--x', `${x - sr.left}px`);
+    section.style.setProperty('--y', `${y - sr.top}px`);
+    section.classList.add('leaning');
+    setTimeout(() => { window.location.href = '/card/'; }, 2300);
+  }
+  prompt.go.addEventListener('click', (e) => { if (near === 'fire') { e.preventDefault(); sitByFire(); } });
+  // Coming back with the browser's Back button: clear the veil
+  window.addEventListener('pageshow', () => { document.querySelector('.fire-veil')?.remove(); section.classList.remove('leaning'); document.body.style.overflow = ''; leaving = false; });
 
   // ---------- Damage, death, game over ----------
   function hurt() {

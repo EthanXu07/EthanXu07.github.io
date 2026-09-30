@@ -692,3 +692,24 @@ main.subpage { padding-top: 5rem; }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ---------- Secret: transition from the level into the campfire card ---------- */
+/* Lean in toward the fire while its light blooms, then fade to dark */
+.title-screen.leaning { transform-origin: var(--x) var(--y); animation: leanIn 1.9s cubic-bezier(.5, 0, .75, .3) forwards; }
+@keyframes leanIn { to { transform: scale(2.6); } }
+.fire-veil { position: fixed; inset: 0; z-index: 200; pointer-events: all; }
+.fire-veil-glow {
+  position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(circle at var(--x) var(--y), rgba(255, 236, 190, 1) 0, rgba(255, 170, 80, .8) 10vmax, rgba(214, 90, 40, .45) 30vmax, rgba(60, 20, 10, .2) 60vmax, transparent 85vmax);
+  mix-blend-mode: screen;
+  animation: veilGlow 1s ease-in forwards;
+}
+.fire-veil-dark { position: absolute; inset: 0; background: #07060c; opacity: 0; animation: veilDark .8s 1s ease-in forwards; }
+.fire-veil-text {
+  position: absolute; left: 50%; top: 50%; margin: 0; transform: translate(-50%, -50%);
+  font: italic 400 clamp(1.1rem, 3vw, 1.5rem) Georgia, "Times New Roman", serif; color: rgba(245, 230, 207, .85);
+  opacity: 0; animation: veilText .7s 1.5s ease-out forwards; white-space: nowrap;
+}
+@keyframes veilGlow { 60% { opacity: .85; } to { opacity: 1; } }
+@keyframes veilDark { to { opacity: 1; } }
+@keyframes veilText { to { opacity: 1; } }
