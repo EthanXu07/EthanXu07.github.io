@@ -99,7 +99,7 @@
     const ctx = canvas.getContext('2d');
     const card = document.getElementById('card');
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let W, H, dpr, S, fx, fy, baseW, flameH, horizon, stars = [], trees = [], tongues = [];
+    let W, H, dpr, S, fx, fy, baseW, flameH, horizon, stars = [], treeLayers = [], tongues = [], rocks = [], coals = [], moon;
     let look = 0, lookTarget = 0, t = 0;
     const rand = (a, b) => a + Math.random() * (b - a);
     const seeded = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
@@ -134,10 +134,35 @@
         return { u, h: flameH * (1 - Math.abs(u) * 1.25) * (0.78 + seeded(i + 21) * 0.3), w: baseW * 0.17 * (1 - Math.abs(u) * 0.45), ph: seeded(i + 40) * 6.28 };
       }).sort((a, b) => a.h - b.h);
       stars = Array.from({ length: Math.round(W * horizon / 2600) }, (_, i) => ({ x: seeded(i + 1) * W, y: seeded(i + 99) * horizon * 0.95, r: seeded(i + 7) * 1.1 + 0.3, p: seeded(i + 3) * 6.28 }));
-      trees = Array.from({ length: Math.ceil(W / 26) + 6 }, (_, i) => ({ x: i * 26 - 60 + seeded(i + 11) * 18, h: (40 + seeded(i + 5) * 70) * S + 20 }));
+      // Two rows of pines: a hazy far row and a dark near row
+      treeLayers = [
+        { color: '#0b0c18', par: 0.25, list: pines(22 * S + 12, 45, 60, 101) },
+        { color: '#040409', par: 0.45, list: pines(34 * S + 16, 70, 90, 202) },
+      ];
+      moon = { x: W * (W < 640 ? 0.78 : 0.8), y: horizon * 0.3, r: 22 * S + 10 };
+      // Fire-ring rocks: lumpy polygons, sized and placed once
+      const rn = W < 640 ? 11 : 14;
+      rocks = Array.from({ length: rn }, (_, i) => {
+        const a = (i / rn) * 6.283 + 0.12 + (seeded(i + 60) - 0.5) * 0.18;
+        const w = (17 + seeded(i) * 12) * S, h = (11 + seeded(i + 4) * 7) * S;
+        const verts = Array.from({ length: 10 }, (_, j) => {
+          const th = (j / 10) * 6.283, r = 0.82 + seeded(i * 10 + j) * 0.3;
+          return [Math.cos(th) * w * r, Math.sin(th) * h * r * (Math.sin(th) > 0 ? 0.55 : 1)];
+        });
+        return { a, w, h, verts, front: Math.sin(a) > 0.05 };
+      });
+      coals = Array.from({ length: 10 }, (_, i) => ({ u: (seeded(i + 300) - 0.5) * 0.7, v: seeded(i + 320), r: (2 + seeded(i + 340) * 3) * S, ph: seeded(i + 360) * 6.28 }));
       // Put the card in the white-hot core of the fire
       card.style.setProperty('--fx', `${fx}px`);
       card.style.setProperty('--fy', `${fy - flameH * 0.4}px`);
+    }
+
+    function pines(step, hMin, hVar, seed) {
+      const list = [];
+      for (let x = -80, i = 0; x < W + 120; x += step * (0.7 + seeded(seed + i) * 0.6), i++) {
+        list.push({ x, h: (hMin + seeded(seed + i * 3) * hVar) * S + 20, tiers: 4 + Math.floor(seeded(seed + i * 7) * 3), lean: (seeded(seed + i * 5) - 0.5) * 0.06 });
+      }
+      return list;
     }
 
     // ---------- Background ----------
@@ -150,14 +175,54 @@
         ctx.fillStyle = `rgba(245,235,215,${a})`;
         ctx.beginPath(); ctx.arc(s.x + off * 0.2, s.y, s.r, 0, 6.283); ctx.fill();
       }
-      // Pine tree line
-      ctx.fillStyle = '#040409';
-      ctx.beginPath(); ctx.moveTo(-80, horizon + 4);
-      for (const tr of trees) {
-        const x = tr.x + off * 0.4;
-        ctx.lineTo(x - 13, horizon + 4); ctx.lineTo(x, horizon - tr.h); ctx.lineTo(x + 13, horizon + 4);
+      drawMoon(off * 0.15);
+      for (const layer of treeLayers) drawPines(layer, off * layer.par);
+    }
+
+    function drawMoon(off) {
+      const { r } = moon, x = moon.x + off, y = moon.y;
+      const halo = ctx.createRadialGradient(x, y, r * 0.8, x, y, r * 5);
+      halo.addColorStop(0, 'rgba(226,220,200,0.18)'); halo.addColorStop(1, 'rgba(226,220,200,0)');
+      ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(x, y, r * 5, 0, 6.283); ctx.fill();
+      const disc = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+      disc.addColorStop(0, '#f7f1dd'); disc.addColorStop(1, '#d9cfb4');
+      ctx.fillStyle = disc; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
+      // craters / maria
+      ctx.fillStyle = 'rgba(160,150,125,0.35)';
+      for (const [cx, cy, cr] of [[-0.3, -0.15, 0.22], [0.25, 0.2, 0.16], [0.1, -0.4, 0.1], [-0.1, 0.35, 0.12], [0.42, -0.1, 0.08]]) {
+        ctx.beginPath(); ctx.arc(x + cx * r, y + cy * r, cr * r, 0, 6.283); ctx.fill();
       }
-      ctx.lineTo(W + 80, horizon + 4); ctx.lineTo(W + 80, horizon + 30); ctx.lineTo(-80, horizon + 30); ctx.fill();
+    }
+
+    function drawPines(layer, off) {
+      const base = horizon + 6;
+      const g = ctx.createLinearGradient(0, horizon - 160 * S, 0, base);
+      g.addColorStop(0, layer.color); g.addColorStop(1, layer === treeLayers[1] ? '#0d080b' : '#10101c');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      for (const tr of layer.list) {
+        const x = tr.x + off, top = base - tr.h, w = tr.h * 0.3;
+        ctx.rect(x - tr.h * 0.02, base - tr.h * 0.18, tr.h * 0.04, tr.h * 0.18); // trunk
+        for (let k = 0; k < tr.tiers; k++) {
+          const t0 = top + (k * tr.h * 0.72) / tr.tiers;
+          const t1 = top + ((k + 1) * tr.h * 0.72) / tr.tiers + tr.h * 0.12;
+          const hw = w * (0.3 + (0.7 * (k + 1)) / tr.tiers);
+          const ax = x + tr.lean * (tr.h - (t0 - top));
+          // tier with a ragged, drooping bottom edge
+          ctx.moveTo(ax, t0);
+          ctx.lineTo(x + hw, t1);
+          ctx.lineTo(x + hw * 0.62, t1 - tr.h * 0.035);
+          ctx.lineTo(x + hw * 0.34, t1 + tr.h * 0.01);
+          ctx.lineTo(x, t1 - tr.h * 0.03);
+          ctx.lineTo(x - hw * 0.34, t1 + tr.h * 0.01);
+          ctx.lineTo(x - hw * 0.62, t1 - tr.h * 0.035);
+          ctx.lineTo(x - hw, t1);
+          ctx.closePath();
+        }
+      }
+      ctx.fill();
+      // ground strip that hides trunk bottoms
+      ctx.fillRect(-100, base - 2, W + 200, 30);
     }
 
     function ground(glow) {
@@ -252,33 +317,72 @@
 
     // ---------- Fire ring, logs, flames ----------
     function stones(front) {
-      const rx = baseW * 0.66, ry = rx * 0.3, n = 14;
-      for (let i = 0; i < n; i++) {
-        const a = (i / n) * 6.283 + 0.1;
-        const isFront = Math.sin(a) > 0;
-        if (isFront !== front) continue;
-        const x = fx + Math.cos(a) * rx, y = fy + Math.sin(a) * ry + 6 * S;
-        const w = (20 + seeded(i) * 9) * S, h = (12 + seeded(i + 4) * 5) * S;
-        ctx.fillStyle = front ? '#2a2020' : '#1b1516';
-        ctx.beginPath(); ctx.ellipse(x, y, w, h, 0, 0, 6.283); ctx.fill();
-        // lit top edge, facing the fire
-        ctx.fillStyle = front ? 'rgba(255,150,80,0.22)' : 'rgba(255,160,90,0.55)';
-        ctx.beginPath(); ctx.ellipse(x, y - h * 0.35, w * 0.8, h * 0.45, 0, Math.PI, 0); ctx.fill();
+      const rx = baseW * 0.64, ry = rx * 0.3;
+      for (const rk of rocks) {
+        if (rk.front !== front) continue;
+        const x = fx + Math.cos(rk.a) * rx, y = fy + Math.sin(rk.a) * ry + 8 * S;
+        ctx.save(); ctx.translate(x, y);
+        // contact shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.45)';
+        ctx.beginPath(); ctx.ellipse(0, rk.h * 0.45, rk.w * 1.05, rk.h * 0.35, 0, 0, 6.283); ctx.fill();
+        // body: back-row rocks face the fire (lit), front-row rocks are lit only on their far edge
+        const g = ctx.createLinearGradient(0, -rk.h, 0, rk.h * 0.6);
+        if (front) { g.addColorStop(0, '#9a6244'); g.addColorStop(0.3, '#4a3229'); g.addColorStop(1, '#171012'); }
+        else { g.addColorStop(0, '#b0714a'); g.addColorStop(0.5, '#5b3a2d'); g.addColorStop(1, '#1c1517'); }
+        ctx.fillStyle = g;
+        ctx.beginPath(); rk.verts.forEach(([vx, vy], j) => (j ? ctx.lineTo(vx, vy) : ctx.moveTo(vx, vy))); ctx.closePath(); ctx.fill();
+        // a crack + speckle for texture
+        ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = Math.max(1, S);
+        ctx.beginPath(); ctx.moveTo(-rk.w * 0.25, -rk.h * 0.5); ctx.lineTo(-rk.w * 0.05, -rk.h * 0.1); ctx.lineTo(rk.w * 0.1, rk.h * 0.1); ctx.stroke();
+        ctx.fillStyle = front ? 'rgba(255,170,110,0.2)' : 'rgba(255,200,150,0.25)';
+        ctx.beginPath(); ctx.ellipse(rk.w * 0.2, -rk.h * 0.55, rk.w * 0.35, rk.h * 0.18, -0.2, 0, 6.283); ctx.fill();
+        ctx.restore();
       }
     }
 
-    function logs() {
-      const L = baseW * 0.5;
+    function log(x0, y0, x1, y1, thick, bark) {
       ctx.lineCap = 'round';
-      for (const [a, c] of [[0.32, '#3a2216'], [-0.32, '#301b12'], [0.05, '#2a1810']]) {
-        ctx.strokeStyle = c; ctx.lineWidth = 22 * S;
-        ctx.beginPath(); ctx.moveTo(fx - Math.cos(a) * L, fy - Math.sin(a) * L * 0.35); ctx.lineTo(fx + Math.cos(a) * L, fy + Math.sin(a) * L * 0.35); ctx.stroke();
+      ctx.strokeStyle = bark; ctx.lineWidth = thick;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = thick * 0.25;       // bark sheen
+      ctx.beginPath(); ctx.moveTo(x0, y0 - thick * 0.2); ctx.lineTo(x1, y1 - thick * 0.2); ctx.stroke();
+    }
+
+    function logs() {
+      const L = baseW * 0.48;
+      for (const [a, c] of [[0.3, '#3a2216'], [-0.3, '#301b12']]) {
+        log(fx - Math.cos(a) * L, fy - 6 * S - Math.sin(a) * L * 0.3, fx + Math.cos(a) * L, fy - 6 * S + Math.sin(a) * L * 0.3, 20 * S, c);
       }
-      // glowing embers on the logs
       const g = ctx.createRadialGradient(fx, fy, 0, fx, fy, baseW * 0.45);
       g.addColorStop(0, 'rgba(255,120,40,0.95)'); g.addColorStop(0.5, 'rgba(200,50,20,0.55)'); g.addColorStop(1, 'rgba(120,20,10,0)');
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.ellipse(fx, fy, baseW * 0.45, baseW * 0.13, 0, 0, 6.283); ctx.fill();
+    }
+
+    // In front of the flames: a glowing bed of coals and one log, so the fire has no flat bottom
+    function frontLogs(glow) {
+      const fr = baseW * 0.11;
+      for (const c of coals) {
+        const x = fx + c.u * baseW * 0.8, y = fy + fr * (0.45 + c.v * 0.35);
+        const k = reduceMotion ? 1 : 0.7 + 0.3 * Math.sin(t * 0.08 + c.ph);
+        ctx.fillStyle = '#2a120c'; ctx.beginPath(); ctx.ellipse(x, y, c.r * 1.3, c.r * 0.8, 0, 0, 6.283); ctx.fill();
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        const cg0 = ctx.createRadialGradient(x, y, 0, x, y, c.r * 3);
+        cg0.addColorStop(0, `rgba(255,${Math.round(110 + 70 * k)},50,${0.8 * k * glow})`); cg0.addColorStop(1, 'rgba(255,80,20,0)');
+        ctx.fillStyle = cg0; ctx.beginPath(); ctx.arc(x, y, c.r * 3, 0, 6.283); ctx.fill();
+        ctx.restore();
+      }
+      const x0 = fx - baseW * 0.3, y0 = fy + fr * 1.05, x1 = fx + baseW * 0.24, y1 = fy + fr * 1.35, th = 28 * S;
+      log(x0, y0, x1, y1, th, '#2e1a11');
+      // charred top glowing where it touches the fire
+      const cg = ctx.createLinearGradient(x0, 0, x1, 0);
+      cg.addColorStop(0, 'rgba(255,110,40,0)'); cg.addColorStop(0.45, `rgba(255,120,40,${0.7 * glow})`); cg.addColorStop(1, 'rgba(255,110,40,0)');
+      ctx.strokeStyle = cg; ctx.lineWidth = th * 0.28; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x0, y0 - th * 0.32); ctx.lineTo(x1, y1 - th * 0.32); ctx.stroke();
+      // end grain
+      ctx.fillStyle = '#8a6242'; ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.32, th * 0.5, 0, 0, 6.283); ctx.fill();
+      ctx.strokeStyle = '#5a3c26'; ctx.lineWidth = Math.max(1, S);
+      ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.16, th * 0.26, 0, 0, 6.283); ctx.stroke();
     }
 
     const sparks = [], embers = [];
@@ -297,6 +401,7 @@
       ctx.moveTo(x - w, base);
       ctx.bezierCurveTo(x - w * 1.15, base - h * 0.42, x + sway * 0.4 - w * 0.4, base - h * 0.72, x + sway, base - h);
       ctx.bezierCurveTo(x + sway * 0.4 + w * 0.4, base - h * 0.72, x + w * 1.15, base - h * 0.42, x + w, base);
+      ctx.bezierCurveTo(x + w, base + w * 0.75, x - w, base + w * 0.75, x - w, base); // rounded bottom
       ctx.closePath(); ctx.fill();
     }
 
@@ -311,8 +416,11 @@
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, flameH * 1.2, 0, 6.283); ctx.fill();
       ctx.restore();
 
-      const base = fy + 4 * S;
+      // Tongues start along the front arc of the fire bed, so the bottom is rounded, not flat
+      const fr = baseW * 0.11;
+      const baseOf = (u) => fy - fr * 0.35 + fr * 0.95 * Math.sqrt(Math.max(0, 1 - (2 * u) ** 2));
       const now = tongues.map((tg) => ({
+        base: baseOf(tg.u),
         x: fx + tg.u * baseW * 0.82,
         w: tg.w,
         h: tg.h * (reduceMotion ? 1 : 0.84 + 0.12 * Math.sin(t * 0.09 + tg.ph) + 0.07 * Math.sin(t * 0.23 + tg.ph * 2) + Math.random() * 0.03),
@@ -320,8 +428,8 @@
       }));
       for (const [color, wm, hm] of LAYERS) {
         ctx.fillStyle = color;
-        ctx.beginPath(); ctx.ellipse(fx, base - baseW * 0.04, baseW * 0.46 * wm, baseW * 0.12 * wm, 0, 0, 6.283); ctx.fill();
-        for (const f of now) tongue(f.x + f.sway * (1 - wm) * 0.3, base, f.w * wm, f.h * hm, f.sway * hm);
+        ctx.beginPath(); ctx.ellipse(fx, fy - fr * 0.1, baseW * 0.44 * wm, fr * (0.9 + 0.3 * wm), 0, 0, 6.283); ctx.fill();
+        for (const f of now) tongue(f.x + f.sway * (1 - wm) * 0.3, f.base - (1 - wm) * fr * 0.4, f.w * wm, f.h * hm, f.sway * hm);
       }
 
       // White-hot heart behind the card so the lettering stays readable (elliptical, soft edge)
@@ -360,42 +468,39 @@
 
     // ---------- You (first person): sneakers + your roasting stick ----------
     function you(off, toast) {
-      const s = S * 0.8;
+      const s = S * 0.6;
       for (const side of [-1, 1]) {
-        const x = W / 2 + side * (95 * s + 30) + off, y = H + 40 * s;
-        ctx.save(); ctx.translate(x, y); ctx.rotate(side * 0.12);
-        // jeans
-        ctx.fillStyle = '#131722';
-        ctx.beginPath(); ctx.roundRect(-44 * s, -40 * s, 88 * s, 140 * s, 30 * s); ctx.fill();
-        // sneaker, toe toward the fire
-        ctx.fillStyle = '#e9e1d6';
-        ctx.beginPath(); ctx.ellipse(0, -95 * s, 46 * s, 78 * s, 0, 0, 6.283); ctx.fill();
-        ctx.fillStyle = '#b3432c';
-        ctx.beginPath(); ctx.ellipse(0, -80 * s, 38 * s, 50 * s, 0, 0, 6.283); ctx.fill();
-        ctx.fillStyle = '#e9e1d6';
-        for (let k = 0; k < 4; k++) ctx.fillRect(-16 * s, (-104 + k * 14) * s, 32 * s, 4 * s); // laces
-        // firelight on the toe
-        const lg = ctx.createLinearGradient(0, -175 * s, 0, -60 * s);
-        lg.addColorStop(0, 'rgba(255,170,90,0.55)'); lg.addColorStop(1, 'rgba(255,170,90,0)');
-        ctx.fillStyle = lg; ctx.beginPath(); ctx.ellipse(0, -95 * s, 46 * s, 78 * s, 0, 0, 6.283); ctx.fill();
-        // shadow at the bottom
-        const sg = ctx.createLinearGradient(0, -40 * s, 0, 60 * s);
-        sg.addColorStop(0, 'rgba(7,6,12,0)'); sg.addColorStop(1, 'rgba(7,6,12,0.9)');
-        ctx.fillStyle = sg; ctx.fillRect(-60 * s, -40 * s, 120 * s, 100 * s);
+        const x = W / 2 + side * (100 * s + 24) + off, y = H + 85 * s;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(side * 0.14);
+        ctx.fillStyle = '#0e1018';                                                       // jeans
+        ctx.beginPath(); ctx.roundRect(-40 * s, -40 * s, 80 * s, 140 * s, 28 * s); ctx.fill();
+        ctx.fillStyle = '#4a4540';                                                       // sole
+        ctx.beginPath(); ctx.ellipse(0, -95 * s, 44 * s, 76 * s, 0, 0, 6.283); ctx.fill();
+        ctx.fillStyle = '#23242c';                                                       // upper
+        ctx.beginPath(); ctx.ellipse(0, -90 * s, 37 * s, 64 * s, 0, 0, 6.283); ctx.fill();
+        ctx.fillStyle = 'rgba(200,190,175,0.25)';                                        // laces
+        for (let k = 0; k < 4; k++) ctx.fillRect(-13 * s, (-100 + k * 13) * s, 26 * s, 3 * s);
+        const lg = ctx.createLinearGradient(0, -170 * s, 0, -90 * s);                    // firelight on the toe
+        lg.addColorStop(0, 'rgba(255,160,90,0.3)'); lg.addColorStop(1, 'rgba(255,160,90,0)');
+        ctx.fillStyle = lg; ctx.beginPath(); ctx.ellipse(0, -95 * s, 44 * s, 76 * s, 0, 0, 6.283); ctx.fill();
         ctx.restore();
       }
-      // Your arm from the bottom-right, holding a stick into the flames
-      const hx = W - 70 * s + off * 1.2, hy = H - 90 * s;
-      const tip = { x: fx + baseW * 0.42 + off * 0.6, y: fy - flameH * (W < 640 ? 0.06 : 0.18) };
-      ctx.strokeStyle = '#4a2c19'; ctx.lineWidth = Math.max(2.5, 4 * s); ctx.lineCap = 'round';
+      // Your hand, low in the corner, holding a thin stick into the flames
+      const hx = Math.min(W - 30 * s, fx + baseW * 0.85) + off * 1.2, hy = H - 18 * s;
+      const tip = { x: fx + baseW * 0.4 + off * 0.6, y: fy - flameH * (W < 640 ? 0.06 : 0.16) };
+      ctx.strokeStyle = '#2f1d12'; ctx.lineWidth = Math.max(1.5, 3 * s); ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tip.x, tip.y); ctx.stroke();
-      marshmallow(tip.x, tip.y, 12 * s, toast);
-      ctx.fillStyle = '#26324a'; // sleeve
-      ctx.beginPath(); ctx.moveTo(W + 10, H - 10 * s); ctx.lineTo(W - 60 * s + off * 1.2, H - 70 * s); ctx.lineTo(W - 20 * s + off * 1.2, H - 120 * s); ctx.lineTo(W + 10, H - 130 * s); ctx.fill();
-      ctx.fillStyle = '#d9a27b'; // hand
-      ctx.beginPath(); ctx.ellipse(hx, hy, 24 * s, 18 * s, -0.6, 0, 6.283); ctx.fill();
-      ctx.fillStyle = 'rgba(255,170,100,0.35)';
-      ctx.beginPath(); ctx.ellipse(hx - 6 * s, hy - 6 * s, 16 * s, 10 * s, -0.6, 0, 6.283); ctx.fill();
+      marshmallow(tip.x, tip.y, 9 * s, toast);
+      ctx.fillStyle = '#10141f';                                                          // sleeve
+      ctx.beginPath(); ctx.moveTo(hx + 10 * s, H + 10); ctx.lineTo(hx + 4 * s, hy + 6 * s); ctx.lineTo(hx + 34 * s, hy - 4 * s); ctx.lineTo(hx + 60 * s, H + 10); ctx.fill();
+      ctx.fillStyle = '#6e4a38';                                                          // hand, in shadow
+      ctx.beginPath(); ctx.ellipse(hx, hy, 20 * s, 15 * s, -0.6, 0, 6.283); ctx.fill();
+      ctx.fillStyle = 'rgba(255,160,100,0.25)';
+      ctx.beginPath(); ctx.ellipse(hx - 5 * s, hy - 5 * s, 12 * s, 7 * s, -0.6, 0, 6.283); ctx.fill();
+      // darken the very bottom of the frame so the foreground recedes
+      const fade = ctx.createLinearGradient(0, H * 0.82, 0, H);
+      fade.addColorStop(0, 'rgba(7,6,12,0)'); fade.addColorStop(1, 'rgba(7,6,12,0.7)');
+      ctx.fillStyle = fade; ctx.fillRect(0, H * 0.82, W, H * 0.18);
     }
 
     // ---------- Loop ----------
@@ -426,6 +531,7 @@
       logs();
       spawn();
       drawFire(glow);
+      frontLogs(glow);
       stones(true);
       ctx.restore();
 
