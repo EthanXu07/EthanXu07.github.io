@@ -205,9 +205,9 @@ function exploreCards() {
     .sort((a, b) => usedIn[b].length - usedIn[a].length || skillName(a).localeCompare(skillName(b)))
     .slice(0, 6);
   const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
-  const list = (items) => `<ul class="explore-list">${items.map((i) => `<li><strong>${esc(i.title)}</strong><span>${esc(i.sub)}</span>${i.badge ? `<em class="explore-badge">${esc(i.badge)}</em>` : ''}</li>`).join('')}</ul>`;
-  const chips = (names) => `<ul class="explore-chips">${names.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>`;
-  const more = (shown, total, noun) => (total > shown ? `<p class="explore-more">+ ${plural(total - shown, noun)}</p>` : '');
+  const list = (items) => `<ul class="overview-list">${items.map((i) => `<li><strong>${esc(i.title)}</strong><span>${esc(i.sub)}</span>${i.badge ? `<em class="overview-badge">${esc(i.badge)}</em>` : ''}</li>`).join('')}</ul>`;
+  const chips = (names) => `<ul class="overview-chips">${names.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>`;
+  const more = (shown, total, noun) => (total > shown ? `<p class="overview-more">+ ${plural(total - shown, noun)}</p>` : '');
 
   const expShown = experience.slice(0, 3);
   const cards = [
@@ -238,11 +238,11 @@ function exploreCards() {
     },
   ];
   return cards.map((c) => `        <li>
-          <a class="explore-card px-box" href="${c.href}">
-            <span class="explore-head"><span class="explore-icon">${pixelIcon(ICONS[c.key])}</span><strong class="explore-title">${c.title}</strong><span class="explore-count">${c.count}</span></span>
-            <span class="explore-summary">${esc(c.summary)}</span>
+          <a class="overview-card px-box" href="${c.href}">
+            <span class="overview-head"><span class="overview-icon">${pixelIcon(ICONS[c.key])}</span><strong class="overview-title">${c.title}</strong><span class="overview-count">${c.count}</span></span>
+            <span class="overview-summary">${esc(c.summary)}</span>
             ${c.body}
-            <span class="explore-link">${c.link} <span aria-hidden="true">→</span></span>
+            <span class="overview-link">${c.link} <span aria-hidden="true">→</span></span>
           </a>
         </li>`).join('\n');
 }

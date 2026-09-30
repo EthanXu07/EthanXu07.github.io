@@ -3,7 +3,9 @@
 //  Run right from the Campanile, bump "?" blocks (coins, coffee = +1 heart,
 //  star = invincibility, coin magnet, double jump, a hidden 1-up), stomp bugs, dodge
 //  spiky viruses, cross pits and a moving platform, then climb the stairs to
-//  the flag and into the castle for the fireworks.
+//  the flag and into the castle for the fireworks. Secret: after the level is
+//  clear, a campfire lights up past the castle. Stand by it and press Enter
+//  to sit down at the fire (/card/, the business card).
 //  Run out of hearts and it's game over. Before Start only the scenery shows;
 //  on Start the level drops into place and the name + bio card slides into
 //  the corner.
@@ -47,6 +49,7 @@
   const CASTLE_X = 1270;
   const DOOR_X = 1295; // castle door (CASTLE_X + 25)
   const WORLD_W = 1430;
+  const FIRE_X = 1392; // secret campfire past the castle (lit after the level is clear)
 
   // Ground with three gaps (the middle one has a moving platform)
   const ground = [[0, 470], [510, 720], [800, 1060], [1090, WORLD_W]].map(([a, b]) => ({ x: a, y: 0, w: b - a, h: 60, kind: 'ground' }));
@@ -148,7 +151,12 @@
     const onControl = e.target.closest?.('a, button');
     if (e.key === 'Enter' && !onControl && playing) {
       if (state === 'over') { e.preventDefault(); newGame(); return; }
-      if (state === 'won' && phase === 'ready') { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); return; }
+      if (state === 'won' && phase === 'ready') {
+        e.preventDefault();
+        if (near === 'fire') { window.location.href = '/card/'; return; }
+        document.getElementById('contact')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+        return;
+      }
     }
     const k = KEYMAP[e.key];
     if (!k) return;
@@ -182,11 +190,19 @@
     if (kind === near) return;
     near = kind;
     if (!kind) { prompt.el.hidden = true; return; }
-    prompt.label.textContent = 'Level clear!';
-    prompt.title.textContent = `Score ${score}`;
-    prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Thanks for playing! Press Enter to get in touch.`;
-    prompt.go.href = '#contact';
-    prompt.go.firstChild.textContent = 'Contact ';
+    if (kind === 'fire') {
+      prompt.label.textContent = 'Secret found';
+      prompt.title.textContent = 'A campfire';
+      prompt.desc.textContent = 'Some friends are gathered around the fire. Press Enter to pull up a log.';
+      prompt.go.href = '/card/';
+      prompt.go.firstChild.textContent = 'Sit down ';
+    } else {
+      prompt.label.textContent = 'Level clear!';
+      prompt.title.textContent = `Score ${score}`;
+      prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Thanks for playing! Press Enter to get in touch. Something is glowing past the castle…`;
+      prompt.go.href = '#contact';
+      prompt.go.firstChild.textContent = 'Contact ';
+    }
     prompt.el.hidden = false;
   }
 
@@ -417,7 +433,8 @@
       popup(FLAG_X, -72, 'Level clear!', 120, true);
     }
     if (state === 'won') {
-      setPrompt('clear');
+      const byFire = phase === 'ready' && Math.abs(p.x + PW / 2 - FIRE_X) < 20;
+      setPrompt(byFire ? 'fire' : 'clear');
     }
   }
 
@@ -513,6 +530,34 @@
     ctx.fillStyle = '#d4553a'; ctx.fillRect(x + 30, -88, 1, 13);
     if (state === 'won' && phase !== 'walk') ctx.fillRect(x + 31, -88, 7, 5); // castle flag goes up
   }
+  // Secret campfire: cold logs until the level is clear, then it lights up
+  function drawCampfire(x) {
+    const lit = state === 'won' && phase !== 'walk' && phase !== 'inside';
+    if (lit) {
+      const glow = 0.3 + Math.sin(t * 0.2) * 0.05;
+      const g = ctx.createRadialGradient(x, -6, 0, x, -6, 30);
+      g.addColorStop(0, `rgba(243,169,58,${glow})`); g.addColorStop(1, 'rgba(243,169,58,0)');
+      ctx.fillStyle = g; ctx.fillRect(x - 30, -36, 60, 36);
+    }
+    ctx.fillStyle = '#6b4630'; ctx.fillRect(x - 8, -3, 16, 3);
+    ctx.fillStyle = '#4a2f20'; ctx.fillRect(x - 6, -5, 3, 2); ctx.fillRect(x + 3, -5, 3, 2);
+    ctx.fillStyle = '#8b949c'; ctx.fillRect(x - 11, -2, 3, 2); ctx.fillRect(x + 8, -2, 3, 2);
+    if (!lit) {
+      if (Math.floor(t / 30) % 3 === 0) { ctx.fillStyle = 'rgba(185,179,156,0.5)'; ctx.fillRect(x, -9 - (t % 30) / 6, 1, 2); }
+      return;
+    }
+    const FL = ['#fff1b8', '#f3c969', '#e8a93a', '#d4553a'];
+    for (let i = -4; i <= 4; i++) {
+      const h = Math.max(1, Math.round((5 - Math.abs(i)) * 2.2 + Math.random() * 3));
+      for (let y = 0; y < h; y++) { ctx.fillStyle = FL[Math.min(3, Math.floor(((h - y) / h) * 4 * 0.99))]; ctx.fillRect(x + i, -4 - y, 1, 1); }
+    }
+    if (Math.random() > 0.6) { ctx.fillStyle = '#f3c969'; ctx.fillRect(x - 3 + Math.floor(Math.random() * 7), -18 - Math.floor(Math.random() * 6), 1, 1); }
+    // two friends sitting by the fire
+    ctx.fillStyle = '#1c2a25';
+    for (const fxo of [-20, 17]) { ctx.fillRect(x + fxo, -9, 4, 9); ctx.fillRect(x + fxo, -13, 4, 4); }
+    ctx.fillStyle = 'rgba(243,169,58,0.55)'; ctx.fillRect(x - 17, -13, 1, 13); ctx.fillRect(x + 17, -13, 1, 13);
+  }
+
   function drawHud() {
     const narrow = window.innerWidth <= 832;
     const top = Math.ceil((narrow ? 345 : 92) / scale); // phones: below the corner card
@@ -615,6 +660,7 @@
       const flagDrop = state === 'won' ? Math.min(66, Math.round((t - winT) * 1.5)) : 0;
       ctx.fillStyle = '#d4553a'; ctx.fillRect(FLAG_X - 14, -78 + flagDrop, 14, 10 - (Math.floor(t / 10) % 2));
       drawCastle(CASTLE_X);
+      drawCampfire(FIRE_X);
       ctx.restore();
       if (drop === 0) {
         for (const c of coins) {
