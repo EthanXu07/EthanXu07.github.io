@@ -137,7 +137,7 @@
         { color: '#0b0c18', par: 0.25, list: pines(22 * S + 12, 45, 60, 101) },
         { color: '#040409', par: 0.45, list: pines(34 * S + 16, 70, 90, 202) },
       ];
-      moon = { x: W * (W < 640 ? 0.78 : 0.8), y: horizon * 0.3, r: 22 * S + 10 };
+      moon = { x: W * (W < 640 ? 0.86 : 0.91), y: horizon * 0.26, r: 22 * S + 10 };
       // Fire-ring rocks: lumpy polygons, sized and placed once
       const rn = W < 640 ? 11 : 14;
       rocks = Array.from({ length: rn }, (_, i) => {
@@ -173,8 +173,31 @@
         ctx.fillStyle = `rgba(245,235,215,${a})`;
         ctx.beginPath(); ctx.arc(s.x + off * 0.2, s.y, s.r, 0, 6.283); ctx.fill();
       }
+      shootingStar(off);
       drawMoon(off * 0.15);
       for (const layer of treeLayers) drawPines(layer, off * layer.par);
+    }
+
+    // Every so often a shooting star streaks across the upper sky (behind the trees)
+    let meteor = null, nextMeteor = location.search.includes('meteor') ? 20 : 240 + Math.random() * 360;
+    function shootingStar(off) {
+      if (reduceMotion) return;
+      if (!meteor && t > nextMeteor) {
+        const dir = Math.random() < 0.5 ? -1 : 1;
+        meteor = { x: W * (0.15 + Math.random() * 0.7), y: horizon * (0.05 + Math.random() * 0.3), vx: dir * (7 + Math.random() * 5) * Math.max(1, S), vy: (2.2 + Math.random() * 1.8) * Math.max(1, S), life: 0, max: 42 + Math.random() * 20 };
+        nextMeteor = t + 300 + Math.random() * 600; // ~5–15 s at 60 fps
+      }
+      if (!meteor) return;
+      const m = meteor;
+      m.x += m.vx; m.y += m.vy; m.life++;
+      const k = m.life / m.max, alpha = Math.sin(Math.PI * Math.min(1, k)); // fade in, then out
+      const len = 14, tx = m.x - m.vx * len, ty = m.y - m.vy * len;
+      const g = ctx.createLinearGradient(m.x + off * 0.2, m.y, tx + off * 0.2, ty);
+      g.addColorStop(0, `rgba(255,250,235,${0.95 * alpha})`); g.addColorStop(1, 'rgba(255,250,235,0)');
+      ctx.strokeStyle = g; ctx.lineWidth = 1.6 * Math.max(1, S * 0.8); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(m.x + off * 0.2, m.y); ctx.lineTo(tx + off * 0.2, ty); ctx.stroke();
+      ctx.fillStyle = `rgba(255,255,245,${alpha})`; ctx.beginPath(); ctx.arc(m.x + off * 0.2, m.y, 1.6 * Math.max(1, S * 0.8), 0, 6.283); ctx.fill();
+      if (m.life >= m.max || m.y > horizon) meteor = null;
     }
 
     function drawMoon(off) {
@@ -397,18 +420,43 @@
       ctx.beginPath(); ctx.moveTo(x0, y0 - thick * 0.2); ctx.lineTo(x1, y1 - thick * 0.2); ctx.stroke();
     }
 
-    function logs() {
-      const L = baseW * 0.48;
-      for (const [a, c] of [[0.3, '#3a2216'], [-0.3, '#301b12']]) {
-        log(fx - Math.cos(a) * L, fy - 6 * S - Math.sin(a) * L * 0.3, fx + Math.cos(a) * L, fy - 6 * S + Math.sin(a) * L * 0.3, 20 * S, c);
+    // Logs lean in toward the middle like a teepee. Back logs are drawn before the
+    // flames (mostly hidden), front logs after them (their lower ends show).
+    const LOG_ANGLES_BACK = [192, 232, 300, 348], LOG_ANGLES_FRONT = [150, 38];
+    function logEnds(deg) {
+      const th = deg * Math.PI / 180, back = Math.sin(th) < 0, R = baseW * (back ? 0.56 : 0.46), ry = baseW * 0.13;
+      return { ox: fx + Math.cos(th) * R, oy: fy + Math.sin(th) * ry + 4 * S, ax: fx + Math.cos(th) * baseW * 0.06, ay: fy - flameH * (back ? 0.2 : 0.12) };
+    }
+    function teepeeLog(deg, i, portion, front, glow) {
+      const { ox, oy, ax, ay } = logEnds(deg);
+      const ex = ox + (ax - ox) * portion, ey = oy + (ay - oy) * portion;
+      const th = (17 + seeded(i + 70) * 7) * S;
+      log(ox, oy, ex, ey, th, ['#3a2216', '#301b12', '#40261a', '#2a1810'][i % 4]);
+      // charred, glowing section toward the fire
+      const cg = ctx.createLinearGradient(ox, oy, ex, ey);
+      cg.addColorStop(0, 'rgba(0,0,0,0)'); cg.addColorStop(0.55, 'rgba(20,8,6,0.65)'); cg.addColorStop(1, `rgba(255,110,40,${0.75 * glow})`);
+      ctx.strokeStyle = cg; ctx.lineWidth = th * 0.8; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ex, ey); ctx.stroke();
+      if (front) {
+        // end grain on the outer end
+        const ang = Math.atan2(ey - oy, ex - ox);
+        ctx.save(); ctx.translate(ox, oy); ctx.rotate(ang);
+        ctx.fillStyle = '#7d5638'; ctx.beginPath(); ctx.ellipse(0, 0, th * 0.28, th * 0.5, 0, 0, 6.283); ctx.fill();
+        ctx.strokeStyle = '#4e331f'; ctx.lineWidth = Math.max(1, S);
+        ctx.beginPath(); ctx.ellipse(0, 0, th * 0.14, th * 0.26, 0, 0, 6.283); ctx.stroke();
+        ctx.restore();
       }
+    }
+
+    function logs(glow = 1) {
       const g = ctx.createRadialGradient(fx, fy, 0, fx, fy, baseW * 0.45);
       g.addColorStop(0, 'rgba(255,120,40,0.95)'); g.addColorStop(0.5, 'rgba(200,50,20,0.55)'); g.addColorStop(1, 'rgba(120,20,10,0)');
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.ellipse(fx, fy, baseW * 0.45, baseW * 0.13, 0, 0, 6.283); ctx.fill();
+      LOG_ANGLES_BACK.forEach((d, i) => teepeeLog(d, i, 1, true, glow));
     }
 
-    // In front of the flames: a glowing bed of coals and one log, so the fire has no flat bottom
+    // In front of the flames: glowing coals and the lower ends of the front logs
     function frontLogs(glow) {
       const fr = baseW * 0.11;
       for (const c of coals) {
@@ -421,17 +469,17 @@
         ctx.fillStyle = cg0; ctx.beginPath(); ctx.arc(x, y, c.r * 3, 0, 6.283); ctx.fill();
         ctx.restore();
       }
-      const x0 = fx - baseW * 0.3, y0 = fy + fr * 1.05, x1 = fx + baseW * 0.24, y1 = fy + fr * 1.35, th = 28 * S;
+      LOG_ANGLES_FRONT.forEach((d, i) => teepeeLog(d, i + 5, 0.6, true, glow));
+      // one log lying across the front of the pile
+      const x0 = fx - baseW * 0.3, y0 = fy + fr * 1.05, x1 = fx + baseW * 0.26, y1 = fy + fr * 1.4, th = 22 * S;
       log(x0, y0, x1, y1, th, '#2e1a11');
-      // charred top glowing where it touches the fire
       const cg = ctx.createLinearGradient(x0, 0, x1, 0);
-      cg.addColorStop(0, 'rgba(255,110,40,0)'); cg.addColorStop(0.45, `rgba(255,120,40,${0.7 * glow})`); cg.addColorStop(1, 'rgba(255,110,40,0)');
+      cg.addColorStop(0, 'rgba(255,110,40,0)'); cg.addColorStop(0.45, `rgba(255,120,40,${0.6 * glow})`); cg.addColorStop(1, 'rgba(255,110,40,0)');
       ctx.strokeStyle = cg; ctx.lineWidth = th * 0.28; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(x0, y0 - th * 0.32); ctx.lineTo(x1, y1 - th * 0.32); ctx.stroke();
-      // end grain
-      ctx.fillStyle = '#8a6242'; ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.32, th * 0.5, 0, 0, 6.283); ctx.fill();
-      ctx.strokeStyle = '#5a3c26'; ctx.lineWidth = Math.max(1, S);
-      ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.16, th * 0.26, 0, 0, 6.283); ctx.stroke();
+      ctx.fillStyle = '#7d5638'; ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.3, th * 0.5, 0, 0, 6.283); ctx.fill();
+      ctx.strokeStyle = '#4e331f'; ctx.lineWidth = Math.max(1, S);
+      ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.15, th * 0.25, 0, 0, 6.283); ctx.stroke();
     }
 
     const sparks = [], embers = [];
@@ -577,7 +625,7 @@
       ctx.save(); ctx.translate(-look * 26, 0);
       card.style.transform = `translate(calc(-50% + ${(-look * 26).toFixed(1)}px), -50%)`;
       stones(false);
-      logs();
+      logs(glow);
       spawn();
       drawFire(glow);
       frontLogs(glow);
