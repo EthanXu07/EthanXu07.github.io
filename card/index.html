@@ -41,7 +41,8 @@
       margin: 0; font: italic 600 clamp(2.4rem, 8.5vw, 3.5rem)/1 "Fraunces", Georgia, serif;
       letter-spacing: -.01em; text-shadow: 0 0 18px rgba(255, 244, 214, .9);
     }
-    .card .role { margin: .5rem 0 1.1rem; font: italic 400 clamp(1rem, 3.6vw, 1.15rem)/1.35 "Fraunces", Georgia, serif; color: var(--ember-2); }
+    .card .role { margin: .5rem 0 .2rem; font: italic 400 clamp(1rem, 3.6vw, 1.15rem)/1.35 "Fraunces", Georgia, serif; color: var(--ember-2); }
+    .card .honor { margin: 0 0 1.05rem; font: 500 clamp(.72rem, 2.6vw, .8rem)/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--ember-2); }
     .card .email, .card .links { margin: 0; font-size: clamp(.85rem, 3.2vw, .95rem); font-weight: 500; }
     .card .links { margin-top: .45rem; display: flex; justify-content: center; gap: .7rem; }
     .card .links span { opacity: .5; }
@@ -75,6 +76,7 @@
   <main class="card" id="card">
     <h1>Ethan Xu</h1>
     <p class="role">Computer Science · UC Berkeley</p>
+    <p class="honor">Regents’ &amp; Chancellor’s Scholar</p>
     <p class="email"><a id="cEmail" href="mailto:ethan_xu@berkeley.edu">ethan_xu@berkeley.edu</a></p>
     <p class="links">
       <a id="cPhone" href="tel:+14098673067">409-867-3067</a>
@@ -424,7 +426,7 @@
     // flames (mostly hidden), front logs after them (their lower ends show).
     const LOG_ANGLES_BACK = [192, 232, 300, 348], LOG_ANGLES_FRONT = [150, 38];
     function logEnds(deg) {
-      const th = deg * Math.PI / 180, back = Math.sin(th) < 0, R = baseW * (back ? 0.56 : 0.46), ry = baseW * 0.13;
+      const th = deg * Math.PI / 180, back = Math.sin(th) < 0, R = baseW * (back ? 0.56 : 0.58), ry = baseW * (back ? 0.13 : 0.17);
       return { ox: fx + Math.cos(th) * R, oy: fy + Math.sin(th) * ry + 4 * S, ax: fx + Math.cos(th) * baseW * 0.06, ay: fy - flameH * (back ? 0.2 : 0.12) };
     }
     function teepeeLog(deg, i, portion, front, glow) {
@@ -449,34 +451,48 @@
     }
 
     function logs(glow = 1) {
+      // charred ash bed inside the stone ring
+      const ar = baseW * 0.6;
+      ctx.save(); ctx.translate(fx, fy + 6 * S); ctx.scale(1, 0.3);
+      const ash = ctx.createRadialGradient(0, 0, 0, 0, 0, ar);
+      ash.addColorStop(0, '#2a120a'); ash.addColorStop(0.6, '#1a0d0a'); ash.addColorStop(1, 'rgba(20,12,10,0)');
+      ctx.fillStyle = ash; ctx.beginPath(); ctx.arc(0, 0, ar, 0, 6.283); ctx.fill();
+      ctx.restore();
+      // ember glow under the wood
       const g = ctx.createRadialGradient(fx, fy, 0, fx, fy, baseW * 0.45);
-      g.addColorStop(0, 'rgba(255,120,40,0.95)'); g.addColorStop(0.5, 'rgba(200,50,20,0.55)'); g.addColorStop(1, 'rgba(120,20,10,0)');
+      g.addColorStop(0, `rgba(255,120,40,${0.95 * glow})`); g.addColorStop(0.5, 'rgba(200,50,20,0.5)'); g.addColorStop(1, 'rgba(120,20,10,0)');
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.ellipse(fx, fy, baseW * 0.45, baseW * 0.13, 0, 0, 6.283); ctx.fill();
+      // the log pile: all of it sits under the flames; only the ends show around the base
       LOG_ANGLES_BACK.forEach((d, i) => teepeeLog(d, i, 1, true, glow));
-    }
-
-    // In front of the flames: glowing coals and the lower ends of the front logs
-    function frontLogs(glow) {
+      LOG_ANGLES_FRONT.forEach((d, i) => teepeeLog(d, i + 5, 0.75, true, glow));
       const fr = baseW * 0.11;
       for (const c of coals) {
         const x = fx + c.u * baseW * 0.8, y = fy + fr * (0.45 + c.v * 0.35);
         const k = reduceMotion ? 1 : 0.7 + 0.3 * Math.sin(t * 0.08 + c.ph);
-        ctx.fillStyle = '#2a120c'; ctx.beginPath(); ctx.ellipse(x, y, c.r * 1.3, c.r * 0.8, 0, 0, 6.283); ctx.fill();
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
         const cg0 = ctx.createRadialGradient(x, y, 0, x, y, c.r * 3);
         cg0.addColorStop(0, `rgba(255,${Math.round(110 + 70 * k)},50,${0.8 * k * glow})`); cg0.addColorStop(1, 'rgba(255,80,20,0)');
         ctx.fillStyle = cg0; ctx.beginPath(); ctx.arc(x, y, c.r * 3, 0, 6.283); ctx.fill();
         ctx.restore();
       }
-      LOG_ANGLES_FRONT.forEach((d, i) => teepeeLog(d, i + 5, 0.6, true, glow));
-      // one log lying across the front of the pile
-      const x0 = fx - baseW * 0.3, y0 = fy + fr * 1.05, x1 = fx + baseW * 0.26, y1 = fy + fr * 1.4, th = 22 * S;
+    }
+
+    // In front of the flames: just a soft glow where the fire meets the wood (nothing solid covers the flames)
+    function frontLogs(glow) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      const fr = baseW * 0.11;
+      const g = ctx.createRadialGradient(fx, fy + fr * 0.6, 0, fx, fy + fr * 0.6, baseW * 0.4);
+      g.addColorStop(0, `rgba(255,150,60,${0.25 * glow})`); g.addColorStop(1, 'rgba(255,120,40,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(fx, fy + fr * 0.6, baseW * 0.4, fr * 1.2, 0, 0, 6.283); ctx.fill();
+      ctx.restore();
+      // one log lying along the front of the pit, below the flames (the fire sits on it)
+      const x0 = fx - baseW * 0.4, y0 = fy + fr * 0.95, x1 = fx + baseW * 0.36, y1 = fy + fr * 1.2, th = 20 * S;
       log(x0, y0, x1, y1, th, '#2e1a11');
-      const cg = ctx.createLinearGradient(x0, 0, x1, 0);
-      cg.addColorStop(0, 'rgba(255,110,40,0)'); cg.addColorStop(0.45, `rgba(255,120,40,${0.6 * glow})`); cg.addColorStop(1, 'rgba(255,110,40,0)');
-      ctx.strokeStyle = cg; ctx.lineWidth = th * 0.28; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(x0, y0 - th * 0.32); ctx.lineTo(x1, y1 - th * 0.32); ctx.stroke();
+      const cg = ctx.createLinearGradient(0, y0 - th / 2, 0, y0 + th / 2);            // top edge glowing where the flames touch
+      cg.addColorStop(0, `rgba(255,140,50,${0.75 * glow})`); cg.addColorStop(0.45, 'rgba(120,40,15,0.25)'); cg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.strokeStyle = cg; ctx.lineWidth = th; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
       ctx.fillStyle = '#7d5638'; ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.3, th * 0.5, 0, 0, 6.283); ctx.fill();
       ctx.strokeStyle = '#4e331f'; ctx.lineWidth = Math.max(1, S);
       ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.15, th * 0.25, 0, 0, 6.283); ctx.stroke();
@@ -498,7 +514,7 @@
       ctx.moveTo(x - w, base);
       ctx.bezierCurveTo(x - w * 1.15, base - h * 0.42, x + sway * 0.4 - w * 0.4, base - h * 0.72, x + sway, base - h);
       ctx.bezierCurveTo(x + sway * 0.4 + w * 0.4, base - h * 0.72, x + w * 1.15, base - h * 0.42, x + w, base);
-      ctx.bezierCurveTo(x + w, base + w * 0.75, x - w, base + w * 0.75, x - w, base); // rounded bottom
+      ctx.bezierCurveTo(x + w, base + w * 0.4, x - w, base + w * 0.4, x - w, base); // rounded bottom
       ctx.closePath(); ctx.fill();
     }
 
@@ -515,7 +531,7 @@
 
       // Tongues start along the front arc of the fire bed, so the bottom is rounded, not flat
       const fr = baseW * 0.11;
-      const baseOf = (u) => fy - fr * 0.35 + fr * 0.95 * Math.sqrt(Math.max(0, 1 - (2 * u) ** 2));
+      const baseOf = (u) => fy - fr * 0.45 + fr * 0.7 * Math.sqrt(Math.max(0, 1 - (2 * u) ** 2));
       const catchUp = reduceMotion ? 1 : Math.min(1, t / 90) ** 0.6; // flames grow as the fire catches
       const now = tongues.map((tg) => ({
         base: baseOf(tg.u),
@@ -526,7 +542,7 @@
       }));
       for (const [color, wm, hm] of LAYERS) {
         ctx.fillStyle = color;
-        ctx.beginPath(); ctx.ellipse(fx, fy - fr * 0.1, baseW * 0.44 * wm, fr * (0.9 + 0.3 * wm), 0, 0, 6.283); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(fx, fy - fr * 0.2, baseW * 0.42 * wm, fr * (0.6 + 0.2 * wm), 0, 0, 6.283); ctx.fill();
         for (const f of now) tongue(f.x + f.sway * (1 - wm) * 0.3, f.base - (1 - wm) * fr * 0.4, f.w * wm, f.h * hm, f.sway * hm);
       }
 
