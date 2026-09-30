@@ -29,6 +29,8 @@
   const MAX_HEARTS = 5;
   const START_HEARTS = 3;
   const FALL_Y = 70;
+  const JUMP_BUFFER = 8; // frames a jump press is remembered (so pressing just before landing still jumps)
+  const COYOTE = 6;      // frames you can still jump after running off a ledge
 
   // ---------- Viewport ----------
   let W = 320, H = 200, G = 176, scale = 4;
@@ -90,7 +92,7 @@
 
   // ---------- State ----------
   const keys = { left: false, right: false, jump: false, down: false };
-  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, checkpoint, popups, particles, winT, near, phase, phaseT, hidePlayer;
+  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, jumpBuffer = 0, coyote = 0, jumpT = 99, checkpoint, popups, particles, winT, near, phase, phaseT, hidePlayer;
   let stars = [], clouds = [];
 
   function newGame() {
@@ -107,7 +109,7 @@
     movers.forEach((m) => { m.x = m.minX + 2; m.vx = 0.5; });
     cam = 0; t = 0;
     state = 'play'; // play | won | over
-    hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0; magnet = 0; feather = 0; airJumps = 0;
+    hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0; magnet = 0; feather = 0; airJumps = 0; jumpBuffer = 0; coyote = 0;
     checkpoint = START_X;
     popups = []; particles = [];
     winT = 0; near = null; phase = null; phaseT = 0; hidePlayer = false;
@@ -162,17 +164,19 @@
     if (!k) return;
     if (onControl && e.key === ' ') return; // Space still presses a focused button
     e.preventDefault();
+    if (k === 'jump' && !e.repeat) pressJump();
     keys[k] = true;
     if (k !== 'down') start();
   });
   window.addEventListener('keyup', (e) => { const k = KEYMAP[e.key]; if (k) keys[k] = false; });
   window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
-  canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); start(); keys.jump = true; });
+  function pressJump() { if (playing) jumpBuffer = JUMP_BUFFER; }
+  canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); pressJump(); start(); keys.jump = true; });
   canvas.addEventListener('pointerup', () => { keys.jump = false; });
   canvas.addEventListener('pointerleave', () => { keys.jump = false; });
   section.querySelectorAll('.explore-pad button').forEach((b) => {
     const k = b.dataset.key;
-    const on = (e) => { e.preventDefault(); start(); keys[k] = true; };
+    const on = (e) => { e.preventDefault(); if (k === 'jump') pressJump(); start(); keys[k] = true; };
     const off = (e) => { e.preventDefault(); keys[k] = false; };
     b.addEventListener('pointerdown', on);
     b.addEventListener('pointerup', off);
@@ -355,15 +359,23 @@
     const maxV = auto ? 1.1 : 2;
     p.vx = Math.max(-maxV, Math.min(maxV, p.vx));
     if (Math.abs(p.vx) < 0.02) p.vx = 0;
-    if (!auto && keys.jump && !p.jumpHeld) {
-      if (p.onGround) { p.vy = JUMP_V; p.onGround = false; airJumps = 1; }
-      else if (feather > 0 && airJumps > 0) { // double jump
-        p.vy = JUMP_V * 0.9; airJumps--;
+    // Jump buffering + coyote time: a press counts for a few frames, and you can
+    // still jump just after leaving a ledge
+    coyote = p.onGround ? COYOTE : Math.max(0, coyote - 1);
+    if (auto) jumpBuffer = 0;
+    if (jumpBuffer > 0) {
+      if (p.onGround || coyote > 0) { p.vy = JUMP_V; p.onGround = false; airJumps = 1; jumpBuffer = 0; coyote = 0; jumpT = 0; }
+      else if (feather > 0 && airJumps > 0 && jumpBuffer === JUMP_BUFFER) { // double jump (fresh press only)
+        jumpBuffer = 0;
+        p.vy = JUMP_V * 0.9; airJumps--; jumpT = 0;
         for (let i = 0; i < 6; i++) particles.push({ x: p.x + 5, y: p.y + PH, vx: (i - 2.5) * 0.5, vy: 0.6, life: 16, color: '#f1e6cc' });
       }
     }
+    if (jumpBuffer > 0) jumpBuffer--;
     p.jumpHeld = keys.jump;
-    if (!keys.jump && p.vy < -1.8) p.vy = -1.8;
+    // Let go early for a shorter hop, but every jump gets a few frames of lift first
+    jumpT++;
+    if (!keys.jump && jumpT > 5 && p.vy < -1.8) p.vy = -1.8;
 
     const { bumpedHead, prevBottom } = moveActor(p, solids);
     if (bumpedHead?.kind === 'block') bumpBlock(bumpedHead);
