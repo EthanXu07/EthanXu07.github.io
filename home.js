@@ -486,8 +486,25 @@
   const SIGN_FONT = '8px "Press Start 2P", monospace';
   // Real-life dusk: deep blue overhead, lavender, then a warm glowing horizon, plus a
   // soft bloom around the sun. Painted as CSS gradients (full resolution, no banding).
-  const SKY_CSS = [[0, '#0e1830'], [0.22, '#1b2c52'], [0.42, '#34497a'], [0.58, '#626b95'], [0.7, '#9c7b97'], [0.8, '#cf8d86'], [0.9, '#efa877'], [1, '#fbcf92']];
+  const SKY_CSS = [[0, '#0f1a33'], [0.15, '#15244a'], [0.3, '#203461'], [0.44, '#344a7a'], [0.56, '#55628f'], [0.66, '#7d7198'], [0.75, '#a87d95'], [0.83, '#cf8d88'], [0.91, '#eca57b'], [1, '#fac98e']];
   let skyKey = '';
+  // Fine random grain laid over the sky: dithering hides the banding a smooth dark
+  // gradient shows on an 8-bit display. Made once as a small tile.
+  const grain = (() => {
+    try {
+      const c = document.createElement('canvas'); c.width = c.height = 96;
+      const g = c.getContext('2d'), img = g.createImageData(96, 96);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const v = Math.random() < 0.5 ? 0 : 255;
+        img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+        img.data[i + 3] = 3 + Math.random() * 4; // ~1–3% opacity: enough to dither, too faint to see
+      }
+      g.putImageData(img, 0, 0);
+      return `url(${c.toDataURL()})`;
+    } catch { return ''; }
+  })();
+  // Blend in OKLab (perceptually even) where supported, else plain sRGB
+  const OKLAB = typeof CSS !== 'undefined' && CSS.supports?.('background-image', 'linear-gradient(in oklab, red, blue)');
   function paintSky(sunX, sunY, skyH) {
     const key = `${sunX},${sunY},${skyH},${W},${H}`;
     if (key === skyKey) return;
@@ -495,9 +512,14 @@
     const pct = (v) => `${((v / H) * 100).toFixed(2)}%`;
     const stops = SKY_CSS.map(([k, c]) => `${c} ${pct(k * skyH)}`).join(', ');
     const sx = `${((sunX / W) * 100).toFixed(2)}%`, sy = pct(sunY);
-    canvas.style.backgroundImage =
-      `radial-gradient(circle at ${sx} ${sy}, rgba(255,226,170,.75) 0, rgba(255,196,130,.4) 3.5%, rgba(255,170,110,.16) 10%, rgba(255,150,100,0) 24%), ` +
-      `linear-gradient(to bottom, ${stops}, ${SKY_CSS[SKY_CSS.length - 1][1]} 100%)`;
+    const space = OKLAB ? 'in oklab ' : '';
+    canvas.style.backgroundImage = [
+      grain,
+      `radial-gradient(${space}circle at ${sx} ${sy}, rgba(255,226,170,.7) 0, rgba(255,200,140,.42) 3%, rgba(255,178,118,.22) 8%, rgba(255,160,105,.1) 15%, rgba(255,150,100,0) 28%)`,
+      `linear-gradient(${space}to bottom, ${stops}, ${SKY_CSS[SKY_CSS.length - 1][1]} 100%)`,
+    ].filter(Boolean).join(', ');
+    canvas.style.backgroundSize = grain ? '96px 96px, 100% 100%, 100% 100%' : '';
+    canvas.style.backgroundRepeat = grain ? 'repeat, no-repeat, no-repeat' : '';
   }
   // Far mountains: jagged ridge with snow on the tallest peaks
   const ridge = (x) => 18 + 8 * Math.sin(x * 0.011 + 0.7) + 7 * Math.abs(Math.sin(x * 0.037 + 2.1)) + 3 * Math.abs(Math.sin(x * 0.083 + 0.3));
