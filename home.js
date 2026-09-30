@@ -29,8 +29,8 @@
   const MAX_HEARTS = 5;
   const START_HEARTS = 3;
   const FALL_Y = 70;
-  const JUMP_BUFFER = 8; // frames a jump press is remembered (so pressing just before landing still jumps)
-  const COYOTE = 6;      // frames you can still jump after running off a ledge
+  const JUMP_BUFFER = 10; // frames a jump press is remembered (so pressing just before landing still jumps)
+  const COYOTE = 8;      // frames you can still jump after running off a ledge
 
   // ---------- Viewport ----------
   let W = 320, H = 200, G = 176, scale = 4;
@@ -274,9 +274,12 @@
     const prevBottom = a.y + a.h;
     a.y += a.vy;
     a.onGround = false;
+    // Decide falling vs rising once: landing across two side-by-side blocks used to
+    // treat the second one as a head bump and push you down through them
+    const falling = a.vy > 0;
     for (const s of solids) {
       if (!hitTest(a, s)) continue;
-      if (a.vy > 0) { a.y = s.y - a.h; a.onGround = true; } else { a.y = s.y + s.h; bumpedHead = s; }
+      if (falling) { a.y = s.y - a.h; a.onGround = true; } else { a.y = s.y + s.h; bumpedHead = s; }
       a.vy = 0;
     }
     return { bumpedHead, prevBottom };
@@ -375,7 +378,7 @@
     p.jumpHeld = keys.jump;
     // Let go early for a shorter hop, but every jump gets a few frames of lift first
     jumpT++;
-    if (!keys.jump && jumpT > 5 && p.vy < -1.8) p.vy = -1.8;
+    if (!keys.jump && jumpT > 6 && p.vy < -2.2) p.vy = -2.2; // even a quick tap is a solid hop
 
     const { bumpedHead, prevBottom } = moveActor(p, solids);
     if (bumpedHead?.kind === 'block') bumpBlock(bumpedHead);

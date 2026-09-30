@@ -245,78 +245,137 @@
       ctx.restore();
     }
 
-    // ---------- Friends (seated silhouettes lit by the fire) ----------
-    function litFill(x, y) {
-      const lx = fx, ly = fy - flameH * 0.25;
-      const d = Math.hypot(x - lx, y - ly);
-      const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, d * 1.35);
-      g.addColorStop(0, '#e58a4c'); g.addColorStop(0.55, '#8a4128'); g.addColorStop(0.78, '#2a161a'); g.addColorStop(1, '#0c090f');
-      return g;
-    }
-
-    function person(x, y, s, o = {}) {
+    // ---------- Friends: seated around the fire, each with their own look ----------
+    // Everything is drawn in the person's local units (scaled by s around their seat),
+    // then tinted by a warm gradient centred on the fire so the side facing it glows.
+    const OUTLINE = 'rgba(12,7,9,0.85)';
+    function person(x, y, s, o) {
       ctx.save();
-      ctx.translate(x, y); ctx.scale(s, s);
-      ctx.translate(-x, -y);
-      const fill = litFill(x, y - 40 * s);
-      // log seat
-      ctx.fillStyle = '#1c110d';
-      ctx.beginPath(); ctx.ellipse(x, y + 16, 46, 11, 0, 0, 6.283); ctx.fill();
-      ctx.fillStyle = litFill(x, y + 10 * s);
-      ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.ellipse(x, y + 13, 44, 7, 0, 0, 3.14); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.translate(x, y); ctx.scale(s, s); ctx.translate(-x, -y);
+      const lfx = x + (fx - x) / s, lfy = y + (fy - flameH * 0.25 - y) / s;
+      const R = Math.hypot(lfx - x, lfy - (y - 50)) * 1.5;
+      const light = ctx.createRadialGradient(lfx, lfy, 0, lfx, lfy, R);
+      light.addColorStop(0, 'rgba(255,170,100,0.5)'); light.addColorStop(0.55, 'rgba(255,120,60,0.18)');
+      light.addColorStop(0.8, 'rgba(10,5,10,0.3)'); light.addColorStop(1, 'rgba(10,5,10,0.6)');
+      const part = (build, color, outline = true) => {
+        ctx.beginPath(); build();
+        ctx.fillStyle = color; ctx.fill();
+        ctx.fillStyle = light; ctx.fill();
+        if (outline) { ctx.strokeStyle = OUTLINE; ctx.lineWidth = 2.2; ctx.stroke(); }
+      };
+      const limb = (pts, color, w = 9) => {
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        const path = () => { ctx.beginPath(); pts.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); };
+        path(); ctx.strokeStyle = OUTLINE; ctx.lineWidth = w + 3; ctx.stroke();
+        path(); ctx.strokeStyle = color; ctx.lineWidth = w; ctx.stroke();
+        path(); ctx.strokeStyle = light; ctx.lineWidth = w; ctx.stroke();
+      };
 
-      ctx.fillStyle = fill;
-      // legs + feet (foreshortened: knees toward the fire)
-      for (const side of [-1, 1]) {
-        ctx.beginPath(); ctx.roundRect(x + side * 11 - 8, y - 6, 16, 30, 7); ctx.fill();
-        ctx.beginPath(); ctx.ellipse(x + side * 12, y + 26, 10, 5, 0, 0, 6.283); ctx.fill();
+      // seat log
+      part(() => ctx.roundRect(x - 44, y + 8, 88, 16, 8), '#4a2c1c');
+      // legs (knees toward the fire) + shoes
+      for (const sd of [-1, 1]) {
+        part(() => ctx.roundRect(x + sd * 11 - 8, y - 8, 16, 32, 7), o.pants);
+        part(() => ctx.ellipse(x + sd * 12, y + 26, 10, 5.5, 0, 0, 6.283), o.shoes);
       }
-      // torso
-      ctx.beginPath();
-      ctx.moveTo(x - 24, y - 56); ctx.quadraticCurveTo(x - 27, y - 20, x - 20, y);
-      ctx.lineTo(x + 20, y); ctx.quadraticCurveTo(x + 27, y - 20, x + 24, y - 56);
-      ctx.quadraticCurveTo(x, y - 66, x - 24, y - 56); ctx.fill();
-      // head + hair / beanie
-      ctx.beginPath(); ctx.arc(x, y - 76, 14, 0, 6.283); ctx.fill();
-      if (o.beanie) { ctx.beginPath(); ctx.arc(x, y - 80, 14.5, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(x, y - 96, 4, 0, 6.283); ctx.fill(); }
-      if (o.hair) { ctx.beginPath(); ctx.ellipse(x, y - 72, 17, 20, 0, Math.PI * 1.05, Math.PI * 1.95); ctx.fill(); ctx.fillRect(x - 17, y - 76, 5, 26); ctx.fillRect(x + 12, y - 76, 5, 26); }
-      // warm glow on the face (they're looking at the fire)
-      ctx.fillStyle = 'rgba(255,190,130,0.14)';
-      ctx.beginPath(); ctx.arc(x, y - 74, 11, 0, 6.283); ctx.fill();
+      // hood behind the head
+      if (o.hood) part(() => ctx.ellipse(x, y - 66, 19, 14, 0, 0, 6.283), o.top);
+      // torso (hoodie / jacket)
+      part(() => {
+        ctx.moveTo(x - 23, y - 58); ctx.quadraticCurveTo(x - 29, y - 22, x - 21, y + 2);
+        ctx.lineTo(x + 21, y + 2); ctx.quadraticCurveTo(x + 29, y - 22, x + 23, y - 58);
+        ctx.quadraticCurveTo(x, y - 66, x - 23, y - 58);
+      }, o.top);
+      if (o.hood) {                                   // drawstrings + pocket
+        ctx.strokeStyle = 'rgba(240,230,210,0.55)'; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.moveTo(x - 5, y - 56); ctx.lineTo(x - 6, y - 44); ctx.moveTo(x + 5, y - 56); ctx.lineTo(x + 6, y - 44); ctx.stroke();
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.moveTo(x - 13, y - 22); ctx.lineTo(x + 13, y - 22); ctx.stroke();
+      }
+      // head + face
+      part(() => ctx.arc(x, y - 77, 13.5, 0, 6.283), o.skin);
+      ctx.fillStyle = '#1d120d';
+      if (o.glasses) {
+        ctx.strokeStyle = '#1d120d'; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.arc(x - 5, y - 77, 3.6, 0, 6.283); ctx.moveTo(x + 8.6, y - 77); ctx.arc(x + 5, y - 77, 3.6, 0, 6.283); ctx.moveTo(x - 1.4, y - 77); ctx.lineTo(x + 1.4, y - 77); ctx.stroke();
+      }
+      ctx.beginPath(); ctx.arc(x - 5, y - 77, 1.6, 0, 6.283); ctx.arc(x + 5, y - 77, 1.6, 0, 6.283); ctx.fill();
+      ctx.strokeStyle = '#5a2a1c'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(x, y - 73, 4, 0.25, Math.PI - 0.25); ctx.stroke();        // smile
+      ctx.fillStyle = 'rgba(255,120,110,0.35)';
+      ctx.beginPath(); ctx.arc(x - 8, y - 72, 2.6, 0, 6.283); ctx.arc(x + 8, y - 72, 2.6, 0, 6.283); ctx.fill();
+      // hair / hats
+      if (o.hair === 'long') {
+        part(() => { ctx.arc(x, y - 79, 15, Math.PI * 1.02, Math.PI * 1.98); ctx.lineTo(x + 16, y - 58); ctx.lineTo(x + 11, y - 58); ctx.lineTo(x + 11, y - 80); ctx.lineTo(x - 11, y - 80); ctx.lineTo(x - 11, y - 58); ctx.lineTo(x - 16, y - 58); ctx.closePath(); }, o.hairColor);
+      } else if (o.hair === 'curly') {
+        part(() => { for (const [cx, cy] of [[-10, -84], [-4, -90], [4, -90], [10, -84], [13, -77], [-13, -77]]) { ctx.moveTo(x + cx + 6, y + cy); ctx.arc(x + cx, y + cy, 6, 0, 6.283); } }, o.hairColor, false);
+      }
+      if (o.beanie) {
+        part(() => { ctx.arc(x, y - 80, 14.5, Math.PI, 0); ctx.lineTo(x + 15, y - 78); ctx.lineTo(x - 15, y - 78); ctx.closePath(); }, o.beanie);
+        part(() => ctx.arc(x, y - 96, 4.5, 0, 6.283), '#f1e6cc');
+        ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x - 14, y - 82); ctx.lineTo(x + 14, y - 82); ctx.stroke();
+      }
 
-      ctx.strokeStyle = fill; ctx.lineCap = 'round'; ctx.lineWidth = 9;
+      // arms + props
       if (o.guitar) {
-        ctx.fillStyle = '#4a2413';
-        ctx.beginPath(); ctx.ellipse(x - 6, y - 16, 17, 13, -0.35, 0, 6.283); ctx.fill();
-        ctx.beginPath(); ctx.ellipse(x + 8, y - 26, 12, 10, -0.35, 0, 6.283); ctx.fill();
-        ctx.fillStyle = 'rgba(255,160,90,0.35)'; ctx.beginPath(); ctx.ellipse(x - 6, y - 14, 12, 8, -0.35, 0, 3.14); ctx.fill();
-        ctx.strokeStyle = '#2c160c'; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.moveTo(x + 12, y - 30); ctx.lineTo(x + 46, y - 50); ctx.stroke();
-        ctx.strokeStyle = fill; ctx.lineWidth = 9;
-        ctx.beginPath(); ctx.moveTo(x - 22, y - 50); ctx.lineTo(x - 12, y - 18); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x + 22, y - 50); ctx.lineTo(x + 40, y - 46); ctx.stroke();
+        const gx = x - 4, gy = y - 20;
+        ctx.save(); ctx.translate(gx, gy); ctx.rotate(-0.42);
+        // neck + headstock
+        part(() => ctx.rect(14, -4.5, 58, 9), '#5a3520');
+        part(() => ctx.roundRect(70, -7, 14, 14, 3), '#3a2214');
+        ctx.fillStyle = '#e8d9b0'; for (let k = 0; k < 3; k++) { ctx.fillRect(73 + k * 3.5, -9, 2, 2.5); ctx.fillRect(73 + k * 3.5, 6.5, 2, 2.5); }
+        ctx.strokeStyle = 'rgba(230,220,190,0.6)'; ctx.lineWidth = 0.8;
+        for (let k = 0; k < 6; k++) { ctx.beginPath(); ctx.moveTo(22 + k * 8, -4.5); ctx.lineTo(22 + k * 8, 4.5); ctx.stroke(); }           // frets
+        // body: honey-coloured acoustic with a dark sound hole
+        part(() => { ctx.ellipse(-12, 0, 17, 15, 0, 0, 6.283); ctx.moveTo(18, 0); ctx.ellipse(8, 0, 12, 11, 0, 0, 6.283); }, '#d08a3e');
+        ctx.fillStyle = '#1a0f0a'; ctx.beginPath(); ctx.arc(2, 0, 5, 0, 6.283); ctx.fill();
+        ctx.fillStyle = '#3a2214'; ctx.fillRect(-20, -4, 4, 8);                                                                       // bridge
+        ctx.strokeStyle = 'rgba(250,240,215,0.75)'; ctx.lineWidth = 0.7;
+        for (let k = -2; k <= 2; k++) { ctx.beginPath(); ctx.moveTo(-18, k * 1.6); ctx.lineTo(72, k * 1.4); ctx.stroke(); }             // strings
+        ctx.restore();
+        limb([[x - 21, y - 52], [x - 24, y - 30], [x - 10, y - 18]], o.top);              // strumming arm
+        limb([[x + 21, y - 52], [x + 30, y - 40], [x + 40, y - 46]], o.top);              // fretting arm
+        part(() => ctx.arc(x + 42, y - 47, 4, 0, 6.283), o.skin);
+        part(() => ctx.arc(x - 9, y - 18, 4, 0, 6.283), o.skin);
       } else if (o.stick) {
-        // arms reach toward the fire holding a roasting stick
-        const tip = o.stick;
-        ctx.beginPath(); ctx.moveTo(x + 18 * o.dir, y - 50); ctx.lineTo(x + 30 * o.dir, y - 26); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x - 18 * o.dir, y - 50); ctx.lineTo(x + 20 * o.dir, y - 24); ctx.stroke();
+        const d = o.dir;
+        limb([[x + 20 * d, y - 52], [x + 30 * d, y - 34], [x + 34 * d, y - 26]], o.top);
+        limb([[x - 20 * d, y - 52], [x - 6 * d, y - 32], [x + 26 * d, y - 25]], o.top);
+        part(() => ctx.arc(x + 32 * d, y - 25, 4.5, 0, 6.283), o.skin);
         ctx.restore(); ctx.save();
-        const hx = x + 30 * o.dir * s, hy = y - 26 * s;
-        ctx.strokeStyle = '#3b2415'; ctx.lineWidth = Math.max(1.5, 2.2 * s);
-        ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tip.x, tip.y); ctx.stroke();
-        marshmallow(tip.x, tip.y, 6 * s, o.toast || 0.3);
+        const hx = x + 32 * d * s, hy = y - 25 * s;
+        roastingStick(hx, hy, o.stick.x, o.stick.y, Math.max(2, 3 * s), 8 * s, o.toast);
       } else {
-        ctx.beginPath(); ctx.moveTo(x - 22, y - 50); ctx.lineTo(x - 14, y - 6); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x + 22, y - 50); ctx.lineTo(x + 14, y - 6); ctx.stroke();
+        limb([[x - 21, y - 52], [x - 16, y - 28], [x - 8, y - 12]], o.top);
+        limb([[x + 21, y - 52], [x + 16, y - 28], [x + 8, y - 12]], o.top);
+        part(() => { ctx.arc(x - 7, y - 11, 4, 0, 6.283); ctx.moveTo(x + 11, y - 11); ctx.arc(x + 7, y - 11, 4, 0, 6.283); }, o.skin);
+        if (o.mug) { part(() => ctx.roundRect(x - 6, y - 20, 12, 13, 2), o.mug); ctx.fillStyle = 'rgba(240,235,225,0.25)'; ctx.fillRect(x - 3, y - 27, 1.5, 5); ctx.fillRect(x + 1, y - 29, 1.5, 6); }
       }
       ctx.restore();
     }
 
-    function marshmallow(x, y, r, toast) {
-      const c = toast > 0.6 ? '#c9853f' : toast > 0.3 ? '#f1d29a' : '#fff5e6';
-      ctx.fillStyle = c;
-      ctx.beginPath(); ctx.roundRect(x - r, y - r * 0.8, r * 2, r * 1.6, r * 0.5); ctx.fill();
-      ctx.fillStyle = 'rgba(255,200,120,0.5)'; ctx.beginPath(); ctx.arc(x, y, r * 1.8, 0, 6.283); ctx.fill();
+    // A stick with a marshmallow on the end, outlined so it reads against the flames
+    function roastingStick(hx, hy, tx, ty, w, r, toast) {
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = OUTLINE; ctx.lineWidth = w + 2.5;
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.strokeStyle = '#8a5a34'; ctx.lineWidth = w;
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,205,140,0.7)'; ctx.lineWidth = Math.max(1, w * 0.35);
+      ctx.beginPath(); ctx.moveTo(hx, hy - w * 0.3); ctx.lineTo(tx, ty - w * 0.3); ctx.stroke();
+      const ang = Math.atan2(ty - hy, tx - hx);
+      marshmallow(tx + Math.cos(ang) * r * 0.9, ty + Math.sin(ang) * r * 0.9, r, toast, ang);
+    }
+
+    function marshmallow(x, y, r, toast, ang = 0) {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+      ctx.fillStyle = 'rgba(255,190,110,0.35)'; ctx.beginPath(); ctx.arc(0, 0, r * 2, 0, 6.283); ctx.fill();   // warm glow
+      ctx.fillStyle = '#fffaf0'; ctx.strokeStyle = '#3a2214'; ctx.lineWidth = Math.max(1.2, r * 0.16);
+      ctx.beginPath(); ctx.roundRect(-r, -r * 0.85, r * 2, r * 1.7, r * 0.55); ctx.fill(); ctx.stroke();
+      // toasted side facing the fire, getting browner over time
+      const tc = toast > 0.6 ? 'rgba(150,80,30,0.9)' : toast > 0.3 ? 'rgba(210,140,60,0.8)' : 'rgba(235,190,120,0.6)';
+      ctx.fillStyle = tc; ctx.beginPath(); ctx.roundRect(r * 0.1, -r * 0.85, r * 0.9, r * 1.7, [0, r * 0.55, r * 0.55, 0]); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.beginPath(); ctx.ellipse(-r * 0.4, -r * 0.35, r * 0.3, r * 0.18, 0, 0, 6.283); ctx.fill(); // shine
+      ctx.restore();
     }
 
     // ---------- Fire ring, logs, flames ----------
@@ -492,17 +551,8 @@
       }
       // Your hand, low in the corner, holding a thin stick into the flames
       const hx = Math.min(W - 30 * s, fx + baseW * 0.85) + off * 1.2, hy = H - 18 * s;
-      const tip = { x: fx + baseW * 0.4 + off * 0.6, y: fy - flameH * (W < 640 ? 0.06 : 0.16) };
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = '#6e4428'; ctx.lineWidth = Math.max(3.5, 7 * s);
-      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tip.x, tip.y); ctx.stroke();
-      const sg = ctx.createLinearGradient(hx, hy, tip.x, tip.y);                         // firelight along the top of the stick
-      sg.addColorStop(0, 'rgba(230,170,110,0.15)'); sg.addColorStop(1, 'rgba(255,200,130,0.85)');
-      ctx.strokeStyle = sg; ctx.lineWidth = Math.max(1.2, 2.2 * s);
-      ctx.beginPath(); ctx.moveTo(hx - 1.5 * s, hy - 2 * s); ctx.lineTo(tip.x - 1.5 * s, tip.y - 2 * s); ctx.stroke();
-      ctx.strokeStyle = '#1d110a'; ctx.lineWidth = Math.max(1.5, 2.5 * s);               // charred tip
-      ctx.beginPath(); ctx.moveTo(tip.x + (hx - tip.x) * 0.06, tip.y + (hy - tip.y) * 0.06); ctx.lineTo(tip.x, tip.y); ctx.stroke();
-      marshmallow(tip.x, tip.y, 13 * s, toast);
+      const tip = { x: fx + baseW * (W < 640 ? 0.5 : 0.56) + off * 0.6, y: fy - flameH * (W < 640 ? 0.1 : 0.2) }; // at the edge of the flames, not in the white-hot middle
+      roastingStick(hx, hy, tip.x, tip.y, Math.max(3.5, 7 * s), 13 * s, toast);
       ctx.fillStyle = '#10141f';                                                          // sleeve
       ctx.beginPath(); ctx.moveTo(hx + 10 * s, H + 10); ctx.lineTo(hx + 4 * s, hy + 6 * s); ctx.lineTo(hx + 34 * s, hy - 4 * s); ctx.lineTo(hx + 60 * s, H + 10); ctx.fill();
       ctx.fillStyle = '#6e4a38';                                                          // hand, in shadow
@@ -532,9 +582,10 @@
       const ry = baseW * 0.19;
       // friends across the fire (behind it), drawn first so the flames overlap them
       const side = Math.min(baseW * 1.05, W * 0.36);
-      person(fx - side, fy - ry * 1.7, pS, { hair: true, stick: { x: fx - baseW * 0.42, y: fy - flameH * 0.22 }, dir: 1, toast: 0.5 });
-      person(fx + baseW * 0.58, fy - ry * 2.3, pS * 0.85, { beanie: true });
-      person(fx + side, fy - ry * 1.5, pS, { guitar: true });
+      person(fx - side, fy - ry * 1.7, pS, { top: '#2f7a78', pants: '#23263a', shoes: '#e6dccb', skin: '#e0a57c', hood: true, hair: 'long', hairColor: '#3a2014',
+        stick: { x: fx - Math.min(baseW * 0.64, side * 0.55), y: fy - flameH * 0.32 }, dir: 1, toast: 0.5 });
+      person(fx + baseW * 0.58, fy - ry * 2.3, pS * 0.85, { top: '#8c3a3a', pants: '#2c2622', shoes: '#1c1a1a', skin: '#c68a62', beanie: '#e2a53a', mug: '#dfe6ea', glasses: true });
+      person(fx + side, fy - ry * 1.5, pS, { top: '#3f5a92', pants: '#1e2230', shoes: '#b3432c', skin: '#9a6644', hair: 'curly', hairColor: '#1a110d', guitar: true });
       ctx.restore();
 
       ctx.save(); ctx.translate(-look * 26, 0);
