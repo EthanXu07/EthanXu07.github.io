@@ -155,7 +155,7 @@ kbd {
   .hud-row { flex-wrap: wrap; row-gap: .25rem; }
   .hud-nav { order: 3; width: 100%; justify-content: space-between; }
   .hud-nav a { flex-direction: column; gap: .3rem; padding: .35rem .3rem; font-size: .45rem; }
-  .nav-icon { width: 18px; height: 18px; }
+  .nav-icon { width: 16px; height: 16px; } /* 16px = 1 screen pixel per icon pixel: crisp */
   html { scroll-padding-top: 8rem; }
 }
 @media (max-width: 26rem) {
@@ -461,8 +461,8 @@ main.subpage { padding-top: 5rem; }
 }
 .overview-card:hover, .overview-card:focus-visible { transform: translateY(-3px); }
 .overview-head { display: flex; align-items: center; gap: .7rem; }
-.overview-icon { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; flex: none; background: var(--ink-3); }
-.overview-icon .nav-icon { width: 1.2rem; height: 1.2rem; fill: var(--gold); }
+.overview-icon { display: grid; place-items: center; width: 2.9rem; height: 2.9rem; flex: none; background: var(--ink-3); }
+.overview-icon .nav-icon { width: 32px; height: 32px; fill: var(--gold); }
 .overview-title { font: 700 1.35rem/1.2 var(--body); color: var(--paper); }
 .overview-count { margin-left: auto; font-size: .85rem; color: var(--text-light-2); white-space: nowrap; }
 .overview-summary { color: var(--text-light-2); font-size: .98rem; }
