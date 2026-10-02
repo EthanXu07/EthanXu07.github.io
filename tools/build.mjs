@@ -43,41 +43,48 @@ const WORLDS = [
 ];
 
 // 10×10 pixel icons for the nav ('#' = filled). Rendered as crisp SVG in currentColor.
-// 16×16 nav icons. '#' = icon colour, '+' = shaded icon colour, '*' = highlight.
-// They use currentColor, so they still turn gold on hover / for the current page.
+// 16×16 nav icons, each with its own palette (letters → colours below; '.' = empty).
+const ICON_COLORS = {
+  home: { R: '#d4553a', r: '#9c3423', C: '#8b949c', W: '#f1e6cc', w: '#cbbd9c', Y: '#f3c969', D: '#8a5a3c', g: '#7aa35a' },
+  experience: { H: '#5a3520', B: '#a0623c', b: '#7a4528', G: '#f3c969', g: '#c9962a' },
+  projects: { o: '#7a4429', O: '#b06a44', A: '#d4ad55', G: '#f3c969', k: '#2a1f1a' },
+  skills: { Y: '#f3c969', y: '#e8a93a', '*': '#fff8e8' },
+  interests: { R: '#e0533d', r: '#a93524', '*': '#ffd9cf' },
+  contact: { P: '#f1e6cc', p: '#b9a988', S: '#d4553a' },
+};
 const ICONS = {
   home: [
     '................',
-    '.......##...++..',
-    '......####..++..',
-    '.....######.++..',
-    '....##########..',
-    '...############.',
-    '..##############',
-    '...#++++++++++#.',
-    '...#+**++++##+#.',
-    '...#+**++++##+#.',
-    '...#+++++++##+#.',
-    '...#+++++++##+#.',
-    '...#+++++++##+#.',
-    '...############.',
+    '.......Rr...CC..',
+    '......RRrr..CC..',
+    '.....RRRrrr.CC..',
+    '....RRRRrrrrCC..',
+    '...RRRRRrrrrrr..',
+    '..RRRRRRrrrrrrr.',
+    '...WWWWWWWWWWw..',
+    '...WYYWWWWDDWw..',
+    '...WYYWWWWDDWw..',
+    '...WWWWWWWDDWw..',
+    '...WWWWWWWDDWw..',
+    '...WWWWWWWDDWw..',
+    '..gggggggggggg..',
     '................',
     '................',
   ],
   experience: [
     '................',
     '................',
-    '.....######.....',
-    '.....#....#.....',
-    '.##############.',
-    '.#*+++++++++++#.',
-    '.#++++++++++++#.',
-    '.#++++####++++#.',
-    '.######**######.',
-    '.#+++++##+++++#.',
-    '.#++++++++++++#.',
-    '.#++++++++++++#.',
-    '.##############.',
+    '.....HHHHHH.....',
+    '.....H....H.....',
+    '.BBBBBBBBBBBBBB.',
+    '.BBBBBBBBBBBBBb.',
+    '.BBBBBBBBBBBBBb.',
+    '.BBBBBBBBBBBBBb.',
+    '.bbbbbbGGbbbbbb.',
+    '.BBBBBBgGBBBBBb.',
+    '.BBBBBBBBBBBBBb.',
+    '.BBBBBBBBBBBBBb.',
+    '.bbbbbbbbbbbbbb.',
     '................',
     '................',
     '................',
@@ -85,54 +92,54 @@ const ICONS = {
   projects: [
     '................',
     '................',
-    '...##########...',
-    '..#++++++++++#..',
-    '.#++++++++++++#.',
-    '.#*+++++++++++#.',
-    '.##############.',
-    '.#+++++##+++++#.',
-    '.#++++#**#++++#.',
-    '.#++++#**#++++#.',
-    '.#+++++##+++++#.',
-    '.#++++++++++++#.',
-    '.##############.',
+    '...oooooooooo...',
+    '..oOOOOOOOOOOo..',
+    '.oOOAOOOOOOAOOo.',
+    '.oOOAOOOOOOAOOo.',
+    '.AAAAAAAAAAAAAA.',
+    '.oOOAOOGGOOAOOo.',
+    '.oOOAOGkkGOAOOo.',
+    '.oOOAOGGGGOAOOo.',
+    '.oOOAOOOOOOAOOo.',
+    '.oOOAOOOOOOAOOo.',
+    '.oooooooooooooo.',
     '................',
     '................',
     '................',
   ],
   skills: [
-    '.......##.......',
-    '.......##.......',
-    '......##++......',
-    '......##++......',
-    '.....#*#+++.....',
-    '########++++++++',
-    '.#######+++++++.',
-    '..######++++++..',
-    '...#####+++++...',
-    '...#####+++++...',
-    '..######++++++..',
-    '..####....++++..',
-    '.####......++++.',
-    '.##..........++.',
+    '.......YY.......',
+    '.......YY.......',
+    '......YYyy......',
+    '......YYyy......',
+    '.....Y*Yyyy.....',
+    'YYYYYYYYyyyyyyyy',
+    '.YYYYYYYyyyyyyy.',
+    '..YYYYYYyyyyyy..',
+    '...YYYYYyyyyy...',
+    '...YYYYYyyyyy...',
+    '..YYYYYYyyyyyy..',
+    '..YYYY....yyyy..',
+    '.YYYY......yyyy.',
+    '.YY..........yy.',
     '................',
     '................',
   ],
   interests: [
     '................',
     '................',
-    '..####....####..',
-    '.######..######.',
-    '##**##########++',
-    '##*###########++',
-    '##############++',
-    '.############++.',
-    '..##########++..',
-    '...########++...',
-    '....######++....',
-    '.....####++.....',
-    '......##++......',
-    '.......++.......',
+    '..RRRR....RRRR..',
+    '.RRRRRR..RRRRRR.',
+    'RR**RRRRRRRRRRrr',
+    'RR*RRRRRRRRRRRrr',
+    'RRRRRRRRRRRRRRrr',
+    '.RRRRRRRRRRRRrr.',
+    '..RRRRRRRRRRrr..',
+    '...RRRRRRRRrr...',
+    '....RRRRRRrr....',
+    '.....RRRRrr.....',
+    '......RRrr......',
+    '.......rr.......',
     '................',
     '................',
   ],
@@ -140,16 +147,16 @@ const ICONS = {
     '................',
     '................',
     '................',
-    '.##############.',
-    '.##++++++++++##.',
-    '.#+#++++++++#+#.',
-    '.#++#++++++#++#.',
-    '.#+++#++++#+++#.',
-    '.#++++#++#++++#.',
-    '.#+++++##+++++#.',
-    '.#++++++++++++#.',
-    '.#++++++++++++#.',
-    '.##############.',
+    '.pppppppppppppp.',
+    '.ppPPPPPPPPPPpp.',
+    '.pPpPPPPPPPPpPp.',
+    '.pPPpPPPPPPpPPp.',
+    '.pPPPpPPPPpPPPp.',
+    '.pPPPPpPPpPPPPp.',
+    '.pPPPPPSSPPPPPp.',
+    '.pPPPPPSSPPPPPp.',
+    '.pPPPPPPPPPPPPp.',
+    '.pppppppppppppp.',
     '................',
     '................',
     '................',
@@ -157,22 +164,23 @@ const ICONS = {
 };
 for (const [k, rows] of Object.entries(ICONS)) {
   if (rows.length !== 16 || rows.some((r) => r.length !== 16)) throw new Error(`nav icon "${k}" must be 16×16`);
+  for (const ch of new Set(rows.join(''))) if (ch !== '.' && !ICON_COLORS[k][ch]) throw new Error(`nav icon "${k}" has no colour for "${ch}"`);
 }
-const pixelIcon = (rows) => {
-  const paths = { '#': '', '+': '', '*': '' };
+const pixelIcon = (rows, key) => {
+  const paths = {};
   rows.forEach((row, y) => {
-    // Merge horizontal runs of the same shade into one rect each
+    // Merge horizontal runs of the same colour into one rect each
     for (let x = 0; x < row.length; x++) {
       const ch = row[x];
-      if (!(ch in paths)) continue;
+      if (ch === '.') continue;
       let w = 1;
       while (row[x + w] === ch) w++;
-      paths[ch] += `M${x} ${y}h${w}v1h-${w}z`;
+      paths[ch] = (paths[ch] || '') + `M${x} ${y}h${w}v1h-${w}z`;
       x += w - 1;
     }
   });
-  return `<svg class="nav-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">` +
-    `<path d="${paths['#']}"/><path d="${paths['+']}" fill-opacity=".55"/><path d="${paths['*']}" fill="#fff8e8" fill-opacity=".9"/></svg>`;
+  const body = Object.entries(paths).map(([ch, d]) => `<path fill="${ICON_COLORS[key][ch]}" d="${d}"/>`).join('');
+  return `<svg class="nav-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">${body}</svg>`;
 };
 
 
@@ -225,7 +233,7 @@ const contactHtml = fill(src('pages/contact.html'), Object.fromEntries(Object.ke
 
 const nav = (active) => WORLDS.map((w) => {
   const current = w.key === active;
-  return `        <a href="${w.href}" title="${w.label}"${current ? ' class="active" aria-current="page"' : ''}>${pixelIcon(ICONS[w.key])}<span class="nav-label">${w.label}</span></a>`;
+  return `        <a href="${w.href}" title="${w.label}"${current ? ' class="active" aria-current="page"' : ''}>${pixelIcon(ICONS[w.key], w.key)}<span class="nav-label">${w.label}</span></a>`;
 }).join('\n');
 
 function page({ out, path, page, title, description, content, sub = true, scripts = '' }) {
@@ -348,7 +356,7 @@ function exploreCards() {
   ];
   return cards.map((c) => `        <li>
           <a class="overview-card px-box" href="${c.href}">
-            <span class="overview-head"><span class="overview-icon">${pixelIcon(ICONS[c.key])}</span><strong class="overview-title">${c.title}</strong><span class="overview-count">${c.count}</span></span>
+            <span class="overview-head"><span class="overview-icon">${pixelIcon(ICONS[c.key], c.key)}</span><strong class="overview-title">${c.title}</strong><span class="overview-count">${c.count}</span></span>
             <span class="overview-summary">${esc(c.summary)}</span>
             ${c.body}
             <span class="overview-link">${c.link} <span aria-hidden="true">→</span></span>
