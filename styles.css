@@ -139,7 +139,11 @@ kbd {
   color: var(--text-light-2);
 }
 .hud-nav a:hover, .hud-nav a.active { color: var(--gold); }
-.nav-icon { width: 16px; height: 16px; flex: none; fill: currentColor; shape-rendering: crispEdges; }
+.nav-icon { width: 16px; height: 16px; flex: none; shape-rendering: crispEdges; }
+/* Coloured icons sit slightly dimmed, and light up on hover / for the current page */
+.hud-nav a .nav-icon { opacity: .88; transition: opacity .15s, transform .15s; }
+.hud-nav a:hover .nav-icon, .hud-nav a:focus-visible .nav-icon, .hud-nav a.active .nav-icon { opacity: 1; }
+.hud-nav a:hover .nav-icon { transform: translateY(-1px); }
 .hud-nav a.active { box-shadow: inset 0 -3px 0 var(--gold); }
 .hud-resume { padding: .6rem .8rem; font-size: .6rem; }
 /* Narrow screens: the logo already links home, so drop "Home" to fit six links */
@@ -462,7 +466,7 @@ main.subpage { padding-top: 5rem; }
 .overview-card:hover, .overview-card:focus-visible { transform: translateY(-3px); }
 .overview-head { display: flex; align-items: center; gap: .7rem; }
 .overview-icon { display: grid; place-items: center; width: 2.9rem; height: 2.9rem; flex: none; background: var(--ink-3); }
-.overview-icon .nav-icon { width: 32px; height: 32px; fill: var(--gold); }
+.overview-icon .nav-icon { width: 32px; height: 32px; }
 .overview-title { font: 700 1.35rem/1.2 var(--body); color: var(--paper); }
 .overview-count { margin-left: auto; font-size: .85rem; color: var(--text-light-2); white-space: nowrap; }
 .overview-summary { color: var(--text-light-2); font-size: .98rem; }
