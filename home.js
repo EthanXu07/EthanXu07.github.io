@@ -230,7 +230,7 @@
     } else {
       prompt.label.textContent = 'Level clear!';
       prompt.title.textContent = `Score ${score}`;
-      prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Thanks for playing! Press Enter to get in touch. Something is glowing past the castle…`;
+      prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Nice run! Press Enter to get in touch. Something is glowing past the castle…`;
       prompt.go.href = '#contact';
       prompt.go.firstChild.textContent = 'Contact ';
     }
@@ -494,7 +494,7 @@
       if (!c.taken && Math.abs(p.x + PW / 2 - c.x) < 8 && Math.abs(p.y + PH / 2 - c.y) < 11) { c.taken = true; addCoin(c.x, c.y - 6); }
     }
 
-    // Flag → castle → thanks for playing
+    // Flag → castle → level clear
     if (state === 'play' && p.x + PW >= FLAG_X) {
       state = 'won';
       winT = t;
