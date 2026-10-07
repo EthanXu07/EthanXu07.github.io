@@ -444,6 +444,9 @@ page({
 });
 
 const interestTpl = src('pages/interest.html');
+// Table of contents: objectives with dotted leaders to (made-up) page numbers
+const tocList = (it) => it.objectives.map((o, n) =>
+  `          <li><span class="toc-entry">${esc(o)}</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-page-num">${1 + n * 12}</span></li>`).join('\n');
 interests.forEach((it, i) => {
   const prev = interests[(i - 1 + interests.length) % interests.length];
   const next = interests[(i + 1) % interests.length];
@@ -461,7 +464,7 @@ interests.forEach((it, i) => {
       num: String(i + 1), total: String(interests.length),
       title: esc(it.title), tagline: esc(it.tagline), photo: esc(it.photo),
       type: esc(it.type), call: esc(it.call), spine: esc(it.spine),
-      rewards: esc(it.rewards), objectives: objectivesList(it),
+      rewards: esc(it.rewards), toc: tocList(it),
       sections, gallery,
       prevHref: `/interests/${prev.slug}/`, prevTitle: esc(prev.title),
       nextHref: `/interests/${next.slug}/`, nextTitle: esc(next.title),

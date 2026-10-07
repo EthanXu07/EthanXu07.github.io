@@ -590,26 +590,7 @@ main.subpage { padding-top: 5rem; }
 .prop-stack span:nth-child(3) { width: 8rem; margin-left: .3rem; background: var(--tomato-dark); }
 .prop-plant svg { display: block; width: 4rem; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 3px 0 rgba(0,0,0,.3)); }
 
-/* Catalog / checkout card: ruled index card with a red header rule and a punched hole */
-.catalog-card {
-  --rule: 1.55rem;
-  position: relative;
-  display: flex; flex-direction: column; align-items: flex-start;
-  padding: 1rem 1.2rem 2rem;
-  color: var(--text-dark);
-  background-color: #fffaf0;
-  background-image:
-    linear-gradient(rgba(212, 85, 58, .55) 0 0),
-    repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), rgba(143, 184, 201, .45) calc(var(--rule) - 1px) var(--rule));
-  background-size: 100% 2px, 100% 100%;
-  background-position: 0 2.6rem, 0 .6rem;
-  background-repeat: no-repeat, repeat;
-  box-shadow: 0 0 0 3px var(--edge), 6px 6px 0 var(--edge);
-}
-.catalog-card::after {   /* punched hole for the catalog drawer rod */
-  content: ""; position: absolute; left: 50%; bottom: .55rem; width: .9rem; height: .9rem; margin-left: -.45rem;
-  background: var(--ink); box-shadow: inset 2px 2px 0 rgba(0,0,0,.4);
-}
+/* Shared by the open-book pages: call number header, stamp, tagline, metadata list */
 .catalog-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; margin-bottom: .9rem; }
 .catalog-call { font: .55rem var(--pixel); color: var(--text-dark-2); letter-spacing: .04em; }
 .stamp {
@@ -617,21 +598,29 @@ main.subpage { padding-top: 5rem; }
   color: var(--tomato); box-shadow: inset 0 0 0 2px var(--tomato);
   transform: rotate(-5deg);
 }
-.catalog-card h3 { margin: 0 0 .3rem; font: 700 1.35rem/1.2 var(--title); }
-.catalog-card h3 a { color: inherit; text-decoration: none; }
-.catalog-card h3 a:hover { text-decoration: underline; text-decoration-thickness: 3px; }
 .catalog-tagline { margin: 0 0 .7rem; font-style: italic; color: var(--text-dark-2); }
 .catalog-meta { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .3rem .8rem; margin: 0 0 1.1rem; font-size: .95rem; }
 .catalog-meta dt { padding-top: .3rem; font: .45rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; }
 .catalog-meta dd { margin: 0; }
 .catalog-meta .quest-list { margin: 0; }
 
-/* Hint under the shelf, shown while every book is closed */
-.shelf-hint { margin: 1.4rem 0 0; text-align: center; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
-.shelf-hint::before { content: "▲ "; }
 
 /* An open book: coloured boards behind two ruled pages with a shaded gutter */
-.reading-desk { margin-top: 2rem; }
+/* Reading desk: the opened book lies on a wooden desktop under the shelf */
+.reading-desk { position: relative; margin-top: 2.25rem; padding: 0 clamp(.5rem, 3vw, 2rem); }
+.desk-top {
+  height: 1.4rem; margin: 0 calc(-1 * clamp(.5rem, 3vw, 2rem));
+  background: #8a5a3c;
+  box-shadow: inset 0 4px 0 #a8714a, inset 0 -5px 0 #5a3520, 0 0 0 4px var(--edge), 8px 8px 0 var(--edge);
+}
+.desk-empty {
+  display: flex; align-items: flex-end; justify-content: center; gap: 1.25rem;
+  min-height: 9rem; padding: 1rem 1rem 0;
+  border: 3px dashed var(--ink-3); border-bottom: 0;
+}
+.desk-empty p { margin: 0 0 1.4rem; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
+.desk-empty p::before { content: "▲ "; }
+.desk-lamp { flex: none; width: 4rem; height: auto; image-rendering: pixelated; }
 .open-book {
   --rule: 1.55rem;
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -687,8 +676,23 @@ main.subpage { padding-top: 5rem; }
 .interest-hero .world-num { display: inline-block; margin-bottom: 1rem; }
 .interest-lede { margin: 1rem 0 0; font-size: 1.15rem; color: var(--text-light-2); }
 .call-chip { display: inline-block; margin: 1.1rem 0 0; padding: .45rem .6rem; font: .5rem/1.6 var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 3px var(--edge); }
-.checkout-card { max-width: 40rem; margin-bottom: 2.25rem; padding-bottom: 2.2rem; }
 .checkout-label { margin: 0 0 .6rem; font: .55rem var(--pixel); color: var(--text-dark); text-transform: uppercase; letter-spacing: .06em; }
+/* Table of contents: a printed book page with dotted leaders */
+.toc-page {
+  max-width: 40rem; margin-bottom: 2.25rem; padding: 1.6rem clamp(1.25rem, 4vw, 2.25rem) 1rem;
+  color: var(--text-dark); background: var(--paper);
+  box-shadow: inset 8px 0 10px -6px rgba(42, 31, 26, .25), 0 0 0 3px var(--edge), 6px 6px 0 var(--edge), 9px 9px 0 var(--paper-2), 12px 12px 0 var(--edge);
+}
+.toc-title { margin: 0 0 1.1rem; text-align: center; font: .8rem var(--pixel); text-transform: uppercase; letter-spacing: .12em; }
+.toc { list-style: none; margin: 0 0 1.2rem; padding: 0; counter-reset: toc; }
+.toc li { display: flex; align-items: flex-end; gap: .4rem; padding: .3rem 0; counter-increment: toc; }
+.toc li::before { content: counter(toc, upper-roman) "."; align-self: flex-start; padding-top: .45rem; min-width: 2rem; font: .55rem var(--pixel); color: var(--tomato-dark); }
+.toc-entry { flex: 0 1 auto; }
+.toc-dots { flex: 1 1 1.5rem; min-width: 1.5rem; margin-bottom: .55rem; border-bottom: 3px dotted var(--text-dark-2); }
+.toc-page-num { flex: none; padding-bottom: .42rem; font: .6rem var(--pixel); }
+.toc-subjects { margin: 0; padding-top: .8rem; border-top: 2px solid var(--paper-2); font-size: .95rem; }
+.toc-subjects span { margin-right: .6rem; font: .5rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; }
+.toc-folio { margin: 1rem 0 0; text-align: center; font: .5rem var(--pixel); color: var(--text-dark-2); }
 /* chapters read like pages of the book */
 .interest-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1.75rem; }
 .chapter {

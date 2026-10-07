@@ -152,7 +152,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 //  Stepped reveal on scroll
 // =====================================================================
 (() => {
-  const targets = $$('.world-head, .portrait, .player-info, .overview-card, .quest, .item, .trophies, .interest, .interest-hero, .interest-section, .gallery, .bookcase, .catalog-card, .save-box');
+  const targets = $$('.world-head, .portrait, .player-info, .overview-card, .quest, .item, .trophies, .interest, .interest-hero, .interest-section, .gallery, .bookcase, .toc-page, .save-box');
   if (reduceMotion || !('IntersectionObserver' in window)) return;
   targets.forEach((el) => el.classList.add('reveal'));
   const io = new IntersectionObserver((entries) => {
