@@ -216,6 +216,20 @@ $$('.chip').forEach((chip) => {
     else open(spine.dataset.book);
   }));
   $$('[data-close-book]').forEach((btn) => btn.addEventListener('click', () => close(true)));
+
+  // Shelf props (bookend, book stack, plant) only stay if they fit on the last row of books;
+  // anything that would wrap onto a shelf of its own is dropped. Re-run on resize and filtering.
+  const shelf = $('.books');
+  const props = $$('.bookend, .shelf-prop');
+  function fitProps() {
+    props.forEach((p) => { p.hidden = false; });
+    const books = $$('.book').filter((b) => !b.hidden);
+    if (!books.length) return;
+    const lastRow = books[books.length - 1].offsetTop;
+    props.forEach((p) => { if (p.offsetTop > lastRow) p.hidden = true; });
+  }
+  new ResizeObserver(fitProps).observe(shelf);
+  $$('.chip').forEach((chip) => chip.addEventListener('click', () => requestAnimationFrame(fitProps)));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openSlug) close(true); });
 })();
 

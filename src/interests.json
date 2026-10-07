@@ -120,6 +120,36 @@
     ]
   },
   {
+    "slug": "gym",
+    "title": "Gym",
+    "type": "Sports",
+    "call": "613.71 XU",
+    "spine": "#4d555e",
+    "tagline": "Lifting, progressive overload and showing up even when I don't feel like it.",
+    "objectives": [
+      "Keep a consistent lifting split",
+      "Add a little weight or a rep every week",
+      "Never skip leg day (mostly)"
+    ],
+    "rewards": "Strength · Discipline · Stress relief",
+    "photo": "/assets/interests/gym.svg",
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
+    "sections": [
+      {
+        "heading": "My split",
+        "placeholder": "Your routine: push/pull/legs, upper/lower, favorite lifts."
+      },
+      {
+        "heading": "Personal records",
+        "placeholder": "PRs you're proud of or chasing."
+      }
+    ]
+  },
+  {
     "slug": "eating",
     "title": "Eating",
     "type": "Food",
@@ -206,6 +236,66 @@
       {
         "heading": "Game night stories",
         "placeholder": "A legendary comeback, betrayal or winning move."
+      }
+    ]
+  },
+  {
+    "slug": "video-games",
+    "title": "Video games",
+    "type": "Games",
+    "call": "794.8 XU",
+    "spine": "#1f7a7a",
+    "tagline": "League of Legends and Valorant: climbing ranked one game at a time.",
+    "objectives": [
+      "Climb the ranked ladder in League of Legends",
+      "Sharpen my aim and crosshair placement in Valorant",
+      "Queue up with friends for late-night games"
+    ],
+    "rewards": "Teamwork · Reflexes · Game sense",
+    "photo": "/assets/interests/videogames.svg",
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
+    "sections": [
+      {
+        "heading": "Mains",
+        "placeholder": "Your League role and champions, and your Valorant agents."
+      },
+      {
+        "heading": "Peak rank",
+        "placeholder": "Highest rank, best game or clutch moment."
+      }
+    ]
+  },
+  {
+    "slug": "webnovels-anime",
+    "title": "Webnovels & anime",
+    "type": "Stories",
+    "call": "791.4334 XU",
+    "spine": "#a33a6b",
+    "tagline": "Binge-reading webnovels and watching anime, one more chapter or episode at a time.",
+    "objectives": [
+      "Follow ongoing webnovels as new chapters drop",
+      "Work through my anime watchlist",
+      "Find the next series worth recommending"
+    ],
+    "rewards": "Worldbuilding · Plot twists · Late nights",
+    "photo": "/assets/interests/anime.svg",
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
+    "sections": [
+      {
+        "heading": "Currently reading and watching",
+        "placeholder": "Webnovels you're following and anime you're watching now."
+      },
+      {
+        "heading": "All-time favorites",
+        "placeholder": "The series you'd recommend to anyone."
       }
     ]
   }

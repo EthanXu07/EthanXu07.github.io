@@ -579,10 +579,8 @@ main.subpage { padding-top: 5rem; }
     linear-gradient(90deg, #f3c969 0 4px, #c9962a 4px) left top / .9rem 100% no-repeat;
   filter: drop-shadow(3px 0 0 var(--edge)) drop-shadow(0 -3px 0 var(--edge));
 }
-/* props share the shelf rows; drop them when the bookcase is narrow so books never wrap onto an empty shelf */
-.bookcase { container-type: inline-size; }
-.shelf-prop { height: var(--row); display: flex; align-items: flex-end; padding-bottom: var(--board); margin-left: clamp(1rem, 4vw, 2.5rem); }
-@container (max-width: 34rem) { .shelf-prop, .bookend { display: none; } }
+/* props share the last row of books; script.js drops any that would wrap onto a shelf of their own */
+.shelf-prop { height: var(--row); display: flex; align-items: flex-end; padding-bottom: var(--board); margin-left: clamp(.75rem, 2.5vw, 2rem); }
 .prop-stack { flex-direction: column; justify-content: flex-end; align-items: flex-start; }
 .prop-stack span { display: block; height: 1.25rem; box-shadow: inset 0 4px 0 rgba(255,255,255,.15), inset 0 -4px 0 rgba(0,0,0,.25), 0 0 0 3px var(--edge); margin-top: 3px; }
 .prop-stack span:nth-child(1) { width: 7rem; margin-left: .6rem; background: var(--plum); }
