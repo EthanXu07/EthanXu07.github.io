@@ -556,6 +556,7 @@ main.subpage { padding-top: 5rem; }
   transition: transform .18s steps(3);
 }
 .book a:hover, .book a:focus-visible { transform: translateY(-.9rem); }
+.book.is-out a { transform: translateY(-1.7rem); box-shadow: inset 5px 0 0 rgba(255,255,255,.18), inset -7px 0 0 rgba(0,0,0,.3), 0 0 0 3px var(--edge), 0 0 0 6px var(--gold); }
 .book a:focus-visible { outline-offset: 5px; }
 .book-title {
   flex: 1; min-height: 0; overflow: hidden;
@@ -589,8 +590,7 @@ main.subpage { padding-top: 5rem; }
 .prop-stack span:nth-child(3) { width: 8rem; margin-left: .3rem; background: var(--tomato-dark); }
 .prop-plant svg { display: block; width: 4rem; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 3px 0 rgba(0,0,0,.3)); }
 
-/* Card catalog: ruled index cards with a red header rule and a punched hole */
-.catalog { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 1.5rem; }
+/* Catalog / checkout card: ruled index card with a red header rule and a punched hole */
 .catalog-card {
   --rule: 1.55rem;
   position: relative;
@@ -625,7 +625,49 @@ main.subpage { padding-top: 5rem; }
 .catalog-meta dt { padding-top: .3rem; font: .45rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; }
 .catalog-meta dd { margin: 0; }
 .catalog-meta .quest-list { margin: 0; }
-.catalog-card .btn { margin-top: auto; }
+
+/* Hint under the shelf, shown while every book is closed */
+.shelf-hint { margin: 1.4rem 0 0; text-align: center; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
+.shelf-hint::before { content: "▲ "; }
+
+/* An open book: coloured boards behind two ruled pages with a shaded gutter */
+.reading-desk { margin-top: 2rem; }
+.open-book {
+  --rule: 1.55rem;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: .7rem;
+  background: var(--c);
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), 0 0 0 4px var(--edge), 8px 8px 0 var(--edge);
+  animation: book-open .35s steps(4);
+  scroll-margin: 6rem 0 2rem;
+}
+@keyframes book-open { from { transform: scaleX(.15); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .open-book { animation: none; } }
+.open-book-page {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 1.1rem clamp(1rem, 3vw, 1.6rem) 1.3rem;
+  color: var(--text-dark);
+  background-color: #fffaf0;
+  background-image:
+    linear-gradient(rgba(212, 85, 58, .55) 0 0),
+    repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), rgba(143, 184, 201, .45) calc(var(--rule) - 1px) var(--rule));
+  background-size: 100% 2px, 100% 100%;
+  background-position: 0 2.75rem, 0 .6rem;
+  background-repeat: no-repeat, repeat;
+}
+.open-book-left { box-shadow: inset -14px 0 12px -10px rgba(42, 31, 26, .3); }
+.open-book-right { box-shadow: inset 14px 0 12px -10px rgba(42, 31, 26, .3); }
+.open-book h3 { margin: 0 0 .3rem; font: 700 1.6rem/1.2 var(--title); }
+.open-book h3:focus { outline: none; }
+.open-book .catalog-meta { margin-bottom: 0; }
+.open-book .checkout-label { margin-top: .6rem; }
+.open-book .quest-list { margin: 0 0 1.1rem; }
+.open-book-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: auto; }
+@media (max-width: 40rem) {
+  .open-book { grid-template-columns: minmax(0, 1fr); }
+  .open-book-left { box-shadow: inset 0 -14px 12px -10px rgba(42, 31, 26, .3); }
+  .open-book-right { box-shadow: inset 0 14px 12px -10px rgba(42, 31, 26, .3); }
+}
 
 /* Single interest page: one volume */
 .breadcrumb { margin-bottom: 1.75rem; font: .55rem/1.8 var(--pixel); color: var(--text-light-2); text-transform: uppercase; }

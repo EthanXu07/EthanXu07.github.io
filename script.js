@@ -170,9 +170,54 @@ $$('.chip').forEach((chip) => {
   chip.addEventListener('click', () => {
     const f = chip.dataset.filter;
     $$('.chip').forEach((c) => { c.classList.toggle('is-on', c === chip); c.setAttribute('aria-pressed', c === chip); });
-    $$('.quest, .book, .catalog-card').forEach((q) => { q.hidden = f !== 'all' && q.dataset.status !== f && q.dataset.type !== f; });
+    $$('.quest, .book').forEach((q) => { q.hidden = f !== 'all' && q.dataset.status !== f && q.dataset.type !== f; });
+    // an open book whose spine was just filtered off the shelf goes back
+    const out = $('.book.is-out');
+    if (out && out.hidden) out.querySelector('[data-book]').click();
   });
 });
+
+// =====================================================================
+//  Library: clicking a spine pulls the book off the shelf and opens it
+//  below. Without JS the spines are plain links to each volume's page.
+// =====================================================================
+(() => {
+  const spines = $$('[data-book]');
+  if (!spines.length) return;
+  const hint = $('#shelfHint');
+  let openSlug = null;
+
+  function close(focusSpine) {
+    if (!openSlug) return;
+    const spine = $(`[data-book="${openSlug}"]`);
+    $(`#book-${openSlug}`).hidden = true;
+    spine.setAttribute('aria-expanded', 'false');
+    spine.closest('.book').classList.remove('is-out');
+    if (focusSpine) spine.focus();
+    openSlug = null;
+    if (hint) hint.hidden = false;
+  }
+
+  function open(slug) {
+    close(false);
+    const spine = $(`[data-book="${slug}"]`);
+    const book = $(`#book-${slug}`);
+    book.hidden = false;
+    spine.setAttribute('aria-expanded', 'true');
+    spine.closest('.book').classList.add('is-out');
+    openSlug = slug;
+    if (hint) hint.hidden = true;
+    book.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+  }
+
+  spines.forEach((spine) => spine.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (openSlug === spine.dataset.book) close(false);
+    else open(spine.dataset.book);
+  }));
+  $$('[data-close-book]').forEach((btn) => btn.addEventListener('click', () => close(true)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openSlug) close(true); });
+})();
 
 // =====================================================================
 //  Skill tree: pick a node to see where the skill was used

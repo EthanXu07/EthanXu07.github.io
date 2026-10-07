@@ -67,31 +67,31 @@
       <div class="bookcase">
         <ul class="books" aria-label="Bookshelf">
           <li class="book" data-type="outdoors" style="--c: #4f7a3a; --h: 13rem; --w: 3.7rem">
-            <a href="/interests/hiking/" title="Trails, switchbacks and whatever view is waiting at the top.">
+            <a href="/interests/hiking/" data-book="hiking" aria-controls="book-hiking" aria-expanded="false" title="Trails, switchbacks and whatever view is waiting at the top.">
               <span class="book-title">Hiking</span>
               <span class="book-label" aria-label="call number 796.51 XU"><span>796</span><span>.51</span><span>XU</span></span>
             </a>
           </li>
           <li class="book" data-type="sports" style="--c: #a8432c; --h: 11.75rem; --w: 3.3rem">
-            <a href="/interests/racket-sports/" title="If there's a racket, a net and a rally, I'm in.">
+            <a href="/interests/racket-sports/" data-book="racket-sports" aria-controls="book-racket-sports" aria-expanded="false" title="If there's a racket, a net and a rally, I'm in.">
               <span class="book-title">Racket sports</span>
               <span class="book-label" aria-label="call number 796.34 XU"><span>796</span><span>.34</span><span>XU</span></span>
             </a>
           </li>
           <li class="book" data-type="sports" style="--c: #2f5d73; --h: 12.75rem; --w: 3.9rem">
-            <a href="/interests/soccer/" title="Always down for a pickup game.">
+            <a href="/interests/soccer/" data-book="soccer" aria-controls="book-soccer" aria-expanded="false" title="Always down for a pickup game.">
               <span class="book-title">Soccer</span>
               <span class="book-label" aria-label="call number 796.334 XU"><span>796</span><span>.334</span><span>XU</span></span>
             </a>
           </li>
           <li class="book" data-type="sports" style="--c: #3d7f9a; --h: 12rem; --w: 3.5rem">
-            <a href="/interests/swimming/" title="Laps in the pool are my favorite way to reset.">
+            <a href="/interests/swimming/" data-book="swimming" aria-controls="book-swimming" aria-expanded="false" title="Laps in the pool are my favorite way to reset.">
               <span class="book-title">Swimming</span>
               <span class="book-label" aria-label="call number 797.21 XU"><span>797</span><span>.21</span><span>XU</span></span>
             </a>
           </li>
           <li class="book" data-type="food" style="--c: #b57a1c; --h: 13.25rem; --w: 3.6rem">
-            <a href="/interests/eating/" title="Always hunting for the next great meal. Taste-testing counts as a sport.">
+            <a href="/interests/eating/" data-book="eating" aria-controls="book-eating" aria-expanded="false" title="Always hunting for the next great meal. Taste-testing counts as a sport.">
               <span class="book-title">Eating</span>
               <span class="book-label" aria-label="call number 394.12 XU"><span>394</span><span>.12</span><span>XU</span></span>
             </a>
@@ -112,74 +112,140 @@
         </ul>
       </div>
 
-      <h2 class="mini-head">Card catalog</h2>
-      <ol class="catalog">
-        <li class="catalog-card" data-type="outdoors">
-          <div class="catalog-top">
-            <span class="catalog-call">796.51 XU</span>
-            <span class="stamp">Ongoing</span>
+      <p class="shelf-hint" id="shelfHint">Pick a book off the shelf to open it.</p>
+      <!-- Open books: one per interest, hidden until its spine is clicked -->
+      <div class="reading-desk">
+        <article class="open-book" id="book-hiking" style="--c: #4f7a3a" aria-labelledby="book-hiking-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">796.51 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-hiking-title" tabindex="-1">Hiking</h3>
+            <p class="catalog-tagline">Trails, switchbacks and whatever view is waiting at the top.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Outdoors</dd>
+              <dt>Subjects</dt><dd>Fresh air · Views · Leg day</dd>
+            </dl>
           </div>
-          <h3><a href="/interests/hiking/">Hiking</a></h3>
-          <p class="catalog-tagline">Trails, switchbacks and whatever view is waiting at the top.</p>
-          <dl class="catalog-meta">
-            <dt>Section</dt><dd>Outdoors</dd>
-            <dt>Subjects</dt><dd>Fresh air · Views · Leg day</dd>
-          </dl>
-          <a class="btn btn-tomato btn-sm" href="/interests/hiking/">Check out <span class="tri" aria-hidden="true"></span></a>
-        </li>
-        <li class="catalog-card" data-type="sports">
-          <div class="catalog-top">
-            <span class="catalog-call">796.34 XU</span>
-            <span class="stamp">Ongoing</span>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Find the trailhead, follow the switchbacks, earn the view</li>
+              <li>Explore the Berkeley Hills and trails beyond the Bay</li>
+              <li>Bring back summit photos for the gallery</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/hiking/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
           </div>
-          <h3><a href="/interests/racket-sports/">Racket sports</a></h3>
-          <p class="catalog-tagline">If there's a racket, a net and a rally, I'm in.</p>
-          <dl class="catalog-meta">
-            <dt>Section</dt><dd>Sports</dd>
-            <dt>Subjects</dt><dd>Reflexes · Footwork · Friendly rivalries</dd>
-          </dl>
-          <a class="btn btn-tomato btn-sm" href="/interests/racket-sports/">Check out <span class="tri" aria-hidden="true"></span></a>
-        </li>
-        <li class="catalog-card" data-type="sports">
-          <div class="catalog-top">
-            <span class="catalog-call">796.334 XU</span>
-            <span class="stamp">Ongoing</span>
+        </article>
+        <article class="open-book" id="book-racket-sports" style="--c: #a8432c" aria-labelledby="book-racket-sports-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">796.34 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-racket-sports-title" tabindex="-1">Racket sports</h3>
+            <p class="catalog-tagline">If there's a racket, a net and a rally, I'm in.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Sports</dd>
+              <dt>Subjects</dt><dd>Reflexes · Footwork · Friendly rivalries</dd>
+            </dl>
           </div>
-          <h3><a href="/interests/soccer/">Soccer</a></h3>
-          <p class="catalog-tagline">Always down for a pickup game.</p>
-          <dl class="catalog-meta">
-            <dt>Section</dt><dd>Sports</dd>
-            <dt>Subjects</dt><dd>Teamwork · Cardio · Bragging rights</dd>
-          </dl>
-          <a class="btn btn-tomato btn-sm" href="/interests/soccer/">Check out <span class="tri" aria-hidden="true"></span></a>
-        </li>
-        <li class="catalog-card" data-type="sports">
-          <div class="catalog-top">
-            <span class="catalog-call">797.21 XU</span>
-            <span class="stamp">Ongoing</span>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Find a court and a rally partner</li>
+              <li>Keep every rally going one shot longer</li>
+              <li>Try every sport that comes with a racket</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/racket-sports/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
           </div>
-          <h3><a href="/interests/swimming/">Swimming</a></h3>
-          <p class="catalog-tagline">Laps in the pool are my favorite way to reset.</p>
-          <dl class="catalog-meta">
-            <dt>Section</dt><dd>Sports</dd>
-            <dt>Subjects</dt><dd>Endurance · Recovery · Calm</dd>
-          </dl>
-          <a class="btn btn-tomato btn-sm" href="/interests/swimming/">Check out <span class="tri" aria-hidden="true"></span></a>
-        </li>
-        <li class="catalog-card" data-type="food">
-          <div class="catalog-top">
-            <span class="catalog-call">394.12 XU</span>
-            <span class="stamp">Ongoing</span>
+        </article>
+        <article class="open-book" id="book-soccer" style="--c: #2f5d73" aria-labelledby="book-soccer-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">796.334 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-soccer-title" tabindex="-1">Soccer</h3>
+            <p class="catalog-tagline">Always down for a pickup game.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Sports</dd>
+              <dt>Subjects</dt><dd>Teamwork · Cardio · Bragging rights</dd>
+            </dl>
           </div>
-          <h3><a href="/interests/eating/">Eating</a></h3>
-          <p class="catalog-tagline">Always hunting for the next great meal. Taste-testing counts as a sport.</p>
-          <dl class="catalog-meta">
-            <dt>Section</dt><dd>Food</dd>
-            <dt>Subjects</dt><dd>Flavor · Good company · Zero regrets</dd>
-          </dl>
-          <a class="btn btn-tomato btn-sm" href="/interests/eating/">Check out <span class="tri" aria-hidden="true"></span></a>
-        </li>
-      </ol>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Show up for pickup games</li>
+              <li>Win the ball back and play it forward</li>
+              <li>Catch the big matches with friends</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/soccer/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
+        <article class="open-book" id="book-swimming" style="--c: #3d7f9a" aria-labelledby="book-swimming-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">797.21 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-swimming-title" tabindex="-1">Swimming</h3>
+            <p class="catalog-tagline">Laps in the pool are my favorite way to reset.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Sports</dd>
+              <dt>Subjects</dt><dd>Endurance · Recovery · Calm</dd>
+            </dl>
+          </div>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Swim laps to clear my head</li>
+              <li>Keep sharpening stroke technique</li>
+              <li>Beat a personal best</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/swimming/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
+        <article class="open-book" id="book-eating" style="--c: #b57a1c" aria-labelledby="book-eating-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">394.12 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-eating-title" tabindex="-1">Eating</h3>
+            <p class="catalog-tagline">Always hunting for the next great meal. Taste-testing counts as a sport.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Food</dd>
+              <dt>Subjects</dt><dd>Flavor · Good company · Zero regrets</dd>
+            </dl>
+          </div>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Hunt down the best spots around Berkeley</li>
+              <li>Try a cuisine I haven't had before</li>
+              <li>Never skip dessert</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/eating/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
+      </div>
     </section>
 
   </main>

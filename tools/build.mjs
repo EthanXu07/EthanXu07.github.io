@@ -405,24 +405,36 @@ const callLines = (call) => {
   return [whole, dec ? `.${dec}` : '', cutter].filter(Boolean).map((l) => `<span>${esc(l)}</span>`).join('');
 };
 const spines = interests.map((it, i) => `          <li class="book" data-type="${slugify(it.type)}" style="--c: ${esc(it.spine)}; --h: ${SPINE_H[i % SPINE_H.length]}rem; --w: ${SPINE_W[i % SPINE_W.length]}rem">
-            <a href="/interests/${it.slug}/" title="${esc(it.tagline)}">
+            <a href="/interests/${it.slug}/" data-book="${it.slug}" aria-controls="book-${it.slug}" aria-expanded="false" title="${esc(it.tagline)}">
               <span class="book-title">${esc(it.title)}</span>
               <span class="book-label" aria-label="call number ${esc(it.call)}">${callLines(it.call)}</span>
             </a>
           </li>`).join('\n');
-const cards = interests.map((it) => `        <li class="catalog-card" data-type="${slugify(it.type)}">
-          <div class="catalog-top">
-            <span class="catalog-call">${esc(it.call)}</span>
-            <span class="stamp">Ongoing</span>
+// Each interest opens as a two-page book: summary on the left, contents on the right
+const cards = interests.map((it) => `        <article class="open-book" id="book-${it.slug}" style="--c: ${esc(it.spine)}" aria-labelledby="book-${it.slug}-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">${esc(it.call)}</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-${it.slug}-title" tabindex="-1">${esc(it.title)}</h3>
+            <p class="catalog-tagline">${esc(it.tagline)}</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>${esc(it.type)}</dd>
+              <dt>Subjects</dt><dd>${esc(it.rewards)}</dd>
+            </dl>
           </div>
-          <h3><a href="/interests/${it.slug}/">${esc(it.title)}</a></h3>
-          <p class="catalog-tagline">${esc(it.tagline)}</p>
-          <dl class="catalog-meta">
-            <dt>Section</dt><dd>${esc(it.type)}</dd>
-            <dt>Subjects</dt><dd>${esc(it.rewards)}</dd>
-          </dl>
-          <a class="btn btn-tomato btn-sm" href="/interests/${it.slug}/">Check out ${TRI}</a>
-        </li>`).join('\n');
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+${objectivesList(it)}
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/${it.slug}/">Read the full volume ${TRI}</a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>`).join('\n');
 const chips = [...new Set(interests.map((it) => it.type))]
   .map((t) => `        <button class="chip" data-filter="${slugify(t)}" aria-pressed="false">${esc(t)}</button>`).join('\n');
 
