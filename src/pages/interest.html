@@ -15,24 +15,13 @@
         </div>
       </header>
 
-      <section class="catalog-card checkout-card" aria-label="Checkout card">
-        <div class="catalog-top">
-          <span class="catalog-call">{{call}}</span>
-          <span class="stamp">Ongoing</span>
-        </div>
-        <p class="checkout-label">Checkout card</p>
-        <dl class="catalog-meta">
-          <dt>Title</dt><dd>{{title}}</dd>
-          <dt>Section</dt><dd>{{type}}</dd>
-          <dt>Contents</dt>
-          <dd>
-            <ul class="quest-list">
-{{objectives}}
-            </ul>
-          </dd>
-          <dt>Subjects</dt><dd>{{rewards}}</dd>
-          <dt>Due</dt><dd>Never. Renewed indefinitely</dd>
-        </dl>
+      <section class="toc-page" aria-labelledby="toc-title">
+        <h2 class="toc-title" id="toc-title">Contents</h2>
+        <ol class="toc">
+{{toc}}
+        </ol>
+        <p class="toc-subjects"><span>Subjects</span> {{rewards}}</p>
+        <p class="toc-folio" aria-hidden="true">— i —</p>
       </section>
 
       <div class="interest-sections">
