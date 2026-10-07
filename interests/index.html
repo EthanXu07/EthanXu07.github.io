@@ -62,6 +62,7 @@
         <button class="chip" data-filter="outdoors" aria-pressed="false">Outdoors</button>
         <button class="chip" data-filter="sports" aria-pressed="false">Sports</button>
         <button class="chip" data-filter="food" aria-pressed="false">Food</button>
+        <button class="chip" data-filter="games" aria-pressed="false">Games</button>
       </div>
 
       <div class="bookcase">
@@ -94,6 +95,18 @@
             <a href="/interests/eating/" data-book="eating" aria-controls="book-eating" aria-expanded="false" title="Always hunting for the next great meal. Taste-testing counts as a sport.">
               <span class="book-title">Eating</span>
               <span class="book-label" aria-label="call number 394.12 XU"><span>394</span><span>.12</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="games" style="--c: #7a2e3a; --h: 11.5rem; --w: 3.4rem">
+            <a href="/interests/card-games/" data-book="card-games" aria-controls="book-card-games" aria-expanded="false" title="Poker and blackjack: reading the table and playing the odds.">
+              <span class="book-title">Card games</span>
+              <span class="book-label" aria-label="call number 795.4 XU"><span>795</span><span>.4</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="games" style="--c: #4a3f7a; --h: 13rem; --w: 3.7rem">
+            <a href="/interests/board-games/" data-book="board-games" aria-controls="book-board-games" aria-expanded="false" title="Catan, Risk and Secret Hitler: trading, conquering and bluffing on game night.">
+              <span class="book-title">Board games</span>
+              <span class="book-label" aria-label="call number 794 XU"><span>794</span><span>XU</span></span>
             </a>
           </li>
           <li class="bookend" aria-hidden="true"></li>
@@ -241,6 +254,58 @@
             </ul>
             <div class="open-book-actions">
               <a class="btn btn-tomato btn-sm" href="/interests/eating/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
+        <article class="open-book" id="book-card-games" style="--c: #7a2e3a" aria-labelledby="book-card-games-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">795.4 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-card-games-title" tabindex="-1">Card games</h3>
+            <p class="catalog-tagline">Poker and blackjack: reading the table and playing the odds.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Games</dd>
+              <dt>Subjects</dt><dd>Probability · Poker face · Friendly stakes</dd>
+            </dl>
+          </div>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Read the table and play the odds in poker</li>
+              <li>Know basic strategy cold at the blackjack table</li>
+              <li>Keep a straight face on the river</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/card-games/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
+        <article class="open-book" id="book-board-games" style="--c: #4a3f7a" aria-labelledby="book-board-games-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">794 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-board-games-title" tabindex="-1">Board games</h3>
+            <p class="catalog-tagline">Catan, Risk and Secret Hitler: trading, conquering and bluffing on game night.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Games</dd>
+              <dt>Subjects</dt><dd>Strategy · Negotiation · Game-night rivalries</dd>
+            </dl>
+          </div>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Trade my way to the longest road in Catan</li>
+              <li>Hold Australia and conquer the world in Risk</li>
+              <li>Bluff my way through Secret Hitler without getting caught</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/board-games/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
               <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
             </div>
           </div>

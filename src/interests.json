@@ -148,5 +148,65 @@
         "placeholder": "Go-to restaurants around Berkeley and beyond."
       }
     ]
+  },
+  {
+    "slug": "card-games",
+    "title": "Card games",
+    "type": "Games",
+    "call": "795.4 XU",
+    "spine": "#7a2e3a",
+    "tagline": "Poker and blackjack: reading the table and playing the odds.",
+    "objectives": [
+      "Read the table and play the odds in poker",
+      "Know basic strategy cold at the blackjack table",
+      "Keep a straight face on the river"
+    ],
+    "rewards": "Probability · Poker face · Friendly stakes",
+    "photo": "/assets/interests/cards.svg",
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
+    "sections": [
+      {
+        "heading": "What I play",
+        "placeholder": "Poker variants (Texas Hold'em?), blackjack, and where you play them."
+      },
+      {
+        "heading": "Best hands",
+        "placeholder": "A favorite hand, bluff or comeback."
+      }
+    ]
+  },
+  {
+    "slug": "board-games",
+    "title": "Board games",
+    "type": "Games",
+    "call": "794 XU",
+    "spine": "#4a3f7a",
+    "tagline": "Catan, Risk and Secret Hitler: trading, conquering and bluffing on game night.",
+    "objectives": [
+      "Trade my way to the longest road in Catan",
+      "Hold Australia and conquer the world in Risk",
+      "Bluff my way through Secret Hitler without getting caught"
+    ],
+    "rewards": "Strategy · Negotiation · Game-night rivalries",
+    "photo": "/assets/interests/boardgames.svg",
+    "gallery": [
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg",
+      "/assets/interests/placeholder.svg"
+    ],
+    "sections": [
+      {
+        "heading": "On the table",
+        "placeholder": "Catan, Risk, Secret Hitler: favorite strategies or house rules."
+      },
+      {
+        "heading": "Game night stories",
+        "placeholder": "A legendary comeback, betrayal or winning move."
+      }
+    ]
   }
 ]
