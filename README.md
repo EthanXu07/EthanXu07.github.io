@@ -14,7 +14,7 @@ node tools/build.mjs
 | `src/data/experience.json` | Experience entries → also the skill tree links |
 | `src/data/projects.json` | Projects, publications and trophies |
 | `src/data/skills.json` | Skill tree branches (mirrors the résumé's Technical Skills + a Specialties branch). "Used ×N" = how many experience entries/projects list it in their `skills`; the rest show "On résumé" |
-| `src/interests.json` | The library: one book spine, catalog card and page per interest. `call` is the Dewey Decimal call number, `spine` the book colour |
+| `src/interests.json` | The library: one book spine, open book and page per interest. `call` is the Dewey Decimal call number, `spine` the book colour, `description` the paragraph shown in the open book and on the page. `photo` / `gallery` currently point to generic stock photos in `assets/interests/photos/` (CC0 / public domain, see `CREDITS.md`). Swap in your own photos by replacing those files or changing the paths |
 | `src/pages/*.html` | Page bodies (home, contact, templates) |
 | `src/layout.html` | Nav bar, footer and résumé pop-up shared by every game page |
 | `card/index.html` | 🔥 Secret business card (hand-written, not generated). Reached by clearing the title-screen level and walking past the castle to the campfire, or directly at `/card/`. Links come from `site-config.js` |

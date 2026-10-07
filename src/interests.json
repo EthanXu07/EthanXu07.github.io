@@ -6,22 +6,23 @@
     "call": "796.51 XU",
     "spine": "#4f7a3a",
     "tagline": "Trails, switchbacks and whatever view is waiting at the top.",
+    "description": "Hiking is how I hit reset. There's something about a trailhead that makes the rest of the week feel far away: the climb, the switchbacks, and then the moment the trees open up and the whole valley is laid out below. Around Berkeley that means the East Bay hills and regional parks, and further out, any trail that ends somewhere worth the climb.",
     "objectives": [
       "Find the trailhead, follow the switchbacks, earn the view",
       "Explore the Berkeley Hills and trails beyond the Bay",
       "Bring back summit photos for the gallery"
     ],
     "rewards": "Fresh air · Views · Leg day",
-    "photo": "/assets/interests/hiking.svg",
+    "photo": "/assets/interests/photos/hiking-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/hiking-1.jpg",
+      "/assets/interests/photos/hiking-2.jpg",
+      "/assets/interests/photos/hiking-3.jpg"
     ],
     "sections": [
       {
         "heading": "Why I hike",
-        "placeholder": "A few sentences on what gets you out on the trail."
+        "body": "It's the one place my phone stays in my pocket. A long climb leaves room to think through a problem or not think at all, and reaching the top always feels earned. I like that every trail is a little different: the same loop looks completely new in fog, at sunset or after a rainy week."
       },
       {
         "heading": "Favorite trails",
@@ -36,19 +37,24 @@
     "call": "796.34 XU",
     "spine": "#a8432c",
     "tagline": "If there's a racket, a net and a rally, I'm in.",
+    "description": "I'll play anything with a racket and a net: tennis, badminton, table tennis, pickleball. Each one has its own rhythm, but they all reward the same things: quick feet, good anticipation and the patience to keep a rally going. Most of all, they're an easy way to turn an afternoon with friends into a friendly rivalry.",
     "objectives": [
       "Find a court and a rally partner",
       "Keep every rally going one shot longer",
       "Try every sport that comes with a racket"
     ],
     "rewards": "Reflexes · Footwork · Friendly rivalries",
-    "photo": "/assets/interests/racket.svg",
+    "photo": "/assets/interests/photos/racket-sports-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/racket-sports-1.jpg",
+      "/assets/interests/photos/racket-sports-2.jpg",
+      "/assets/interests/photos/racket-sports-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I play",
+        "body": "Racket sports are the perfect mix of exercise and strategy. A good rally is part reflexes, part chess: setting up a shot two or three hits ahead. They're also easy to pick up anywhere. A free court, two rackets and someone willing to play is all it takes."
+      },
       {
         "heading": "What I play",
         "placeholder": "Which ones: tennis, badminton, pickleball, squash, table tennis…"
@@ -66,19 +72,24 @@
     "call": "796.334 XU",
     "spine": "#2f5d73",
     "tagline": "Always down for a pickup game.",
+    "description": "Soccer is the sport I'll always say yes to. Pickup games are my favourite way to play: no refs, mixed skill levels, and everyone chasing the same ball until it gets too dark to see it. Off the field, I'm usually catching the big matches with friends.",
     "objectives": [
       "Show up for pickup games",
       "Win the ball back and play it forward",
       "Catch the big matches with friends"
     ],
     "rewards": "Teamwork · Cardio · Bragging rights",
-    "photo": "/assets/interests/soccer.svg",
+    "photo": "/assets/interests/photos/soccer-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/soccer-1.jpg",
+      "/assets/interests/photos/soccer-2.jpg",
+      "/assets/interests/photos/soccer-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I play",
+        "body": "It's the most social way I know to get a workout in. Ninety minutes of running doesn't feel like cardio when you're trying to win the ball back. I love the teamwork too: the best goals come from a few good passes, not one person doing everything."
+      },
       {
         "heading": "On the pitch",
         "placeholder": "Where you play and which position."
@@ -96,19 +107,24 @@
     "call": "797.21 XU",
     "spine": "#3d7f9a",
     "tagline": "Laps in the pool are my favorite way to reset.",
+    "description": "Swimming laps is my favourite way to clear my head. Once I'm in the water there's nothing to check and nowhere to be: just the black line, steady breathing and counting lengths. I come out feeling more relaxed than when I went in, even after a hard set.",
     "objectives": [
       "Swim laps to clear my head",
       "Keep sharpening stroke technique",
       "Beat a personal best"
     ],
     "rewards": "Endurance · Recovery · Calm",
-    "photo": "/assets/interests/swim.svg",
+    "photo": "/assets/interests/photos/swimming-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/swimming-1.jpg",
+      "/assets/interests/photos/swimming-2.jpg",
+      "/assets/interests/photos/swimming-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I swim",
+        "body": "It's a full-body workout that's easy on the joints, so it balances out the running and lifting. Swimming is also technical in a way I enjoy: small fixes to a stroke or a turn make a real difference, so there's always something to work on."
+      },
       {
         "heading": "In the water",
         "placeholder": "Favorite stroke, pool or open-water spot."
@@ -126,19 +142,24 @@
     "call": "613.71 XU",
     "spine": "#4d555e",
     "tagline": "Lifting, progressive overload and showing up even when I don't feel like it.",
+    "description": "The gym is where I build consistency. I follow a lifting split and try to add a little weight or one more rep each week. Progress is slow, but it's measurable and it compounds. Some days it's about chasing a number; other days it's just about showing up.",
     "objectives": [
       "Keep a consistent lifting split",
       "Add a little weight or a rep every week",
       "Never skip leg day (mostly)"
     ],
     "rewards": "Strength · Discipline · Stress relief",
-    "photo": "/assets/interests/gym.svg",
+    "photo": "/assets/interests/photos/gym-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/gym-1.jpg",
+      "/assets/interests/photos/gym-2.jpg",
+      "/assets/interests/photos/gym-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I lift",
+        "body": "Lifting is the most honest feedback loop I know: put in the work and the numbers go up; skip it and they don't. It's also my favourite way to deal with stress after a long day of classes or code. An hour with headphones in and a plan on the whiteboard resets everything."
+      },
       {
         "heading": "My split",
         "placeholder": "Your routine: push/pull/legs, upper/lower, favorite lifts."
@@ -156,19 +177,24 @@
     "call": "394.12 XU",
     "spine": "#b57a1c",
     "tagline": "Always hunting for the next great meal. Taste-testing counts as a sport.",
+    "description": "I'm always on the hunt for the next great meal: a new ramen spot, a hole-in-the-wall dumpling shop, or a dessert worth the walk. Berkeley and the Bay Area make that easy, with nearly every cuisine within a short drive. Trying something new with friends is half the fun.",
     "objectives": [
       "Hunt down the best spots around Berkeley",
       "Try a cuisine I haven't had before",
       "Never skip dessert"
     ],
     "rewards": "Flavor · Good company · Zero regrets",
-    "photo": "/assets/interests/food.svg",
+    "photo": "/assets/interests/photos/eating-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/eating-1.jpg",
+      "/assets/interests/photos/eating-2.jpg",
+      "/assets/interests/photos/eating-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I eat (seriously)",
+        "body": "Food is the easiest way to explore a place and its people without leaving town. Every cuisine has its own logic, ingredients and stories, and a good meal is the best excuse to get friends around a table. I'll rank spots, argue about them, and go back anyway."
+      },
       {
         "heading": "Favorite cuisines",
         "placeholder": "What you'd happily eat every week."
@@ -186,19 +212,24 @@
     "call": "795.4 XU",
     "spine": "#7a2e3a",
     "tagline": "Poker and blackjack: reading the table and playing the odds.",
+    "description": "Poker and blackjack are where probability meets psychology. In blackjack, the math tells you exactly what to do; in poker, the math is just the starting point and the rest is reading the table. I play for fun and friendly stakes. The real prize is a well-timed bluff.",
     "objectives": [
       "Read the table and play the odds in poker",
       "Know basic strategy cold at the blackjack table",
       "Keep a straight face on the river"
     ],
     "rewards": "Probability · Poker face · Friendly stakes",
-    "photo": "/assets/interests/cards.svg",
+    "photo": "/assets/interests/photos/card-games-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/card-games-1.jpg",
+      "/assets/interests/photos/card-games-2.jpg",
+      "/assets/interests/photos/card-games-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I play",
+        "body": "Card games are probability you can feel. Counting outs, weighing pot odds and knowing basic strategy cold make the math click in a way a textbook never did. Poker adds the human side: tells, timing and staying calm when the river doesn't go your way."
+      },
       {
         "heading": "What I play",
         "placeholder": "Poker variants (Texas Hold'em?), blackjack, and where you play them."
@@ -216,19 +247,24 @@
     "call": "794 XU",
     "spine": "#4a3f7a",
     "tagline": "Catan, Risk and Secret Hitler: trading, conquering and bluffing on game night.",
+    "description": "Game night means Catan, Risk or Secret Hitler on the table and a long evening of trading, conquering and lying to my friends' faces. Each one rewards a different skill: negotiation in Catan, long-term strategy in Risk, and pure social deduction in Secret Hitler.",
     "objectives": [
       "Trade my way to the longest road in Catan",
       "Hold Australia and conquer the world in Risk",
       "Bluff my way through Secret Hitler without getting caught"
     ],
     "rewards": "Strategy · Negotiation · Game-night rivalries",
-    "photo": "/assets/interests/boardgames.svg",
+    "photo": "/assets/interests/photos/board-games-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/board-games-1.jpg",
+      "/assets/interests/photos/board-games-2.jpg",
+      "/assets/interests/photos/board-games-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I play",
+        "body": "Board games put strategy and people in the same room. Every game is a different puzzle, but the best moments are social: the trade that wins Catan, the alliance that collapses in Risk, the reveal at the end of Secret Hitler. They're the best excuse for a long night with friends."
+      },
       {
         "heading": "On the table",
         "placeholder": "Catan, Risk, Secret Hitler: favorite strategies or house rules."
@@ -246,19 +282,24 @@
     "call": "794.8 XU",
     "spine": "#1f7a7a",
     "tagline": "League of Legends and Valorant: climbing ranked one game at a time.",
+    "description": "League of Legends and Valorant are my games of choice: one a strategy game about macro decisions and teamwork, the other a tactical shooter about aim, positioning and communication. I'm always working on climbing ranked, but the best nights are queueing up with friends.",
     "objectives": [
       "Climb the ranked ladder in League of Legends",
       "Sharpen my aim and crosshair placement in Valorant",
       "Queue up with friends for late-night games"
     ],
     "rewards": "Teamwork · Reflexes · Game sense",
-    "photo": "/assets/interests/videogames.svg",
+    "photo": "/assets/interests/photos/video-games-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/video-games-1.jpg",
+      "/assets/interests/photos/video-games-2.jpg",
+      "/assets/interests/photos/video-games-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I play",
+        "body": "Competitive games are a lot like any skill: improvement comes from reviewing mistakes, learning the meta and practising the fundamentals. League rewards thinking a few moves ahead; Valorant rewards precision under pressure. Both are at their best with a team that communicates."
+      },
       {
         "heading": "Mains",
         "placeholder": "Your League role and champions, and your Valorant agents."
@@ -276,19 +317,24 @@
     "call": "791.4334 XU",
     "spine": "#a33a6b",
     "tagline": "Binge-reading webnovels and watching anime, one more chapter or episode at a time.",
+    "description": "Webnovels and anime are my go-to stories: long-running series with huge worlds, power systems and plot twists I didn't see coming. I'll follow a webnovel for hundreds of chapters, binge a season of anime in a weekend, and then go looking for the next recommendation.",
     "objectives": [
       "Follow ongoing webnovels as new chapters drop",
       "Work through my anime watchlist",
       "Find the next series worth recommending"
     ],
     "rewards": "Worldbuilding · Plot twists · Late nights",
-    "photo": "/assets/interests/anime.svg",
+    "photo": "/assets/interests/photos/webnovels-anime-0.jpg",
     "gallery": [
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg",
-      "/assets/interests/placeholder.svg"
+      "/assets/interests/photos/webnovels-anime-1.jpg",
+      "/assets/interests/photos/webnovels-anime-2.jpg",
+      "/assets/interests/photos/webnovels-anime-3.jpg"
     ],
     "sections": [
+      {
+        "heading": "Why I read and watch",
+        "body": "I love stories that have room to build a whole world: the magic system, the politics, the side characters who end up mattering. Serialised fiction also makes it a shared experience, waiting for the next chapter or episode drop and talking theories with friends."
+      },
       {
         "heading": "Currently reading and watching",
         "placeholder": "Webnovels you're following and anime you're watching now."
