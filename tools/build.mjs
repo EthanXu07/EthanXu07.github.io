@@ -419,12 +419,14 @@ const cards = interests.map((it) => `        <article class="open-book" id="book
             </div>
             <h3 id="book-${it.slug}-title" tabindex="-1">${esc(it.title)}</h3>
             <p class="catalog-tagline">${esc(it.tagline)}</p>
+            <p class="open-book-desc">${esc(it.description)}</p>
             <dl class="catalog-meta">
               <dt>Section</dt><dd>${esc(it.type)}</dd>
               <dt>Subjects</dt><dd>${esc(it.rewards)}</dd>
             </dl>
           </div>
           <div class="open-book-page open-book-right">
+            <img class="open-book-plate" src="${esc(it.photo)}" alt="" loading="lazy" width="960" height="720">
             <p class="checkout-label">Contents</p>
             <ul class="quest-list">
 ${objectivesList(it)}
@@ -456,13 +458,13 @@ interests.forEach((it, i) => {
           ${s.body ? `<p>${esc(s.body)}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}
         </section>`).join('\n');
   const gallery = it.gallery.map((g, n) =>
-    `        <img src="${esc(g)}" alt="${esc(it.title)} photo ${n + 1}" loading="lazy" width="400" height="300">`).join('\n');
+    `        <img src="${esc(g)}" alt="${esc(it.title)} photo ${n + 1}" loading="lazy" width="960" height="720">`).join('\n');
   page({
     out: `interests/${it.slug}/index.html`, path: `/interests/${it.slug}/`, page: 'interests',
     title: `${it.title} · The library · Ethan Xu`, description: `${it.title}: ${it.tagline}`,
     content: fill(interestTpl, {
       num: String(i + 1), total: String(interests.length),
-      title: esc(it.title), tagline: esc(it.tagline), photo: esc(it.photo),
+      title: esc(it.title), tagline: esc(it.tagline), description: esc(it.description), photo: esc(it.photo),
       type: esc(it.type), call: esc(it.call), spine: esc(it.spine),
       rewards: esc(it.rewards), toc: tocList(it),
       sections, gallery,

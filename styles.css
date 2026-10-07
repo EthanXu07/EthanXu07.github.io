@@ -646,6 +646,8 @@ main.subpage { padding-top: 5rem; }
 .open-book-right { box-shadow: inset 14px 0 12px -10px rgba(42, 31, 26, .3); }
 .open-book h3 { margin: 0 0 .3rem; font: 700 1.6rem/1.2 var(--title); }
 .open-book h3:focus { outline: none; }
+.open-book-desc { margin: 0 0 .9rem; font-size: .98rem; line-height: 1.55rem; }   /* sits on the ruled lines */
+.open-book-plate { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: .9rem; box-shadow: 0 0 0 3px var(--edge); }
 .open-book .catalog-meta { margin-bottom: 0; }
 .open-book .checkout-label { margin-top: .6rem; }
 .open-book .quest-list { margin: 0 0 1.1rem; }
@@ -673,6 +675,7 @@ main.subpage { padding-top: 5rem; }
 .book-cover-title { margin: 1rem 0 0; text-align: center; font: .75rem var(--pixel); color: var(--gold); text-transform: uppercase; text-shadow: 2px 2px 0 rgba(0,0,0,.35); }
 .interest-hero .world-num { display: inline-block; margin-bottom: 1rem; }
 .interest-lede { margin: 1rem 0 0; font-size: 1.15rem; color: var(--text-light-2); }
+.interest-desc { margin: .9rem 0 0; color: var(--text-light); max-width: 34rem; }
 .call-chip { display: inline-block; margin: 1.1rem 0 0; padding: .45rem .6rem; font: .5rem/1.6 var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 3px var(--edge); }
 .checkout-label { margin: 0 0 .6rem; font: .55rem var(--pixel); color: var(--text-dark); text-transform: uppercase; letter-spacing: .06em; }
 /* Table of contents: a printed book page with dotted leaders */
