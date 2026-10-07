@@ -152,7 +152,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 //  Stepped reveal on scroll
 // =====================================================================
 (() => {
-  const targets = $$('.world-head, .portrait, .player-info, .overview-card, .quest, .item, .trophies, .interest, .interest-hero, .interest-section, .gallery, .save-box');
+  const targets = $$('.world-head, .portrait, .player-info, .overview-card, .quest, .item, .trophies, .interest, .interest-hero, .interest-section, .gallery, .bookcase, .catalog-card, .save-box');
   if (reduceMotion || !('IntersectionObserver' in window)) return;
   targets.forEach((el) => el.classList.add('reveal'));
   const io = new IntersectionObserver((entries) => {
@@ -164,13 +164,13 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 })();
 
 // =====================================================================
-//  Experience / side-quest filters
+//  Experience / library filters
 // =====================================================================
 $$('.chip').forEach((chip) => {
   chip.addEventListener('click', () => {
     const f = chip.dataset.filter;
     $$('.chip').forEach((c) => { c.classList.toggle('is-on', c === chip); c.setAttribute('aria-pressed', c === chip); });
-    $$('.quest').forEach((q) => { q.hidden = f !== 'all' && q.dataset.status !== f && q.dataset.type !== f; });
+    $$('.quest, .book, .catalog-card').forEach((q) => { q.hidden = f !== 'all' && q.dataset.status !== f && q.dataset.type !== f; });
   });
 });
 

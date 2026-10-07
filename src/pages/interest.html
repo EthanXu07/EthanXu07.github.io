@@ -1,40 +1,52 @@
-    <!-- ============ SIDE QUEST (generated per interest from src/interests.json) ============ -->
+    <!-- ============ VOLUME (generated per interest from src/interests.json) ============ -->
     <article class="world interest-page" data-checkpoint="{{title}}">
-      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/interests/">Side quests</a> <span aria-hidden="true">›</span> <span aria-current="page">{{title}}</span></nav>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/interests/">Library</a> <span aria-hidden="true">›</span> <span>{{type}}</span> <span aria-hidden="true">›</span> <span aria-current="page">{{title}}</span></nav>
 
       <header class="interest-hero">
-        <img class="interest-hero-photo px-box" src="{{photo}}" alt="{{title}}" width="400" height="300">
+        <div class="book-cover" style="--c: {{spine}}">
+          <img class="book-cover-photo" src="{{photo}}" alt="{{title}}" width="400" height="300">
+          <p class="book-cover-title">{{title}}</p>
+        </div>
         <div>
-          <p class="world-num">SIDE QUEST {{num}} / {{total}}</p>
+          <p class="world-num">VOLUME {{num}} / {{total}}</p>
           <h1 class="world-title">{{title}}</h1>
           <p class="interest-lede">{{tagline}}</p>
+          <p class="call-chip">Call no. {{call}} <span aria-hidden="true">·</span> {{type}} section</p>
         </div>
       </header>
 
-      <section class="quest px-box paper quest-details" aria-label="Quest details">
-        <div class="quest-top">
-          <span class="badge badge-active">● Ongoing</span>
-          <span class="quest-when">Side quest {{num}} / {{total}} · {{type}}</span>
+      <section class="catalog-card checkout-card" aria-label="Checkout card">
+        <div class="catalog-top">
+          <span class="catalog-call">{{call}}</span>
+          <span class="stamp">Ongoing</span>
         </div>
-        <p class="objectives-label">Objectives</p>
-        <ul class="quest-list">
+        <p class="checkout-label">Checkout card</p>
+        <dl class="catalog-meta">
+          <dt>Title</dt><dd>{{title}}</dd>
+          <dt>Section</dt><dd>{{type}}</dd>
+          <dt>Contents</dt>
+          <dd>
+            <ul class="quest-list">
 {{objectives}}
-        </ul>
-        <p class="reward"><span>Rewards</span> {{rewards}}</p>
+            </ul>
+          </dd>
+          <dt>Subjects</dt><dd>{{rewards}}</dd>
+          <dt>Due</dt><dd>Never. Renewed indefinitely</dd>
+        </dl>
       </section>
 
       <div class="interest-sections">
 {{sections}}
       </div>
 
-      <h2 class="mini-head">Gallery</h2>
+      <h2 class="mini-head">Illustrations</h2>
       <div class="gallery">
 {{gallery}}
       </div>
 
-      <nav class="interest-pager" aria-label="More side quests">
+      <nav class="interest-pager" aria-label="More volumes">
         <a class="btn btn-ghost" href="{{prevHref}}">◀ {{prevTitle}}</a>
-        <a class="btn btn-paper" href="/interests/">All side quests</a>
+        <a class="btn btn-paper" href="/interests/">Back to the shelf</a>
         <a class="btn btn-ghost" href="{{nextHref}}">{{nextTitle}} ▶</a>
       </nav>
     </article>

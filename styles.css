@@ -513,33 +513,153 @@ main.subpage { padding-top: 5rem; }
 .interest h3 { margin: 0 0 .4rem; font: 700 1.45rem/1.15 var(--title); color: var(--paper); }
 .interest p:not(.interest-tag) { margin: 0; color: var(--text-light-2); font-size: .95rem; }
 
-/* Side quests as quest-log entries */
-.side-quest { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
-@media (max-width: 44rem) { .side-quest { grid-template-columns: 1fr; } }
-.side-quest-photo { display: block; box-shadow: 0 0 0 3px var(--text-dark); }
-.side-quest-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink-3); }
-.side-quest h3 a { color: inherit; text-decoration: none; }
-.side-quest h3 a:hover { text-decoration: underline; text-decoration-thickness: 3px; }
 .objectives-label { margin: .9rem 0 .5rem; font: .5rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; }
-.side-quest-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; margin-top: 1rem; padding-top: .75rem; border-top: 2px dashed var(--paper-2); }
-.side-quest-foot .reward { margin: 0; padding: 0; border: 0; }
-.quest-details { margin-bottom: 1.75rem; }
-.quest-details .objectives-label { margin-top: .25rem; }
 
-/* Single interest page */
+/* ---------- The library (interests) ---------- */
+/* Bookcase: wooden frame, dark back panel, one shelf board under every row of books */
+.bookcase {
+  --wood: #8a5a3c; --wood-hi: #a8714a; --wood-lo: #5a3520; --back: #2a1d16;
+  --row: 15.5rem;        /* one shelf: books + board */
+  --board: 1rem;
+  margin-bottom: 1rem;
+  padding: 12px 12px 0;
+  background: var(--wood);
+  box-shadow: inset 4px 4px 0 var(--wood-hi), inset -4px 0 0 var(--wood-lo), 0 0 0 4px var(--edge), 8px 8px 0 var(--edge);
+}
+.books {
+  list-style: none; margin: 0; padding: 0 clamp(.75rem, 3vw, 1.75rem);
+  display: flex; flex-wrap: wrap; align-items: flex-end;
+  /* back panel planks + a shelf board at the bottom of every row */
+  background:
+    repeating-linear-gradient(to bottom,
+      transparent 0 calc(var(--row) - var(--board)),
+      var(--wood-hi) calc(var(--row) - var(--board)) calc(var(--row) - var(--board) + 4px),
+      var(--wood) calc(var(--row) - var(--board) + 4px) calc(var(--row) - 4px),
+      var(--wood-lo) calc(var(--row) - 4px) var(--row)),
+    repeating-linear-gradient(90deg, var(--back) 0 5.5rem, #241812 5.5rem calc(5.5rem + 4px));
+  box-shadow: inset 0 10px 0 rgba(0,0,0,.25);
+}
+.book, .bookend { height: var(--row); display: flex; align-items: flex-end; padding-bottom: var(--board); }
+.book { margin-right: 3px; }
+.book a {
+  display: flex; flex-direction: column; align-items: center;
+  width: var(--w, 3.6rem); height: var(--h, 12.5rem);
+  padding: 1.6rem 0 .6rem;
+  color: #fff8e8; text-decoration: none;
+  background-color: var(--c);
+  /* gilt bands near the top and bottom of the spine */
+  background-image: linear-gradient(var(--gold) 0 0), linear-gradient(var(--gold) 0 0), linear-gradient(var(--gold) 0 0);
+  background-size: 100% 4px, 100% 4px, 100% 3px;
+  background-position: 0 .55rem, 0 1rem, 0 calc(100% - 3.9rem);
+  background-repeat: no-repeat;
+  box-shadow: inset 5px 0 0 rgba(255,255,255,.18), inset -7px 0 0 rgba(0,0,0,.3), 0 0 0 3px var(--edge);
+  transition: transform .18s steps(3);
+}
+.book a:hover, .book a:focus-visible { transform: translateY(-.9rem); }
+.book a:focus-visible { outline-offset: 5px; }
+.book-title {
+  flex: 1; min-height: 0; overflow: hidden;
+  writing-mode: vertical-rl;            /* spine text reads top to bottom, like English-language books */
+  font: .62rem/1 var(--pixel); letter-spacing: .06em; text-transform: uppercase;
+  text-shadow: 2px 2px 0 rgba(0,0,0,.35);
+  padding: .3rem 0 .9rem;
+}
+/* white call-number sticker, as on a real library book */
+.book-label {
+  display: flex; flex-direction: column; align-items: center;
+  width: calc(100% - 1.1rem); padding: .3rem 0;
+  font: .42rem/1.45 var(--pixel); color: var(--text-dark);
+  background: #fffaf0; box-shadow: 0 0 0 2px var(--edge);
+}
+.bookend::before {   /* brass L-shaped bookend */
+  content: ""; display: block; width: 2.2rem; height: 6rem; margin-left: 2px;
+  background:
+    linear-gradient(#c9962a 0 0) left bottom / 100% .9rem no-repeat,
+    linear-gradient(90deg, #f3c969 0 4px, #c9962a 4px) left top / .9rem 100% no-repeat;
+  filter: drop-shadow(3px 0 0 var(--edge)) drop-shadow(0 -3px 0 var(--edge));
+}
+/* props share the shelf rows; drop them when the bookcase is narrow so books never wrap onto an empty shelf */
+.bookcase { container-type: inline-size; }
+.shelf-prop { height: var(--row); display: flex; align-items: flex-end; padding-bottom: var(--board); margin-left: clamp(1rem, 4vw, 2.5rem); }
+@container (max-width: 34rem) { .shelf-prop, .bookend { display: none; } }
+.prop-stack { flex-direction: column; justify-content: flex-end; align-items: flex-start; }
+.prop-stack span { display: block; height: 1.25rem; box-shadow: inset 0 4px 0 rgba(255,255,255,.15), inset 0 -4px 0 rgba(0,0,0,.25), 0 0 0 3px var(--edge); margin-top: 3px; }
+.prop-stack span:nth-child(1) { width: 7rem; margin-left: .6rem; background: var(--plum); }
+.prop-stack span:nth-child(2) { width: 8.5rem; background: var(--sage); }
+.prop-stack span:nth-child(3) { width: 8rem; margin-left: .3rem; background: var(--tomato-dark); }
+.prop-plant svg { display: block; width: 4rem; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 3px 0 rgba(0,0,0,.3)); }
+
+/* Card catalog: ruled index cards with a red header rule and a punched hole */
+.catalog { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 1.5rem; }
+.catalog-card {
+  --rule: 1.55rem;
+  position: relative;
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 1rem 1.2rem 2rem;
+  color: var(--text-dark);
+  background-color: #fffaf0;
+  background-image:
+    linear-gradient(rgba(212, 85, 58, .55) 0 0),
+    repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), rgba(143, 184, 201, .45) calc(var(--rule) - 1px) var(--rule));
+  background-size: 100% 2px, 100% 100%;
+  background-position: 0 2.6rem, 0 .6rem;
+  background-repeat: no-repeat, repeat;
+  box-shadow: 0 0 0 3px var(--edge), 6px 6px 0 var(--edge);
+}
+.catalog-card::after {   /* punched hole for the catalog drawer rod */
+  content: ""; position: absolute; left: 50%; bottom: .55rem; width: .9rem; height: .9rem; margin-left: -.45rem;
+  background: var(--ink); box-shadow: inset 2px 2px 0 rgba(0,0,0,.4);
+}
+.catalog-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; margin-bottom: .9rem; }
+.catalog-call { font: .55rem var(--pixel); color: var(--text-dark-2); letter-spacing: .04em; }
+.stamp {
+  padding: .3rem .45rem; font: .5rem var(--pixel); text-transform: uppercase;
+  color: var(--tomato); box-shadow: inset 0 0 0 2px var(--tomato);
+  transform: rotate(-5deg);
+}
+.catalog-card h3 { margin: 0 0 .3rem; font: 700 1.35rem/1.2 var(--title); }
+.catalog-card h3 a { color: inherit; text-decoration: none; }
+.catalog-card h3 a:hover { text-decoration: underline; text-decoration-thickness: 3px; }
+.catalog-tagline { margin: 0 0 .7rem; font-style: italic; color: var(--text-dark-2); }
+.catalog-meta { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .3rem .8rem; margin: 0 0 1.1rem; font-size: .95rem; }
+.catalog-meta dt { padding-top: .3rem; font: .45rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; }
+.catalog-meta dd { margin: 0; }
+.catalog-meta .quest-list { margin: 0; }
+.catalog-card .btn { margin-top: auto; }
+
+/* Single interest page: one volume */
 .breadcrumb { margin-bottom: 1.75rem; font: .55rem/1.8 var(--pixel); color: var(--text-light-2); text-transform: uppercase; }
 .breadcrumb a { color: var(--gold); text-decoration: none; }
 .breadcrumb a:hover { text-decoration: underline; }
-.interest-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; margin-bottom: 2.5rem; }
+.interest-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: center; margin-bottom: 2.5rem; }
 @media (max-width: 46rem) { .interest-hero { grid-template-columns: 1fr; } }
-.interest-hero-photo { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink-3); }
+/* hardback cover: coloured board, spine hinge on the left, photo plate, gilt title */
+.book-cover {
+  max-width: 22rem; padding: 1.1rem 1.1rem 1rem 2.1rem;
+  background-color: var(--c);
+  background-image: linear-gradient(90deg, rgba(0,0,0,.3) 0 .9rem, rgba(255,255,255,.12) .9rem calc(.9rem + 4px), transparent 0);
+  box-shadow: inset -6px -6px 0 rgba(0,0,0,.25), 0 0 0 4px var(--edge), 8px 8px 0 var(--edge);
+}
+.book-cover-photo { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink-3); box-shadow: 0 0 0 4px var(--gold); }
+.book-cover-title { margin: 1rem 0 0; text-align: center; font: .75rem var(--pixel); color: var(--gold); text-transform: uppercase; text-shadow: 2px 2px 0 rgba(0,0,0,.35); }
 .interest-hero .world-num { display: inline-block; margin-bottom: 1rem; }
 .interest-lede { margin: 1rem 0 0; font-size: 1.15rem; color: var(--text-light-2); }
+.call-chip { display: inline-block; margin: 1.1rem 0 0; padding: .45rem .6rem; font: .5rem/1.6 var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 3px var(--edge); }
+.checkout-card { max-width: 40rem; margin-bottom: 2.25rem; padding-bottom: 2.2rem; }
+.checkout-label { margin: 0 0 .6rem; font: .55rem var(--pixel); color: var(--text-dark); text-transform: uppercase; letter-spacing: .06em; }
+/* chapters read like pages of the book */
 .interest-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1.75rem; }
-.interest-section { padding: 1.25rem 1.4rem; }
-.interest-section h2 { margin: 0 0 .6rem; font: 700 1.35rem/1.2 var(--title); color: var(--paper); }
-.interest-section p { margin: 0; color: var(--text-light-2); }
+.chapter {
+  padding: 1.25rem 1.4rem 1.4rem;
+  color: var(--text-dark);
+  background: var(--paper);
+  box-shadow: inset 6px 0 0 var(--paper-2), 0 0 0 3px var(--edge), 6px 6px 0 var(--edge);
+}
+.chapter-num { margin: 0 0 .5rem; font: .5rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; letter-spacing: .06em; }
+.chapter h2 { margin: 0 0 .6rem; font: 700 1.35rem/1.2 var(--title); color: var(--text-dark); }
+.chapter p { margin: 0; }
 .placeholder-note { padding: .75rem .9rem; border: 2px dashed var(--ink-3); color: var(--text-light-2); font-style: italic; }
+.chapter .placeholder-note { border-color: var(--paper-2); color: var(--text-dark-2); }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: 1rem; }
 .gallery img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink-3); box-shadow: 0 0 0 3px var(--edge); }
 .interest-pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; margin-top: 3rem; }
