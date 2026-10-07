@@ -63,6 +63,7 @@
         <button class="chip" data-filter="sports" aria-pressed="false">Sports</button>
         <button class="chip" data-filter="food" aria-pressed="false">Food</button>
         <button class="chip" data-filter="games" aria-pressed="false">Games</button>
+        <button class="chip" data-filter="stories" aria-pressed="false">Stories</button>
       </div>
 
       <div class="bookcase">
@@ -91,22 +92,40 @@
               <span class="book-label" aria-label="call number 797.21 XU"><span>797</span><span>.21</span><span>XU</span></span>
             </a>
           </li>
-          <li class="book" data-type="food" style="--c: #b57a1c; --h: 13.25rem; --w: 3.6rem">
+          <li class="book" data-type="sports" style="--c: #4d555e; --h: 13.25rem; --w: 3.6rem">
+            <a href="/interests/gym/" data-book="gym" aria-controls="book-gym" aria-expanded="false" title="Lifting, progressive overload and showing up even when I don't feel like it.">
+              <span class="book-title">Gym</span>
+              <span class="book-label" aria-label="call number 613.71 XU"><span>613</span><span>.71</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="food" style="--c: #b57a1c; --h: 11.5rem; --w: 3.4rem">
             <a href="/interests/eating/" data-book="eating" aria-controls="book-eating" aria-expanded="false" title="Always hunting for the next great meal. Taste-testing counts as a sport.">
               <span class="book-title">Eating</span>
               <span class="book-label" aria-label="call number 394.12 XU"><span>394</span><span>.12</span><span>XU</span></span>
             </a>
           </li>
-          <li class="book" data-type="games" style="--c: #7a2e3a; --h: 11.5rem; --w: 3.4rem">
+          <li class="book" data-type="games" style="--c: #7a2e3a; --h: 13rem; --w: 3.7rem">
             <a href="/interests/card-games/" data-book="card-games" aria-controls="book-card-games" aria-expanded="false" title="Poker and blackjack: reading the table and playing the odds.">
               <span class="book-title">Card games</span>
               <span class="book-label" aria-label="call number 795.4 XU"><span>795</span><span>.4</span><span>XU</span></span>
             </a>
           </li>
-          <li class="book" data-type="games" style="--c: #4a3f7a; --h: 13rem; --w: 3.7rem">
+          <li class="book" data-type="games" style="--c: #4a3f7a; --h: 11.75rem; --w: 3.3rem">
             <a href="/interests/board-games/" data-book="board-games" aria-controls="book-board-games" aria-expanded="false" title="Catan, Risk and Secret Hitler: trading, conquering and bluffing on game night.">
               <span class="book-title">Board games</span>
               <span class="book-label" aria-label="call number 794 XU"><span>794</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="games" style="--c: #1f7a7a; --h: 12.75rem; --w: 3.9rem">
+            <a href="/interests/video-games/" data-book="video-games" aria-controls="book-video-games" aria-expanded="false" title="League of Legends and Valorant: climbing ranked one game at a time.">
+              <span class="book-title">Video games</span>
+              <span class="book-label" aria-label="call number 794.8 XU"><span>794</span><span>.8</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="stories" style="--c: #a33a6b; --h: 12rem; --w: 3.5rem">
+            <a href="/interests/webnovels-anime/" data-book="webnovels-anime" aria-controls="book-webnovels-anime" aria-expanded="false" title="Binge-reading webnovels and watching anime, one more chapter or episode at a time.">
+              <span class="book-title">Webnovels &amp; anime</span>
+              <span class="book-label" aria-label="call number 791.4334 XU"><span>791</span><span>.4334</span><span>XU</span></span>
             </a>
           </li>
           <li class="bookend" aria-hidden="true"></li>
@@ -241,6 +260,32 @@
             </div>
           </div>
         </article>
+        <article class="open-book" id="book-gym" style="--c: #4d555e" aria-labelledby="book-gym-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">613.71 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-gym-title" tabindex="-1">Gym</h3>
+            <p class="catalog-tagline">Lifting, progressive overload and showing up even when I don't feel like it.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Sports</dd>
+              <dt>Subjects</dt><dd>Strength · Discipline · Stress relief</dd>
+            </dl>
+          </div>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Keep a consistent lifting split</li>
+              <li>Add a little weight or a rep every week</li>
+              <li>Never skip leg day (mostly)</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/gym/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
         <article class="open-book" id="book-eating" style="--c: #b57a1c" aria-labelledby="book-eating-title" hidden>
           <div class="open-book-page open-book-left">
             <div class="catalog-top">
@@ -315,6 +360,58 @@
             </ul>
             <div class="open-book-actions">
               <a class="btn btn-tomato btn-sm" href="/interests/board-games/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
+        <article class="open-book" id="book-video-games" style="--c: #1f7a7a" aria-labelledby="book-video-games-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">794.8 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-video-games-title" tabindex="-1">Video games</h3>
+            <p class="catalog-tagline">League of Legends and Valorant: climbing ranked one game at a time.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Games</dd>
+              <dt>Subjects</dt><dd>Teamwork · Reflexes · Game sense</dd>
+            </dl>
+          </div>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Climb the ranked ladder in League of Legends</li>
+              <li>Sharpen my aim and crosshair placement in Valorant</li>
+              <li>Queue up with friends for late-night games</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/video-games/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
+              <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
+            </div>
+          </div>
+        </article>
+        <article class="open-book" id="book-webnovels-anime" style="--c: #a33a6b" aria-labelledby="book-webnovels-anime-title" hidden>
+          <div class="open-book-page open-book-left">
+            <div class="catalog-top">
+              <span class="catalog-call">791.4334 XU</span>
+              <span class="stamp">Ongoing</span>
+            </div>
+            <h3 id="book-webnovels-anime-title" tabindex="-1">Webnovels &amp; anime</h3>
+            <p class="catalog-tagline">Binge-reading webnovels and watching anime, one more chapter or episode at a time.</p>
+            <dl class="catalog-meta">
+              <dt>Section</dt><dd>Stories</dd>
+              <dt>Subjects</dt><dd>Worldbuilding · Plot twists · Late nights</dd>
+            </dl>
+          </div>
+          <div class="open-book-page open-book-right">
+            <p class="checkout-label">Contents</p>
+            <ul class="quest-list">
+              <li>Follow ongoing webnovels as new chapters drop</li>
+              <li>Work through my anime watchlist</li>
+              <li>Find the next series worth recommending</li>
+            </ul>
+            <div class="open-book-actions">
+              <a class="btn btn-tomato btn-sm" href="/interests/webnovels-anime/">Read the full volume <span class="tri" aria-hidden="true"></span></a>
               <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
             </div>
           </div>
