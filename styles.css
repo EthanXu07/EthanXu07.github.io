@@ -607,18 +607,69 @@ main.subpage { padding-top: 5rem; }
 /* Reading desk: the opened book lies on a wooden desktop under the shelf */
 .reading-desk { position: relative; margin-top: 2.25rem; padding: 0 clamp(.5rem, 3vw, 2rem); }
 .desk-top {
-  height: 1.4rem; margin: 0 calc(-1 * clamp(.5rem, 3vw, 2rem));
+  display: flex; justify-content: center; align-items: center;
+  min-height: 2.6rem; padding: .45rem 1rem; margin: 0 calc(-1 * clamp(.5rem, 3vw, 2rem));
   background: #8a5a3c;
   box-shadow: inset 0 4px 0 #a8714a, inset 0 -5px 0 #5a3520, 0 0 0 4px var(--edge), 8px 8px 0 var(--edge);
 }
-.desk-empty {
-  display: flex; align-items: flex-end; justify-content: center; gap: 1.25rem;
-  min-height: 9rem; padding: 1rem 1rem 0;
-  border: 3px dashed var(--ink-3); border-bottom: 0;
+/* brass plaque screwed to the front of the desk */
+.desk-plaque {
+  position: relative; margin: 0; padding: .35rem .9rem;
+  font: .45rem/1.7 var(--pixel); text-align: center; text-transform: uppercase; letter-spacing: .04em;
+  color: #3a2810; background: linear-gradient(#f3c969, #c9962a);
+  box-shadow: inset 0 -2px 0 #9a6f1a, 0 0 0 2px var(--edge);
 }
-.desk-empty p { margin: 0 0 1.4rem; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
-.desk-empty p::before { content: "▲ "; }
-.desk-lamp { flex: none; width: 4rem; height: auto; image-rendering: pixelated; }
+.desk-plaque::before, .desk-plaque::after { content: ""; position: absolute; top: 50%; width: 4px; height: 4px; margin-top: -2px; background: #7a5512; }
+.desk-plaque::before { left: 4px; } .desk-plaque::after { right: 4px; }
+
+/* Desk scene while no book is open: lamp, returns pile, date stamp, hint, mug, "On hold" note */
+.desk-empty {
+  display: grid; align-items: end; gap: 1rem 1.25rem;
+  grid-template-columns: auto auto auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "lamp returns stamp hint mug note";
+  min-height: 11rem; padding-top: 1rem;
+}
+.desk-lamp { grid-area: lamp; }
+.desk-returns { grid-area: returns; }
+.desk-stamp { grid-area: stamp; }
+.desk-hint { grid-area: hint; }
+.desk-mug { grid-area: mug; }
+.on-hold { grid-area: note; }
+@media (max-width: 52rem) {
+  .desk-empty {
+    grid-template-columns: repeat(4, auto); justify-content: space-around;
+    grid-template-areas: "hint hint hint hint" "note note note note" "lamp returns stamp mug";
+  }
+  .on-hold { justify-self: center; }
+}
+.desk-prop { display: block; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 0 0 rgba(0,0,0,.25)); }
+.desk-lamp { width: 4rem; }
+.desk-stamp { width: 3rem; }
+.desk-mug { width: 3.5rem; }
+.desk-mug .steam { animation: steam 1.6s steps(2) infinite; }
+@keyframes steam { 50% { transform: translateY(-1px); opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .desk-mug .steam { animation: none; } }
+.desk-returns { position: relative; display: flex; flex-direction: column; align-items: flex-start; filter: none; }
+.desk-returns span { display: block; height: .95rem; margin-top: 3px; box-shadow: inset 0 3px 0 rgba(255,255,255,.15), inset 0 -3px 0 rgba(0,0,0,.25), 0 0 0 3px var(--edge); }
+.desk-returns span:nth-child(1) { width: 4.6rem; margin-left: .5rem; background: var(--sky); }
+.desk-returns span:nth-child(2) { width: 5.4rem; background: var(--gold-dark); }
+.desk-returns span:nth-child(3) { width: 5rem; margin-left: .25rem; background: var(--plum); }
+.desk-returns b { position: absolute; top: -1.35rem; left: 1.2rem; padding: .15rem .35rem; font: .4rem var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 2px var(--edge); transform: rotate(-4deg); }
+.desk-hint { margin: 0 0 .6rem; text-align: center; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
+.desk-hint::before { content: "▲ "; }
+/* pinned "On hold" note: hobbies on the waiting list */
+.on-hold {
+  position: relative; width: 13.5rem; margin-bottom: .4rem; padding: 1.1rem 1rem .8rem;
+  color: var(--text-dark); background: #fff1a8;
+  box-shadow: 0 0 0 3px var(--edge), 5px 5px 0 rgba(0,0,0,.35);
+  transform: rotate(2deg);
+}
+.on-hold::before { content: ""; position: absolute; top: -.45rem; left: 50%; width: .9rem; height: .9rem; margin-left: -.45rem; background: var(--tomato); box-shadow: inset -3px -3px 0 var(--tomato-dark), 0 0 0 2px var(--edge); }
+.on-hold-title { margin: 0 0 .5rem; font: .6rem var(--pixel); text-transform: uppercase; letter-spacing: .06em; }
+.on-hold ul { list-style: none; margin: 0; padding: 0; font-size: .95rem; }
+.on-hold li { display: flex; align-items: center; gap: .55rem; padding: .1rem 0; }
+.on-hold li::before { content: ""; flex: none; width: .7rem; height: .7rem; box-shadow: inset 0 0 0 2px var(--text-dark); }
+.on-hold-foot { margin: .6rem 0 0; font: .4rem/1.6 var(--pixel); color: var(--text-dark-2); text-transform: uppercase; }
 .open-book {
   --rule: 1.55rem;
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));

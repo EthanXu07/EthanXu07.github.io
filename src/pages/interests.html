@@ -33,17 +33,43 @@
 
       <!-- Reading desk: a picked book opens here; one per interest, hidden until its spine is clicked -->
       <div class="reading-desk">
+        <!-- Desk scene, shown while every book is on the shelf -->
         <div class="desk-empty" id="shelfHint">
-          <svg class="desk-lamp" viewBox="0 0 16 20" width="64" height="80" shape-rendering="crispEdges" aria-hidden="true">
+          <svg class="desk-prop desk-lamp" viewBox="0 0 16 20" width="64" height="80" shape-rendering="crispEdges" aria-hidden="true">
             <path fill="#2a1f1a" d="M3 18h10v2H3zM7 8h2v10H7z"/>
             <path fill="#5f9c8f" d="M4 1h8v1H4zM3 2h10v4H3zM2 6h12v2H2z"/>
             <path fill="#8fbfb2" d="M4 2h2v4H4z"/>
             <path fill="#f3c969" d="M5 8h6v1H5z"/>
             <path fill="#4a463e" d="M4 18h8v1H4z"/>
           </svg>
-          <p>Pick a book off the shelf to read it here.</p>
+          <div class="desk-prop desk-returns" aria-hidden="true"><span></span><span></span><span></span><b>Returns</b></div>
+          <svg class="desk-prop desk-stamp" viewBox="0 0 16 16" width="48" height="48" shape-rendering="crispEdges" aria-hidden="true">
+            <path fill="#8a5a3c" d="M6 1h4v2H6zM7 3h2v5H7z"/>
+            <path fill="#a8714a" d="M6 1h1v2H6z"/>
+            <path fill="#2a1f1a" d="M4 8h8v3H4z"/>
+            <path fill="#9c3423" d="M1 12h14v3H1z"/>
+            <path fill="#d4553a" d="M2 12h12v1H2z"/>
+          </svg>
+          <p class="desk-hint">Pick a book off the shelf to read it here.</p>
+          <svg class="desk-prop desk-mug" viewBox="0 0 16 18" width="56" height="63" shape-rendering="crispEdges" aria-hidden="true">
+            <g class="steam" fill="#b9b39c"><path d="M5 0h1v2H5zM4 2h1v2H4zM9 1h1v2H9zM10 3h1v2h-1z"/></g>
+            <path fill="#f1e6cc" d="M2 6h9v10H2zM3 16h7v1H3z"/>
+            <path fill="#cbbd9c" d="M9 6h2v10H9z"/>
+            <path fill="#d4553a" d="M2 9h9v2H2z"/>
+            <path fill="#f1e6cc" d="M11 8h3v1h-3zM13 9h1v4h-1zM11 13h3v1h-3z"/>
+            <path fill="#5e3a22" d="M3 6h7v1H3z"/>
+          </svg>
+          <aside class="on-hold" aria-labelledby="onHoldTitle">
+            <p class="on-hold-title" id="onHoldTitle">On hold</p>
+            <ul>
+{{onHold}}
+            </ul>
+            <p class="on-hold-foot">{{onHoldCount}} volumes waiting to be written</p>
+          </aside>
         </div>
 {{cards}}
-        <div class="desk-top" aria-hidden="true"></div>
+        <div class="desk-top">
+          <p class="desk-plaque">{{stats}}</p>
+        </div>
       </div>
     </section>

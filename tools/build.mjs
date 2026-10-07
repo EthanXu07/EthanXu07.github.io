@@ -440,9 +440,17 @@ ${objectivesList(it)}
 const chips = [...new Set(interests.map((it) => it.type))]
   .map((t) => `        <button class="chip" data-filter="${slugify(t)}" aria-pressed="false">${esc(t)}</button>`).join('\n');
 
+// Desk: "On hold" note (hobbies to pick up next) and a brass plaque with shelf stats
+const onHoldItems = json('data/on-hold.json').items;
+const onHold = onHoldItems.map((h) => `              <li>${esc(h)}</li>`).join('\n');
+const sectionCount = new Set(interests.map((it) => it.type)).size;
+const shelved = new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+const libraryStats = [`${interests.length} volumes`, `${sectionCount} sections`, '0 overdue', `Last shelved ${shelved}`]
+  .map(esc).join(' <span aria-hidden="true">·</span> ');
+
 page({
   out: 'interests/index.html', path: '/interests/', page: 'interests', title: 'The library · Ethan Xu', description: 'What Ethan Xu does when he is not coding.',
-  content: fill(src('pages/interests.html'), { spines, cards, chips }),
+  content: fill(src('pages/interests.html'), { spines, cards, chips, onHold, onHoldCount: String(onHoldItems.length), stats: libraryStats }),
 });
 
 const interestTpl = src('pages/interest.html');
