@@ -555,8 +555,8 @@ main.subpage { padding-top: 5rem; }
   box-shadow: inset 5px 0 0 rgba(255,255,255,.18), inset -7px 0 0 rgba(0,0,0,.3), 0 0 0 3px var(--edge);
   transition: transform .18s steps(3);
 }
-.book a:hover, .book a:focus-visible { transform: translateY(-.9rem); }
-.book.is-out a { transform: translateY(-1.7rem); box-shadow: inset 5px 0 0 rgba(255,255,255,.18), inset -7px 0 0 rgba(0,0,0,.3), 0 0 0 3px var(--edge), 0 0 0 6px var(--gold); }
+.book a:hover, .book a:focus-visible { transform: translateY(-.8rem); }
+.book.is-out a { transform: translateY(-1.2rem);   /* tallest spine (13.25rem) + lift stays under the shelf above */ box-shadow: inset 5px 0 0 rgba(255,255,255,.18), inset -7px 0 0 rgba(0,0,0,.3), 0 0 0 3px var(--edge), 0 0 0 6px var(--gold); }
 .book a:focus-visible { outline-offset: 5px; }
 .book-title {
   flex: 1; min-height: 0; overflow: hidden;
