@@ -1,18 +1,38 @@
-    <!-- ============ WORLD 4: SIDE QUESTS (hub) ============ -->
-    <!-- Quest cards are generated from src/interests.json -->
-    <section id="interests" class="world" data-checkpoint="Side quests">
+    <!-- ============ WORLD 5: THE LIBRARY (hub) ============ -->
+    <!-- Book spines and catalog cards are generated from src/interests.json -->
+    <section id="interests" class="world" data-checkpoint="Library">
       <header class="world-head">
         <p class="world-num">WORLD 5</p>
-        <h1 class="world-title">Side quests</h1>
+        <h1 class="world-title">The library</h1>
       </header>
-      <p class="section-lede">What I'm up to when I'm not coding. Every one of these is still in progress.</p>
+      <p class="section-lede">What I'm up to when I'm not coding. Every interest is a book I'm still writing. Pull one off the shelf.</p>
 
-      <div class="filter" role="group" aria-label="Filter side quests">
-        <button class="chip is-on" data-filter="all" aria-pressed="true">All</button>
+      <div class="filter" role="group" aria-label="Browse the library by section">
+        <button class="chip is-on" data-filter="all" aria-pressed="true">All sections</button>
 {{chips}}
       </div>
 
-      <ol class="quests side-quests">
+      <div class="bookcase">
+        <ul class="books" aria-label="Bookshelf">
+{{spines}}
+          <li class="bookend" aria-hidden="true"></li>
+          <!-- shelf props: decorative, hidden on narrow screens -->
+          <li class="shelf-prop prop-stack" aria-hidden="true"><span></span><span></span><span></span></li>
+          <li class="shelf-prop prop-plant" aria-hidden="true">
+            <svg viewBox="0 0 16 22" width="64" height="88" shape-rendering="crispEdges">
+              <path fill="#3f6b33" d="M7 1h2v2H7zM4 3h2v2H4zM10 3h2v2h-2zM2 6h3v2H2zM11 6h3v2h-3zM6 3h4v9H6zM3 5h3v3H3zM10 5h3v3h-3zM1 8h4v2H1zM11 8h4v2h-4z"/>
+              <path fill="#7aa35a" d="M7 2h1v8H7zM4 4h1v1H4zM11 4h1v1h-1zM2 7h2v1H2zM12 7h2v1h-2zM5 6h1v1H5zM10 6h1v1h-1z"/>
+              <path fill="#2e4d26" d="M9 4h1v7H9zM12 9h2v1h-2zM2 9h2v1H2z"/>
+              <path fill="#b0603c" d="M3 12h10v2H3zM4 14h8v8H4z"/>
+              <path fill="#d4835a" d="M3 12h10v1H3zM5 14h1v7H5z"/>
+              <path fill="#7a3d22" d="M11 14h1v8h-1zM4 21h8v1H4z"/>
+            </svg>
+          </li>
+        </ul>
+      </div>
+
+      <h2 class="mini-head">Card catalog</h2>
+      <ol class="catalog">
 {{cards}}
       </ol>
     </section>

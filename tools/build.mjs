@@ -7,7 +7,7 @@
 //   src/data/experience.json  experience (jobs + research) ┐ one source of truth for
 //   src/data/projects.json    projects + trophies          │ experience, projects and the skill tree
 //   src/data/skills.json      skill tree branches        │
-//   src/interests.json        side quests                ┘
+//   src/interests.json        interests (the library)    ┘
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -393,42 +393,50 @@ page({
   content: fill(src('pages/skills.html'), { branches: branches.map(renderBranch).join('\n'), skillData: inlineJson(skillData) }),
 });
 
-// ---------------------------------------------------------------- Interests
+// ---------------------------------------------------------------- Interests (the library)
 const objectivesList = (it) => it.objectives.map((o) => `              <li>${esc(o)}</li>`).join('\n');
-const cards = interests.map((it, i) => `        <li class="quest side-quest px-box paper" data-type="${slugify(it.type)}">
-          <a class="side-quest-photo" href="/interests/${it.slug}/" tabindex="-1" aria-hidden="true">
-            <img src="${esc(it.photo)}" alt="" loading="lazy" width="400" height="300">
-          </a>
-          <div class="side-quest-body">
-            <div class="quest-top">
-              <span class="badge badge-active">● Ongoing</span>
-              <span class="quest-when">Side quest ${i + 1} · ${esc(it.type)}</span>
-            </div>
-            <h3><a href="/interests/${it.slug}/">${esc(it.title)}</a></h3>
-            <p class="quest-org">${esc(it.tagline)}</p>
-            <p class="objectives-label">Objectives</p>
-            <ul class="quest-list">
-${objectivesList(it)}
-            </ul>
-            <div class="side-quest-foot">
-              <p class="reward"><span>Rewards</span> ${esc(it.rewards)}</p>
-              <a class="btn btn-tomato btn-sm" href="/interests/${it.slug}/">View quest ${TRI}</a>
-            </div>
+// Spines vary a little in height and width so the shelf looks hand-stacked
+const SPINE_H = [13, 11.75, 12.75, 12, 13.25, 11.5];
+const SPINE_W = [3.7, 3.3, 3.9, 3.5, 3.6, 3.4];
+// "796.51 XU" → sticker lines "796" / ".51" / "XU"
+const callLines = (call) => {
+  const [num, cutter] = call.split(' ');
+  const [whole, dec] = num.split('.');
+  return [whole, dec ? `.${dec}` : '', cutter].filter(Boolean).map((l) => `<span>${esc(l)}</span>`).join('');
+};
+const spines = interests.map((it, i) => `          <li class="book" data-type="${slugify(it.type)}" style="--c: ${esc(it.spine)}; --h: ${SPINE_H[i % SPINE_H.length]}rem; --w: ${SPINE_W[i % SPINE_W.length]}rem">
+            <a href="/interests/${it.slug}/" title="${esc(it.tagline)}">
+              <span class="book-title">${esc(it.title)}</span>
+              <span class="book-label" aria-label="call number ${esc(it.call)}">${callLines(it.call)}</span>
+            </a>
+          </li>`).join('\n');
+const cards = interests.map((it) => `        <li class="catalog-card" data-type="${slugify(it.type)}">
+          <div class="catalog-top">
+            <span class="catalog-call">${esc(it.call)}</span>
+            <span class="stamp">Ongoing</span>
           </div>
+          <h3><a href="/interests/${it.slug}/">${esc(it.title)}</a></h3>
+          <p class="catalog-tagline">${esc(it.tagline)}</p>
+          <dl class="catalog-meta">
+            <dt>Section</dt><dd>${esc(it.type)}</dd>
+            <dt>Subjects</dt><dd>${esc(it.rewards)}</dd>
+          </dl>
+          <a class="btn btn-tomato btn-sm" href="/interests/${it.slug}/">Check out ${TRI}</a>
         </li>`).join('\n');
 const chips = [...new Set(interests.map((it) => it.type))]
   .map((t) => `        <button class="chip" data-filter="${slugify(t)}" aria-pressed="false">${esc(t)}</button>`).join('\n');
 
 page({
-  out: 'interests/index.html', path: '/interests/', page: 'interests', title: 'Side quests · Ethan Xu', description: 'What Ethan Xu does when he is not coding.',
-  content: fill(src('pages/interests.html'), { cards, chips }),
+  out: 'interests/index.html', path: '/interests/', page: 'interests', title: 'The library · Ethan Xu', description: 'What Ethan Xu does when he is not coding.',
+  content: fill(src('pages/interests.html'), { spines, cards, chips }),
 });
 
 const interestTpl = src('pages/interest.html');
 interests.forEach((it, i) => {
   const prev = interests[(i - 1 + interests.length) % interests.length];
   const next = interests[(i + 1) % interests.length];
-  const sections = it.sections.map((s) => `        <section class="interest-section px-box">
+  const sections = it.sections.map((s, n) => `        <section class="interest-section chapter">
+          <p class="chapter-num">Chapter ${n + 1}</p>
           <h2>${esc(s.heading)}</h2>
           ${s.body ? `<p>${esc(s.body)}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}
         </section>`).join('\n');
@@ -436,11 +444,12 @@ interests.forEach((it, i) => {
     `        <img src="${esc(g)}" alt="${esc(it.title)} photo ${n + 1}" loading="lazy" width="400" height="300">`).join('\n');
   page({
     out: `interests/${it.slug}/index.html`, path: `/interests/${it.slug}/`, page: 'interests',
-    title: `${it.title} · Side quests · Ethan Xu`, description: `${it.title}: ${it.tagline}`,
+    title: `${it.title} · The library · Ethan Xu`, description: `${it.title}: ${it.tagline}`,
     content: fill(interestTpl, {
       num: String(i + 1), total: String(interests.length),
       title: esc(it.title), tagline: esc(it.tagline), photo: esc(it.photo),
-      type: esc(it.type), rewards: esc(it.rewards), objectives: objectivesList(it),
+      type: esc(it.type), call: esc(it.call), spine: esc(it.spine),
+      rewards: esc(it.rewards), objectives: objectivesList(it),
       sections, gallery,
       prevHref: `/interests/${prev.slug}/`, prevTitle: esc(prev.title),
       nextHref: `/interests/${next.slug}/`, nextTitle: esc(next.title),

@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Side quests · Ethan Xu</title>
+  <title>The library · Ethan Xu</title>
   <meta name="description" content="What Ethan Xu does when he is not coding.">
   <link rel="canonical" href="https://ethanxu.dev/interests/">
   <meta property="og:url" content="https://ethanxu.dev/interests/">
-  <meta property="og:title" content="Side quests · Ethan Xu">
+  <meta property="og:title" content="The library · Ethan Xu">
   <meta property="og:description" content="What Ethan Xu does when he is not coding.">
   <meta name="theme-color" content="#1c2a25">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -48,137 +48,136 @@
   </aside>
 
   <main id="content" class="subpage">
-    <!-- ============ WORLD 4: SIDE QUESTS (hub) ============ -->
-    <!-- Quest cards are generated from src/interests.json -->
-    <section id="interests" class="world" data-checkpoint="Side quests">
+    <!-- ============ WORLD 5: THE LIBRARY (hub) ============ -->
+    <!-- Book spines and catalog cards are generated from src/interests.json -->
+    <section id="interests" class="world" data-checkpoint="Library">
       <header class="world-head">
         <p class="world-num">WORLD 5</p>
-        <h1 class="world-title">Side quests</h1>
+        <h1 class="world-title">The library</h1>
       </header>
-      <p class="section-lede">What I'm up to when I'm not coding. Every one of these is still in progress.</p>
+      <p class="section-lede">What I'm up to when I'm not coding. Every interest is a book I'm still writing. Pull one off the shelf.</p>
 
-      <div class="filter" role="group" aria-label="Filter side quests">
-        <button class="chip is-on" data-filter="all" aria-pressed="true">All</button>
+      <div class="filter" role="group" aria-label="Browse the library by section">
+        <button class="chip is-on" data-filter="all" aria-pressed="true">All sections</button>
         <button class="chip" data-filter="outdoors" aria-pressed="false">Outdoors</button>
         <button class="chip" data-filter="sports" aria-pressed="false">Sports</button>
         <button class="chip" data-filter="food" aria-pressed="false">Food</button>
       </div>
 
-      <ol class="quests side-quests">
-        <li class="quest side-quest px-box paper" data-type="outdoors">
-          <a class="side-quest-photo" href="/interests/hiking/" tabindex="-1" aria-hidden="true">
-            <img src="/assets/interests/hiking.svg" alt="" loading="lazy" width="400" height="300">
-          </a>
-          <div class="side-quest-body">
-            <div class="quest-top">
-              <span class="badge badge-active">● Ongoing</span>
-              <span class="quest-when">Side quest 1 · Outdoors</span>
-            </div>
-            <h3><a href="/interests/hiking/">Hiking</a></h3>
-            <p class="quest-org">Trails, switchbacks and whatever view is waiting at the top.</p>
-            <p class="objectives-label">Objectives</p>
-            <ul class="quest-list">
-              <li>Find the trailhead, follow the switchbacks, earn the view</li>
-              <li>Explore the Berkeley Hills and trails beyond the Bay</li>
-              <li>Bring back summit photos for the gallery</li>
-            </ul>
-            <div class="side-quest-foot">
-              <p class="reward"><span>Rewards</span> Fresh air · Views · Leg day</p>
-              <a class="btn btn-tomato btn-sm" href="/interests/hiking/">View quest <span class="tri" aria-hidden="true"></span></a>
-            </div>
+      <div class="bookcase">
+        <ul class="books" aria-label="Bookshelf">
+          <li class="book" data-type="outdoors" style="--c: #4f7a3a; --h: 13rem; --w: 3.7rem">
+            <a href="/interests/hiking/" title="Trails, switchbacks and whatever view is waiting at the top.">
+              <span class="book-title">Hiking</span>
+              <span class="book-label" aria-label="call number 796.51 XU"><span>796</span><span>.51</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="sports" style="--c: #a8432c; --h: 11.75rem; --w: 3.3rem">
+            <a href="/interests/racket-sports/" title="If there's a racket, a net and a rally, I'm in.">
+              <span class="book-title">Racket sports</span>
+              <span class="book-label" aria-label="call number 796.34 XU"><span>796</span><span>.34</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="sports" style="--c: #2f5d73; --h: 12.75rem; --w: 3.9rem">
+            <a href="/interests/soccer/" title="Always down for a pickup game.">
+              <span class="book-title">Soccer</span>
+              <span class="book-label" aria-label="call number 796.334 XU"><span>796</span><span>.334</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="sports" style="--c: #3d7f9a; --h: 12rem; --w: 3.5rem">
+            <a href="/interests/swimming/" title="Laps in the pool are my favorite way to reset.">
+              <span class="book-title">Swimming</span>
+              <span class="book-label" aria-label="call number 797.21 XU"><span>797</span><span>.21</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="book" data-type="food" style="--c: #b57a1c; --h: 13.25rem; --w: 3.6rem">
+            <a href="/interests/eating/" title="Always hunting for the next great meal. Taste-testing counts as a sport.">
+              <span class="book-title">Eating</span>
+              <span class="book-label" aria-label="call number 394.12 XU"><span>394</span><span>.12</span><span>XU</span></span>
+            </a>
+          </li>
+          <li class="bookend" aria-hidden="true"></li>
+          <!-- shelf props: decorative, hidden on narrow screens -->
+          <li class="shelf-prop prop-stack" aria-hidden="true"><span></span><span></span><span></span></li>
+          <li class="shelf-prop prop-plant" aria-hidden="true">
+            <svg viewBox="0 0 16 22" width="64" height="88" shape-rendering="crispEdges">
+              <path fill="#3f6b33" d="M7 1h2v2H7zM4 3h2v2H4zM10 3h2v2h-2zM2 6h3v2H2zM11 6h3v2h-3zM6 3h4v9H6zM3 5h3v3H3zM10 5h3v3h-3zM1 8h4v2H1zM11 8h4v2h-4z"/>
+              <path fill="#7aa35a" d="M7 2h1v8H7zM4 4h1v1H4zM11 4h1v1h-1zM2 7h2v1H2zM12 7h2v1h-2zM5 6h1v1H5zM10 6h1v1h-1z"/>
+              <path fill="#2e4d26" d="M9 4h1v7H9zM12 9h2v1h-2zM2 9h2v1H2z"/>
+              <path fill="#b0603c" d="M3 12h10v2H3zM4 14h8v8H4z"/>
+              <path fill="#d4835a" d="M3 12h10v1H3zM5 14h1v7H5z"/>
+              <path fill="#7a3d22" d="M11 14h1v8h-1zM4 21h8v1H4z"/>
+            </svg>
+          </li>
+        </ul>
+      </div>
+
+      <h2 class="mini-head">Card catalog</h2>
+      <ol class="catalog">
+        <li class="catalog-card" data-type="outdoors">
+          <div class="catalog-top">
+            <span class="catalog-call">796.51 XU</span>
+            <span class="stamp">Ongoing</span>
           </div>
+          <h3><a href="/interests/hiking/">Hiking</a></h3>
+          <p class="catalog-tagline">Trails, switchbacks and whatever view is waiting at the top.</p>
+          <dl class="catalog-meta">
+            <dt>Section</dt><dd>Outdoors</dd>
+            <dt>Subjects</dt><dd>Fresh air · Views · Leg day</dd>
+          </dl>
+          <a class="btn btn-tomato btn-sm" href="/interests/hiking/">Check out <span class="tri" aria-hidden="true"></span></a>
         </li>
-        <li class="quest side-quest px-box paper" data-type="sports">
-          <a class="side-quest-photo" href="/interests/racket-sports/" tabindex="-1" aria-hidden="true">
-            <img src="/assets/interests/racket.svg" alt="" loading="lazy" width="400" height="300">
-          </a>
-          <div class="side-quest-body">
-            <div class="quest-top">
-              <span class="badge badge-active">● Ongoing</span>
-              <span class="quest-when">Side quest 2 · Sports</span>
-            </div>
-            <h3><a href="/interests/racket-sports/">Racket sports</a></h3>
-            <p class="quest-org">If there's a racket, a net and a rally, I'm in.</p>
-            <p class="objectives-label">Objectives</p>
-            <ul class="quest-list">
-              <li>Find a court and a rally partner</li>
-              <li>Keep every rally going one shot longer</li>
-              <li>Try every sport that comes with a racket</li>
-            </ul>
-            <div class="side-quest-foot">
-              <p class="reward"><span>Rewards</span> Reflexes · Footwork · Friendly rivalries</p>
-              <a class="btn btn-tomato btn-sm" href="/interests/racket-sports/">View quest <span class="tri" aria-hidden="true"></span></a>
-            </div>
+        <li class="catalog-card" data-type="sports">
+          <div class="catalog-top">
+            <span class="catalog-call">796.34 XU</span>
+            <span class="stamp">Ongoing</span>
           </div>
+          <h3><a href="/interests/racket-sports/">Racket sports</a></h3>
+          <p class="catalog-tagline">If there's a racket, a net and a rally, I'm in.</p>
+          <dl class="catalog-meta">
+            <dt>Section</dt><dd>Sports</dd>
+            <dt>Subjects</dt><dd>Reflexes · Footwork · Friendly rivalries</dd>
+          </dl>
+          <a class="btn btn-tomato btn-sm" href="/interests/racket-sports/">Check out <span class="tri" aria-hidden="true"></span></a>
         </li>
-        <li class="quest side-quest px-box paper" data-type="sports">
-          <a class="side-quest-photo" href="/interests/soccer/" tabindex="-1" aria-hidden="true">
-            <img src="/assets/interests/soccer.svg" alt="" loading="lazy" width="400" height="300">
-          </a>
-          <div class="side-quest-body">
-            <div class="quest-top">
-              <span class="badge badge-active">● Ongoing</span>
-              <span class="quest-when">Side quest 3 · Sports</span>
-            </div>
-            <h3><a href="/interests/soccer/">Soccer</a></h3>
-            <p class="quest-org">Always down for a pickup game.</p>
-            <p class="objectives-label">Objectives</p>
-            <ul class="quest-list">
-              <li>Show up for pickup games</li>
-              <li>Win the ball back and play it forward</li>
-              <li>Catch the big matches with friends</li>
-            </ul>
-            <div class="side-quest-foot">
-              <p class="reward"><span>Rewards</span> Teamwork · Cardio · Bragging rights</p>
-              <a class="btn btn-tomato btn-sm" href="/interests/soccer/">View quest <span class="tri" aria-hidden="true"></span></a>
-            </div>
+        <li class="catalog-card" data-type="sports">
+          <div class="catalog-top">
+            <span class="catalog-call">796.334 XU</span>
+            <span class="stamp">Ongoing</span>
           </div>
+          <h3><a href="/interests/soccer/">Soccer</a></h3>
+          <p class="catalog-tagline">Always down for a pickup game.</p>
+          <dl class="catalog-meta">
+            <dt>Section</dt><dd>Sports</dd>
+            <dt>Subjects</dt><dd>Teamwork · Cardio · Bragging rights</dd>
+          </dl>
+          <a class="btn btn-tomato btn-sm" href="/interests/soccer/">Check out <span class="tri" aria-hidden="true"></span></a>
         </li>
-        <li class="quest side-quest px-box paper" data-type="sports">
-          <a class="side-quest-photo" href="/interests/swimming/" tabindex="-1" aria-hidden="true">
-            <img src="/assets/interests/swim.svg" alt="" loading="lazy" width="400" height="300">
-          </a>
-          <div class="side-quest-body">
-            <div class="quest-top">
-              <span class="badge badge-active">● Ongoing</span>
-              <span class="quest-when">Side quest 4 · Sports</span>
-            </div>
-            <h3><a href="/interests/swimming/">Swimming</a></h3>
-            <p class="quest-org">Laps in the pool are my favorite way to reset.</p>
-            <p class="objectives-label">Objectives</p>
-            <ul class="quest-list">
-              <li>Swim laps to clear my head</li>
-              <li>Keep sharpening stroke technique</li>
-              <li>Beat a personal best</li>
-            </ul>
-            <div class="side-quest-foot">
-              <p class="reward"><span>Rewards</span> Endurance · Recovery · Calm</p>
-              <a class="btn btn-tomato btn-sm" href="/interests/swimming/">View quest <span class="tri" aria-hidden="true"></span></a>
-            </div>
+        <li class="catalog-card" data-type="sports">
+          <div class="catalog-top">
+            <span class="catalog-call">797.21 XU</span>
+            <span class="stamp">Ongoing</span>
           </div>
+          <h3><a href="/interests/swimming/">Swimming</a></h3>
+          <p class="catalog-tagline">Laps in the pool are my favorite way to reset.</p>
+          <dl class="catalog-meta">
+            <dt>Section</dt><dd>Sports</dd>
+            <dt>Subjects</dt><dd>Endurance · Recovery · Calm</dd>
+          </dl>
+          <a class="btn btn-tomato btn-sm" href="/interests/swimming/">Check out <span class="tri" aria-hidden="true"></span></a>
         </li>
-        <li class="quest side-quest px-box paper" data-type="food">
-          <a class="side-quest-photo" href="/interests/eating/" tabindex="-1" aria-hidden="true">
-            <img src="/assets/interests/food.svg" alt="" loading="lazy" width="400" height="300">
-          </a>
-          <div class="side-quest-body">
-            <div class="quest-top">
-              <span class="badge badge-active">● Ongoing</span>
-              <span class="quest-when">Side quest 5 · Food</span>
-            </div>
-            <h3><a href="/interests/eating/">Eating</a></h3>
-            <p class="quest-org">Always hunting for the next great meal. Taste-testing counts as a sport.</p>
-            <p class="objectives-label">Objectives</p>
-            <ul class="quest-list">
-              <li>Hunt down the best spots around Berkeley</li>
-              <li>Try a cuisine I haven't had before</li>
-              <li>Never skip dessert</li>
-            </ul>
-            <div class="side-quest-foot">
-              <p class="reward"><span>Rewards</span> Flavor · Good company · Zero regrets</p>
-              <a class="btn btn-tomato btn-sm" href="/interests/eating/">View quest <span class="tri" aria-hidden="true"></span></a>
-            </div>
+        <li class="catalog-card" data-type="food">
+          <div class="catalog-top">
+            <span class="catalog-call">394.12 XU</span>
+            <span class="stamp">Ongoing</span>
           </div>
+          <h3><a href="/interests/eating/">Eating</a></h3>
+          <p class="catalog-tagline">Always hunting for the next great meal. Taste-testing counts as a sport.</p>
+          <dl class="catalog-meta">
+            <dt>Section</dt><dd>Food</dd>
+            <dt>Subjects</dt><dd>Flavor · Good company · Zero regrets</dd>
+          </dl>
+          <a class="btn btn-tomato btn-sm" href="/interests/eating/">Check out <span class="tri" aria-hidden="true"></span></a>
         </li>
       </ol>
     </section>
