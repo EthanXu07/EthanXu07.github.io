@@ -623,21 +623,18 @@ main.subpage { padding-top: 5rem; }
 .desk-plaque::before { left: 4px; } .desk-plaque::after { right: 4px; }
 /* two wooden legs under the desktop */
 .desk-legs { display: flex; justify-content: space-between; height: 4.5rem; margin: 4px calc(-1 * clamp(.5rem, 3vw, 2rem)) 0; padding: 0 clamp(1rem, 4vw, 2.5rem); }
-.desk-legs span { width: 1.25rem; background: #7a4d31; box-shadow: inset 4px 0 0 #a8714a, inset -4px 0 0 #5a3520, inset 0 -6px 0 #4a2a17, 0 0 0 4px var(--edge), 8px 0 0 var(--edge); }
+.desk-legs span { flex: none; width: 1.25rem; background: #7a4d31; box-shadow: inset 4px 0 0 #a8714a, inset -4px 0 0 #5a3520, inset 0 -6px 0 #4a2a17, 0 0 0 4px var(--edge), 8px 0 0 var(--edge); }
 
 /* Desk scene while no book is open: lamp, returns pile, date stamp, hint, mug, "On hold" note */
 .desk-empty {
   display: grid; align-items: end; gap: .75rem 1rem;
   grid-template-columns: auto auto auto minmax(0, 1fr) auto auto auto auto;
-  grid-template-areas:
-    "hint hint hint hint hint hint hint note"
-    "lamp returns stamp . laptop mug banker note";
+  grid-template-areas: "lamp returns stamp . laptop mug banker note";
   min-height: 11rem; padding-top: 1rem;
 }
 .desk-lamp { grid-area: lamp; }
 .desk-returns { grid-area: returns; }
 .desk-stamp { grid-area: stamp; }
-.desk-hint { grid-area: hint; }
 .desk-laptop { grid-area: laptop; }
 .desk-mug { grid-area: mug; }
 .desk-banker { grid-area: banker; }
@@ -646,13 +643,13 @@ main.subpage { padding-top: 5rem; }
 @media (max-width: 60rem) {
   .desk-empty {
     grid-template-columns: repeat(4, auto); justify-content: space-around;
-    grid-template-areas: "hint hint hint hint" "note note note note" "lamp returns laptop mug";
+    grid-template-areas: "note note note note" "lamp returns laptop mug";
   }
   .on-hold { justify-self: center; }
   .desk-empty .desk-stamp, .desk-empty .desk-banker { display: none; }
 }
 @media (max-width: 30rem) {
-  .desk-empty { grid-template-columns: repeat(3, auto); grid-template-areas: "hint hint hint" "note note note" "lamp laptop mug"; }
+  .desk-empty { grid-template-columns: repeat(3, auto); grid-template-areas: "note note note" "lamp laptop mug"; }
   .desk-empty .desk-returns { display: none; }
 }
 .desk-prop { display: block; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 0 0 rgba(0,0,0,.25)); }
@@ -671,8 +668,9 @@ main.subpage { padding-top: 5rem; }
 .desk-returns span:nth-child(2) { width: 5.4rem; background: var(--gold-dark); }
 .desk-returns span:nth-child(3) { width: 5rem; margin-left: .25rem; background: var(--plum); }
 .desk-returns b { position: absolute; top: -1.35rem; left: 1.2rem; padding: .15rem .35rem; font: .4rem var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 2px var(--edge); transform: rotate(-4deg); }
-.desk-hint { margin: 0 0 .6rem; text-align: center; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
+.desk-hint { flex: 1; align-self: center; margin: 0 1rem; text-align: center; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
 .desk-hint::before { content: "▲ "; }
+.desk-empty[hidden] ~ .desk-legs .desk-hint { visibility: hidden; }
 /* pinned "On hold" note: hobbies on the waiting list */
 .on-hold {
   position: relative; width: 10.5rem; margin-bottom: .4rem; padding: .9rem .75rem .6rem;
