@@ -29,6 +29,16 @@
             </svg>
           </li>
         </ul>
+        <!-- Base of the bookcase: brass plaque with shelf stats, and "Up next" labels for hobbies still to be written -->
+        <div class="bookcase-base">
+          <p class="shelf-plaque">{{stats}}</p>
+          <div class="up-next">
+            <p id="upNextTitle">Up next</p>
+            <ul aria-labelledby="upNextTitle">
+{{onHold}}
+            </ul>
+          </div>
+        </div>
       </div>
 
       <!-- Reading desk: a picked book opens here; one per interest, hidden until its spine is clicked -->
@@ -85,18 +95,9 @@
             <path fill="#9a6f1a" d="M3 14h12v2H3z"/>
             <path fill="#f3c969" d="M4 14h6v1H4z"/>
           </svg>
-          <!-- "Up next": a pile of books still to be written, one per hobby on the waiting list -->
-          <aside class="up-next" aria-labelledby="upNextTitle">
-            <b id="upNextTitle">Up next</b>
-            <ul>
-{{onHold}}
-            </ul>
-          </aside>
         </div>
 {{cards}}
-        <div class="desk-top">
-          <p class="desk-plaque">{{stats}}</p>
-        </div>
+        <div class="desk-top"></div>
         <div class="desk-legs"><span aria-hidden="true"></span><p class="desk-hint">Pick a book off the shelf to read it here.</p><span aria-hidden="true"></span></div>
       </div>
     </section>

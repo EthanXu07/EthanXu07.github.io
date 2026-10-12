@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=9ed0bc5d">
+  <link rel="stylesheet" href="/styles.css?v=43bb19bb">
   <script src="/site-config.js?v=d0df445c"></script>
 </head>
 <body data-page="interests">
@@ -142,6 +142,20 @@
             </svg>
           </li>
         </ul>
+        <!-- Base of the bookcase: brass plaque with shelf stats, and "Up next" labels for hobbies still to be written -->
+        <div class="bookcase-base">
+          <p class="shelf-plaque">10 volumes <span aria-hidden="true">·</span> 5 sections <span aria-hidden="true">·</span> 0 overdue <span aria-hidden="true">·</span> Last shelved Oct 2026</p>
+          <div class="up-next">
+            <p id="upNextTitle">Up next</p>
+            <ul aria-labelledby="upNextTitle">
+              <li>Rock climbing</li>
+              <li>Snowboarding</li>
+              <li>Chess</li>
+              <li>Learning guitar</li>
+              <li>Cooking</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <!-- Reading desk: a picked book opens here; one per interest, hidden until its spine is clicked -->
@@ -198,17 +212,6 @@
             <path fill="#9a6f1a" d="M3 14h12v2H3z"/>
             <path fill="#f3c969" d="M4 14h6v1H4z"/>
           </svg>
-          <!-- "Up next": a pile of books still to be written, one per hobby on the waiting list -->
-          <aside class="up-next" aria-labelledby="upNextTitle">
-            <b id="upNextTitle">Up next</b>
-            <ul>
-              <li>Rock climbing</li>
-              <li>Snowboarding</li>
-              <li>Chess</li>
-              <li>Learning guitar</li>
-              <li>Cooking</li>
-            </ul>
-          </aside>
         </div>
         <article class="open-book" id="book-hiking" style="--c: #4f7a3a" aria-labelledby="book-hiking-title" hidden>
           <div class="open-book-page open-book-left">
@@ -490,9 +493,7 @@
             </div>
           </div>
         </article>
-        <div class="desk-top">
-          <p class="desk-plaque">10 volumes <span aria-hidden="true">·</span> 5 sections <span aria-hidden="true">·</span> 0 overdue <span aria-hidden="true">·</span> Last shelved Oct 2026</p>
-        </div>
+        <div class="desk-top"></div>
         <div class="desk-legs"><span aria-hidden="true"></span><p class="desk-hint">Pick a book off the shelf to read it here.</p><span aria-hidden="true"></span></div>
       </div>
     </section>

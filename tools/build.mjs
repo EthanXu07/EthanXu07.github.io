@@ -444,7 +444,7 @@ ${objectivesList(it)}
 const chips = [...new Set(interests.map((it) => it.type))]
   .map((t) => `        <button class="chip" data-filter="${slugify(t)}" aria-pressed="false">${esc(t)}</button>`).join('\n');
 
-// Desk: "Up next" pile of books (hobbies to pick up next) and a brass plaque with shelf stats
+// Bookcase base: "Up next" labels (hobbies to pick up next) and a brass plaque with shelf stats
 const onHoldItems = json('data/on-hold.json').items;
 const onHold = onHoldItems.map((h) => `              <li>${esc(h)}</li>`).join('\n');
 const sectionCount = new Set(interests.map((it) => it.type)).size;
