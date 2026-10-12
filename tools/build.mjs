@@ -414,6 +414,12 @@ const spines = interests.map((it, i) => `          <li class="book" data-type="$
               <span class="book-label" aria-label="call number ${esc(it.call)}">${callLines(it.call)}</span>
             </a>
           </li>`).join('\n');
+// Optional "favorites" list (interests.json), shown on the left page of the open book
+const favoritesList = (it) => !it.favorites?.length ? '' : `
+            <p class="checkout-label">Favorites</p>
+            <ul class="quest-list">
+${it.favorites.map((f) => `              <li>${esc(f)}</li>`).join('\n')}
+            </ul>`;
 // Each interest opens as a two-page book: summary on the left, contents on the right
 const cards = interests.map((it) => `        <article class="open-book" id="book-${it.slug}" style="--c: ${esc(it.spine)}" aria-labelledby="book-${it.slug}-title" hidden>
           <div class="open-book-page open-book-left">
@@ -427,7 +433,7 @@ const cards = interests.map((it) => `        <article class="open-book" id="book
             <dl class="catalog-meta">
               <dt>Section</dt><dd>${esc(it.type)}</dd>
               <dt>Subjects</dt><dd>${esc(it.rewards)}</dd>
-            </dl>
+            </dl>${favoritesList(it)}
           </div>
           <div class="open-book-page open-book-right">
             <img class="open-book-plate" src="${esc(it.photo)}" alt="" loading="lazy" width="960" height="720">
@@ -469,9 +475,7 @@ interests.forEach((it, i) => {
   const sections = it.sections.map((s, n) => `        <section class="interest-section chapter">
           <p class="chapter-num">Chapter ${n + 1}</p>
           <h2>${esc(s.heading)}</h2>
-          ${s.items ? `<ul class="quest-list">\n${s.items.map((x) => `            <li>${esc(x)}</li>`).join('\n')}
-          </ul>`
-            : s.body ? `<p>${esc(s.body)}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}
+          ${s.body ? `<p>${esc(s.body)}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}
         </section>`).join('\n');
   const gallery = it.gallery.map((g, n) =>
     `        <img src="${esc(g)}" alt="${esc(it.title)} photo ${n + 1}" loading="lazy" width="960" height="720">`).join('\n');

@@ -324,6 +324,11 @@
       "Find the next series worth recommending"
     ],
     "rewards": "Worldbuilding · Plot twists · Late nights",
+    "favorites": [
+      "Reverend Insanity (webnovel)",
+      "Code Geass (anime)",
+      "Vinland Saga (anime)"
+    ],
     "photo": "/assets/interests/photos/webnovels-anime-0.jpg",
     "gallery": [
       "/assets/interests/photos/webnovels-anime-1.jpg",
@@ -338,14 +343,6 @@
       {
         "heading": "Currently reading and watching",
         "placeholder": "Webnovels you're following and anime you're watching now."
-      },
-      {
-        "heading": "All-time favorites",
-        "items": [
-          "Reverend Insanity (webnovel)",
-          "Code Geass (anime)",
-          "Vinland Saga (anime)"
-        ]
       }
     ]
   }
