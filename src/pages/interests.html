@@ -17,7 +17,8 @@
 {{spines}}
           <li class="bookend" aria-hidden="true"></li>
           <!-- shelf props: decorative, hidden on narrow screens -->
-          <li class="shelf-prop prop-stack" aria-hidden="true"><span></span><span></span><span></span></li>
+          <!-- "Up next" pile: one book lying flat per hobby still to be written (src/data/on-hold.json) -->
+          <li class="shelf-prop prop-stack" aria-hidden="true"><b>Up next</b>{{upNextBooks}}</li>
           <li class="shelf-prop prop-plant" aria-hidden="true">
             <svg viewBox="0 0 16 22" width="64" height="88" shape-rendering="crispEdges">
               <path fill="#3f6b33" d="M7 1h2v2H7zM4 3h2v2H4zM10 3h2v2h-2zM2 6h3v2H2zM11 6h3v2h-3zM6 3h4v9H6zM3 5h3v3H3zM10 5h3v3h-3zM1 8h4v2H1zM11 8h4v2h-4z"/>
@@ -29,15 +30,10 @@
             </svg>
           </li>
         </ul>
-        <!-- Base of the bookcase: brass plaque with shelf stats, and "Up next" labels for hobbies still to be written -->
+        <!-- Base of the bookcase: brass plaque with shelf stats. The "Up next" line only shows when the pile above has no room (script.js) -->
         <div class="bookcase-base">
           <p class="shelf-plaque">{{stats}}</p>
-          <div class="up-next">
-            <p id="upNextTitle">Up next</p>
-            <ul aria-labelledby="upNextTitle">
-{{onHold}}
-            </ul>
-          </div>
+          <p class="up-next"><b>Up next:</b> {{upNextLine}}</p>
         </div>
       </div>
 
@@ -45,13 +41,15 @@
       <div class="reading-desk">
         <!-- Desk scene, shown while every book is on the shelf -->
         <div class="desk-empty" id="shelfHint">
-          <svg class="desk-prop desk-lamp" viewBox="0 0 16 20" width="64" height="80" shape-rendering="crispEdges" aria-hidden="true">
-            <path fill="#2a1f1a" d="M3 18h10v2H3zM7 8h2v10H7z"/>
-            <path fill="#5f9c8f" d="M4 1h8v1H4zM3 2h10v4H3zM2 6h12v2H2z"/>
-            <path fill="#8fbfb2" d="M4 2h2v4H4z"/>
-            <path fill="#f3c969" d="M5 8h6v1H5z"/>
-            <path fill="#4a463e" d="M4 18h8v1H4z"/>
-          </svg>
+          <button class="desk-prop desk-lamp lamp" type="button" aria-pressed="true" aria-label="Desk lamp">
+            <svg viewBox="0 0 16 20" width="64" height="80" shape-rendering="crispEdges">
+              <path fill="#2a1f1a" d="M3 18h10v2H3zM7 8h2v10H7z"/>
+              <path fill="#5f9c8f" d="M4 1h8v1H4zM3 2h10v4H3zM2 6h12v2H2z"/>
+              <path fill="#8fbfb2" d="M4 2h2v4H4z"/>
+              <path class="bulb" fill="#f3c969" d="M5 8h6v1H5z"/>
+              <path fill="#4a463e" d="M4 18h8v1H4z"/>
+            </svg>
+          </button>
           <div class="desk-prop desk-returns" aria-hidden="true"><span></span><span></span><span></span><b>Returns</b></div>
           <svg class="desk-prop desk-stamp" viewBox="0 0 16 15" width="48" height="45" shape-rendering="crispEdges" aria-hidden="true">
             <path fill="#8a5a3c" d="M6 1h4v2H6zM7 3h2v5H7z"/>
@@ -83,18 +81,20 @@
             <path fill="#f1e6cc" d="M11 8h3v1h-3zM13 9h1v4h-1zM11 13h3v1h-3z"/>
             <path fill="#5e3a22" d="M3 6h7v1H3z"/>
           </svg>
-          <svg class="desk-prop desk-banker" viewBox="0 0 18 16" width="64" height="57" shape-rendering="crispEdges" aria-hidden="true">
-            <path fill="#1f5236" d="M4 1h10v1H4zM3 2h12v4H3z"/>
-            <path fill="#2f7a4a" d="M4 2h10v3H4z"/>
-            <path fill="#5fae78" d="M5 2h5v1H5z"/>
-            <path fill="#c9962a" d="M2 6h14v1H2z"/>
-            <path fill="#f3c969" d="M4 7h10v1H4z"/>
-            <path fill="#c9962a" d="M8 8h2v5H8zM13 7h1v2h-1z"/>
-            <path fill="#9a6f1a" d="M9 8h1v5H9zM12 9h3v1h-3z"/>
-            <path fill="#c9962a" d="M4 13h10v1H4z"/>
-            <path fill="#9a6f1a" d="M3 14h12v2H3z"/>
-            <path fill="#f3c969" d="M4 14h6v1H4z"/>
-          </svg>
+          <button class="desk-prop desk-banker lamp" type="button" aria-pressed="true" aria-label="Banker's lamp">
+            <svg viewBox="0 0 18 16" width="64" height="57" shape-rendering="crispEdges">
+              <path fill="#1f5236" d="M4 1h10v1H4zM3 2h12v4H3z"/>
+              <path fill="#2f7a4a" d="M4 2h10v3H4z"/>
+              <path fill="#5fae78" d="M5 2h5v1H5z"/>
+              <path fill="#c9962a" d="M2 6h14v1H2z"/>
+              <path class="bulb" fill="#f3c969" d="M4 7h10v1H4z"/>
+              <path fill="#c9962a" d="M8 8h2v5H8zM13 7h1v2h-1z"/>
+              <path fill="#9a6f1a" d="M9 8h1v5H9zM12 9h3v1h-3z"/>
+              <path fill="#c9962a" d="M4 13h10v1H4z"/>
+              <path fill="#9a6f1a" d="M3 14h12v2H3z"/>
+              <path fill="#f3c969" d="M4 14h6v1H4z"/>
+            </svg>
+          </button>
         </div>
 {{cards}}
         <div class="desk-top"></div>

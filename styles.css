@@ -582,14 +582,25 @@ main.subpage { padding-top: 5rem; }
 /* props share the last row of books; script.js drops any that would wrap onto a shelf of their own */
 .shelf-prop { height: var(--row); display: flex; align-items: flex-end; padding-bottom: var(--board); margin-left: clamp(.75rem, 2.5vw, 2rem); }
 .prop-stack { flex-direction: column; justify-content: flex-end; align-items: flex-start; }
-.prop-stack span { display: block; height: 1.25rem; box-shadow: inset 0 4px 0 rgba(255,255,255,.15), inset 0 -4px 0 rgba(0,0,0,.25), 0 0 0 3px var(--edge); margin-top: 3px; }
-.prop-stack span:nth-child(1) { width: 7rem; margin-left: .6rem; background: var(--plum); }
-.prop-stack span:nth-child(2) { width: 8.5rem; background: var(--sage); }
-.prop-stack span:nth-child(3) { width: 8rem; margin-left: .3rem; background: var(--tomato-dark); }
+/* "Up next" pile: one book lying flat per hobby on the waiting list, title on the spine */
+.prop-stack { position: relative; }
+.prop-stack span {
+  display: block; width: 8.4rem; height: 1.25rem; margin-top: 3px; padding: 0 .5rem;
+  font: .4rem/1.25rem var(--pixel); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; overflow: hidden;
+  color: var(--text-light); text-shadow: 1px 1px 0 rgba(0,0,0,.45);
+  box-shadow: inset 0 4px 0 rgba(255,255,255,.15), inset 0 -4px 0 rgba(0,0,0,.25), 0 0 0 3px var(--edge);
+}
+.prop-stack span:nth-of-type(5n+1) { width: 7.6rem; margin-left: .5rem; background: var(--plum); }
+.prop-stack span:nth-of-type(5n+2) { background: var(--sage); }
+.prop-stack span:nth-of-type(5n+3) { width: 7.9rem; margin-left: .3rem; background: var(--tomato-dark); }
+.prop-stack span:nth-of-type(5n+4) { width: 8.6rem; background: #3d6f8c; }
+.prop-stack span:nth-of-type(5n)   { width: 8.2rem; margin-left: .2rem; background: var(--gold-dark); }
+.prop-stack b { margin: 0 0 .5rem 1.4rem; padding: .15rem .35rem; font: .4rem var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 2px var(--edge); transform: rotate(3deg); }
 .prop-plant svg { display: block; width: 4rem; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 3px 0 rgba(0,0,0,.3)); }
 
-/* Base of the bookcase, under the bottom shelf: stats plaque and "Up next" labels */
-.bookcase-base { display: flex; flex-direction: column; align-items: center; gap: .7rem; padding: .8rem 1rem 1rem; }
+/* Base of the bookcase, under the bottom shelf: stats plaque */
+.bookcase { position: relative; }
+.bookcase-base { display: flex; flex-direction: column; align-items: center; gap: .6rem; padding: .7rem 1rem .8rem; }
 /* brass plaque screwed to the base of the bookcase */
 .shelf-plaque {
   position: relative; margin: 0; padding: .35rem .9rem;
@@ -599,11 +610,10 @@ main.subpage { padding-top: 5rem; }
 }
 .shelf-plaque::before, .shelf-plaque::after { content: ""; position: absolute; top: 50%; width: 4px; height: 4px; margin-top: -2px; background: #7a5512; }
 .shelf-plaque::before { left: 4px; } .shelf-plaque::after { right: 4px; }
-/* "Up next": hobbies on the waiting list, one card-catalogue label each */
-.up-next { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem .7rem; }
-.up-next p { margin: 0; font: .45rem var(--pixel); text-transform: uppercase; letter-spacing: .06em; color: #f3c969; text-shadow: 2px 2px 0 rgba(0,0,0,.35); }
-.up-next ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
-.up-next li { padding: .3rem .5rem; font: .4rem var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 2px var(--edge); }
+/* "Up next" in one line, for when the pile has no room on the bottom shelf (script.js sets .has-pile when it does) */
+.up-next { margin: 0; max-width: 34rem; text-align: center; font: .4rem/1.9 var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: #f1dcae; text-shadow: 2px 2px 0 rgba(0,0,0,.35); }
+.up-next b { color: #f3c969; }
+.has-pile .up-next { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Shared by the open-book pages: call number header, stamp, tagline, metadata list */
 .catalog-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; margin-bottom: .9rem; }
@@ -660,6 +670,26 @@ main.subpage { padding-top: 5rem; }
   .desk-empty { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: "lamp laptop mug"; }
   .desk-empty .desk-returns, .desk-empty .desk-banker { display: none; }
 }
+/* Lamps are switches: lit by default, click to turn off. Halo round the bulb plus a cone of light down to the desk */
+.lamp { position: relative; padding: 0; border: 0; background: none; cursor: pointer; filter: none; }
+.lamp svg { display: block; width: 100%; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 0 0 rgba(0,0,0,.25)); }
+.lamp::before, .lamp::after { content: ""; position: absolute; left: 50%; pointer-events: none; }
+.lamp::before {
+  top: 42%; width: 9rem; height: 9rem; margin: -4.5rem 0 0 -4.5rem;
+  background: radial-gradient(closest-side, rgba(255,214,120,.5), rgba(255,214,120,.16) 55%, transparent);
+  animation: lamp-glow 3.2s steps(4) infinite;
+}
+.lamp::after {
+  top: 42%; bottom: 0; width: 8rem; margin-left: -4rem;
+  background: linear-gradient(rgba(255,224,150,.55), rgba(255,224,150,.12));
+  clip-path: polygon(34% 0, 66% 0, 100% 100%, 0 100%);
+}
+.lamp .bulb { fill: #fff3c4; }
+.lamp.is-off::before, .lamp.is-off::after { display: none; }
+.lamp.is-off .bulb { fill: #6b5a2a; }
+.lamp.is-off svg { filter: drop-shadow(3px 0 0 rgba(0,0,0,.25)) brightness(.8); }
+@keyframes lamp-glow { 50% { opacity: .75; } }
+@media (prefers-reduced-motion: reduce) { .lamp::before { animation: none; } }
 .desk-prop { display: block; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 0 0 rgba(0,0,0,.25)); }
 .desk-lamp { width: 4rem; }
 .desk-stamp { width: 3rem; }

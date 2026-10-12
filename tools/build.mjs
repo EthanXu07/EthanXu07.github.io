@@ -444,9 +444,11 @@ ${objectivesList(it)}
 const chips = [...new Set(interests.map((it) => it.type))]
   .map((t) => `        <button class="chip" data-filter="${slugify(t)}" aria-pressed="false">${esc(t)}</button>`).join('\n');
 
-// Bookcase base: "Up next" labels (hobbies to pick up next) and a brass plaque with shelf stats
+// "Up next" (hobbies to pick up next): a pile of books on the bottom shelf, plus a one-line fallback for when the pile does not fit.
+// The brass plaque with shelf stats sits on the base of the bookcase
 const onHoldItems = json('data/on-hold.json').items;
-const onHold = onHoldItems.map((h) => `              <li>${esc(h)}</li>`).join('\n');
+const upNextBooks = onHoldItems.map((h) => `<span>${esc(h)}</span>`).join('');
+const upNextLine = onHoldItems.map(esc).join(' · ');
 const sectionCount = new Set(interests.map((it) => it.type)).size;
 const shelved = new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 const libraryStats = [`${interests.length} volumes`, `${sectionCount} sections`, '0 overdue', `Last shelved ${shelved}`]
@@ -454,7 +456,7 @@ const libraryStats = [`${interests.length} volumes`, `${sectionCount} sections`,
 
 page({
   out: 'interests/index.html', path: '/interests/', page: 'interests', title: 'The library · Ethan Xu', description: 'What Ethan Xu does when he is not coding.',
-  content: fill(src('pages/interests.html'), { spines, cards, chips, onHold, stats: libraryStats }),
+  content: fill(src('pages/interests.html'), { spines, cards, chips, upNextBooks, upNextLine, stats: libraryStats }),
 });
 
 const interestTpl = src('pages/interest.html');
