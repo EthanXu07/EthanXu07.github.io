@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=f6ec9f76">
+  <link rel="stylesheet" href="/styles.css?v=9ed0bc5d">
   <script src="/site-config.js?v=d0df445c"></script>
 </head>
 <body data-page="interests">
@@ -198,8 +198,9 @@
             <path fill="#9a6f1a" d="M3 14h12v2H3z"/>
             <path fill="#f3c969" d="M4 14h6v1H4z"/>
           </svg>
-          <aside class="on-hold" aria-labelledby="onHoldTitle">
-            <p class="on-hold-title" id="onHoldTitle">Up next</p>
+          <!-- "Up next": a pile of books still to be written, one per hobby on the waiting list -->
+          <aside class="up-next" aria-labelledby="upNextTitle">
+            <b id="upNextTitle">Up next</b>
             <ul>
               <li>Rock climbing</li>
               <li>Snowboarding</li>
@@ -207,7 +208,6 @@
               <li>Learning guitar</li>
               <li>Cooking</li>
             </ul>
-            <p class="on-hold-foot">5 volumes waiting to be written</p>
           </aside>
         </div>
         <article class="open-book" id="book-hiking" style="--c: #4f7a3a" aria-labelledby="book-hiking-title" hidden>

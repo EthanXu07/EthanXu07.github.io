@@ -625,12 +625,12 @@ main.subpage { padding-top: 5rem; }
 .desk-legs { display: flex; justify-content: space-between; height: 4.5rem; margin: 4px calc(-1 * clamp(.5rem, 3vw, 2rem)) 0; padding: 0 clamp(1rem, 4vw, 2.5rem); }
 .desk-legs span { flex: none; width: 1.25rem; background: #7a4d31; box-shadow: inset 4px 0 0 #a8714a, inset -4px 0 0 #5a3520, inset 0 -6px 0 #4a2a17, 0 0 0 4px var(--edge), 8px 0 0 var(--edge); }
 
-/* Desk scene while no book is open: lamp, returns pile, date stamp, hint, mug, "Up next" note */
+/* Desk scene while no book is open: lamp, returns pile, date stamp, MacBook, mug, banker's lamp, "Up next" pile */
 .desk-empty {
   position: relative;
-  display: grid; align-items: end; gap: .75rem 1rem;
+  display: grid; align-items: end; gap: 0 1rem;
   grid-template-columns: auto auto auto minmax(0, 1fr) auto auto auto;
-  grid-template-areas: "lamp returns stamp . mug banker note";
+  grid-template-areas: "lamp returns stamp . mug banker next";
   min-height: 11rem; padding-top: 1rem;
 }
 .desk-lamp { grid-area: lamp; }
@@ -640,18 +640,19 @@ main.subpage { padding-top: 5rem; }
 .desk-laptop { position: absolute; left: 50%; bottom: 0; margin-left: -3.5rem; }
 .desk-mug { grid-area: mug; }
 .desk-banker { grid-area: banker; }
-.on-hold { grid-area: note; }
-/* narrower screens: note on top, then the props that fit on one row of desk, MacBook in the middle column */
+.up-next { grid-area: next; }
+/* narrower screens: the "Up next" pile moves to the middle of the desk and the MacBook sits on top of it */
 @media (max-width: 60rem) {
   .desk-empty {
     grid-template-columns: repeat(2, minmax(0, 1fr)) auto repeat(2, minmax(0, 1fr)); justify-items: center;
-    grid-template-areas: "note note note note note" "lamp returns laptop mug banker";
+    grid-template-areas: ". . laptop . ." "lamp returns next mug banker";
   }
-  .desk-laptop { position: static; margin-left: 0; grid-area: laptop; }
+  .desk-laptop { position: static; margin: 0 0 3px; grid-area: laptop; }
   .desk-empty .desk-stamp { display: none; }
+  .desk-empty .up-next b { top: .1rem; left: 100%; margin-left: -.6rem; white-space: nowrap; }   /* tag hangs off the side, clear of the MacBook */
 }
 @media (max-width: 40rem) {
-  .desk-empty { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: "note note note" "lamp laptop mug"; }
+  .desk-empty { column-gap: .5rem; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: ". laptop ." "lamp next mug"; }
   .desk-empty .desk-returns, .desk-empty .desk-banker { display: none; }
 }
 .desk-prop { display: block; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 0 0 rgba(0,0,0,.25)); }
@@ -673,19 +674,21 @@ main.subpage { padding-top: 5rem; }
 .desk-hint { flex: 1; align-self: center; margin: 0 1rem; text-align: center; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
 .desk-hint::before { content: "▲ "; }
 .desk-empty[hidden] ~ .desk-legs .desk-hint { visibility: hidden; }
-/* pinned "Up next" note: hobbies on the waiting list */
-.on-hold {
-  position: relative; width: 10.5rem; margin-bottom: .4rem; padding: .9rem .75rem .6rem;
-  color: var(--text-dark); background: #fff1a8;
-  box-shadow: 0 0 0 3px var(--edge), 5px 5px 0 rgba(0,0,0,.35);
-  transform: rotate(2deg);
+/* "Up next" pile: one book lying flat per hobby on the waiting list, title on the spine */
+.up-next { position: relative; }
+.up-next ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.up-next li {
+  width: 8.4rem; height: 1.2rem; margin-top: 3px; padding: 0 .5rem;
+  font: .4rem/1.2rem var(--pixel); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; overflow: hidden;
+  color: var(--text-light, #f1e6cc); text-shadow: 1px 1px 0 rgba(0,0,0,.45);
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.15), inset 0 -3px 0 rgba(0,0,0,.25), 0 0 0 3px var(--edge);
 }
-.on-hold::before { content: ""; position: absolute; top: -.4rem; left: 50%; width: .75rem; height: .75rem; margin-left: -.375rem; background: var(--tomato); box-shadow: inset -3px -3px 0 var(--tomato-dark), 0 0 0 2px var(--edge); }
-.on-hold-title { margin: 0 0 .4rem; font: .5rem var(--pixel); text-transform: uppercase; letter-spacing: .06em; }
-.on-hold ul { list-style: none; margin: 0; padding: 0; font-size: .8rem; }
-.on-hold li { display: flex; align-items: center; gap: .45rem; padding: .05rem 0; }
-.on-hold li::before { content: ""; flex: none; width: .6rem; height: .6rem; box-shadow: inset 0 0 0 2px var(--text-dark); }
-.on-hold-foot { margin: .5rem 0 0; font: .35rem/1.6 var(--pixel); color: var(--text-dark-2); text-transform: uppercase; }
+.up-next li:nth-child(5n+1) { width: 7.6rem; margin-left: .5rem; background: var(--tomato-dark); }
+.up-next li:nth-child(5n+2) { background: var(--sage); }
+.up-next li:nth-child(5n+3) { width: 7.9rem; margin-left: .3rem; background: var(--plum); }
+.up-next li:nth-child(5n+4) { width: 8.6rem; background: var(--sky); }
+.up-next li:nth-child(5n)   { width: 8.2rem; margin-left: .2rem; background: var(--gold-dark); }
+.up-next b { position: absolute; top: -1.35rem; left: 1.4rem; padding: .15rem .35rem; font: .4rem var(--pixel); text-transform: uppercase; color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 2px var(--edge); transform: rotate(3deg); }
 .open-book {
   --rule: 1.55rem;
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
