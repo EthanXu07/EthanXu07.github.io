@@ -85,12 +85,12 @@
             <path fill="#9a6f1a" d="M3 14h12v2H3z"/>
             <path fill="#f3c969" d="M4 14h6v1H4z"/>
           </svg>
-          <aside class="on-hold" aria-labelledby="onHoldTitle">
-            <p class="on-hold-title" id="onHoldTitle">Up next</p>
+          <!-- "Up next": a pile of books still to be written, one per hobby on the waiting list -->
+          <aside class="up-next" aria-labelledby="upNextTitle">
+            <b id="upNextTitle">Up next</b>
             <ul>
 {{onHold}}
             </ul>
-            <p class="on-hold-foot">{{onHoldCount}} volumes waiting to be written</p>
           </aside>
         </div>
 {{cards}}
