@@ -341,7 +341,11 @@
       },
       {
         "heading": "All-time favorites",
-        "placeholder": "The series you'd recommend to anyone."
+        "items": [
+          "Reverend Insanity (webnovel)",
+          "Code Geass (anime)",
+          "Vinland Saga (anime)"
+        ]
       }
     ]
   }
