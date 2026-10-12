@@ -8,6 +8,7 @@
 //   src/data/projects.json    projects + trophies          │ experience, projects and the skill tree
 //   src/data/skills.json      skill tree branches        │
 //   src/interests.json        interests (the library)    ┘
+import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,6 +31,9 @@ const fill = (tpl, vars) => tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => {
 });
 const TRI = '<span class="tri" aria-hidden="true"></span>';
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+// Cache busting: "/styles.css" → "/styles.css?v=<content hash>", so browsers refetch a stylesheet or script as soon as it changes
+const stamp = (html) => html.replace(/(href|src)="\/(styles\.css|[\w-]+\.js)"/g, (_, attr, f) =>
+  `${attr}="/${f}?v=${createHash('sha1').update(readFileSync(join(ROOT, f))).digest('hex').slice(0, 8)}"`);
 
 // ---------------------------------------------------------------- Navigation
 // Keys 1–6 follow this order. Contact is the Save Point at the bottom of every page.
@@ -252,7 +256,7 @@ function page({ out, path, page, title, description, content, sub = true, script
 function write(out, html) {
   const file = join(ROOT, out);
   mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, html);
+  writeFileSync(file, stamp(html));
   console.log(`  ${out}`);
 }
 
