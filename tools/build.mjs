@@ -469,7 +469,9 @@ interests.forEach((it, i) => {
   const sections = it.sections.map((s, n) => `        <section class="interest-section chapter">
           <p class="chapter-num">Chapter ${n + 1}</p>
           <h2>${esc(s.heading)}</h2>
-          ${s.body ? `<p>${esc(s.body)}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}
+          ${s.items ? `<ul class="quest-list">\n${s.items.map((x) => `            <li>${esc(x)}</li>`).join('\n')}
+          </ul>`
+            : s.body ? `<p>${esc(s.body)}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}
         </section>`).join('\n');
   const gallery = it.gallery.map((g, n) =>
     `        <img src="${esc(g)}" alt="${esc(it.title)} photo ${n + 1}" loading="lazy" width="960" height="720">`).join('\n');
