@@ -625,32 +625,34 @@ main.subpage { padding-top: 5rem; }
 .desk-legs { display: flex; justify-content: space-between; height: 4.5rem; margin: 4px calc(-1 * clamp(.5rem, 3vw, 2rem)) 0; padding: 0 clamp(1rem, 4vw, 2.5rem); }
 .desk-legs span { flex: none; width: 1.25rem; background: #7a4d31; box-shadow: inset 4px 0 0 #a8714a, inset -4px 0 0 #5a3520, inset 0 -6px 0 #4a2a17, 0 0 0 4px var(--edge), 8px 0 0 var(--edge); }
 
-/* Desk scene while no book is open: lamp, returns pile, date stamp, hint, mug, "On hold" note */
+/* Desk scene while no book is open: lamp, returns pile, date stamp, hint, mug, "Up next" note */
 .desk-empty {
+  position: relative;
   display: grid; align-items: end; gap: .75rem 1rem;
-  grid-template-columns: auto auto auto minmax(0, 1fr) auto auto auto auto;
-  grid-template-areas: "lamp returns stamp . laptop mug banker note";
+  grid-template-columns: auto auto auto minmax(0, 1fr) auto auto auto;
+  grid-template-areas: "lamp returns stamp . mug banker note";
   min-height: 11rem; padding-top: 1rem;
 }
 .desk-lamp { grid-area: lamp; }
 .desk-returns { grid-area: returns; }
 .desk-stamp { grid-area: stamp; }
-.desk-laptop { grid-area: laptop; }
+/* the MacBook sits dead centre on the desk, whatever is either side of it */
+.desk-laptop { position: absolute; left: 50%; bottom: 0; margin-left: -3.5rem; }
 .desk-mug { grid-area: mug; }
 .desk-banker { grid-area: banker; }
 .on-hold { grid-area: note; }
-/* narrower screens: hint and note on top, then the props that fit on one row of desk */
+/* narrower screens: note on top, then the props that fit on one row of desk, MacBook in the middle column */
 @media (max-width: 60rem) {
   .desk-empty {
-    grid-template-columns: repeat(4, auto); justify-content: space-around;
-    grid-template-areas: "note note note note" "lamp returns laptop mug";
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto repeat(2, minmax(0, 1fr)); justify-items: center;
+    grid-template-areas: "note note note note note" "lamp returns laptop mug banker";
   }
-  .on-hold { justify-self: center; }
-  .desk-empty .desk-stamp, .desk-empty .desk-banker { display: none; }
+  .desk-laptop { position: static; margin-left: 0; grid-area: laptop; }
+  .desk-empty .desk-stamp { display: none; }
 }
-@media (max-width: 30rem) {
-  .desk-empty { grid-template-columns: repeat(3, auto); grid-template-areas: "note note note" "lamp laptop mug"; }
-  .desk-empty .desk-returns { display: none; }
+@media (max-width: 40rem) {
+  .desk-empty { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: "note note note" "lamp laptop mug"; }
+  .desk-empty .desk-returns, .desk-empty .desk-banker { display: none; }
 }
 .desk-prop { display: block; height: auto; image-rendering: pixelated; filter: drop-shadow(3px 0 0 rgba(0,0,0,.25)); }
 .desk-lamp { width: 4rem; }
@@ -671,7 +673,7 @@ main.subpage { padding-top: 5rem; }
 .desk-hint { flex: 1; align-self: center; margin: 0 1rem; text-align: center; font: .55rem/1.8 var(--pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .04em; }
 .desk-hint::before { content: "▲ "; }
 .desk-empty[hidden] ~ .desk-legs .desk-hint { visibility: hidden; }
-/* pinned "On hold" note: hobbies on the waiting list */
+/* pinned "Up next" note: hobbies on the waiting list */
 .on-hold {
   position: relative; width: 10.5rem; margin-bottom: .4rem; padding: .9rem .75rem .6rem;
   color: var(--text-dark); background: #fff1a8;
