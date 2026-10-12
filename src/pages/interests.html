@@ -41,6 +41,7 @@
       <div class="reading-desk">
         <!-- Desk scene, shown while every book is on the shelf -->
         <div class="desk-empty" id="shelfHint">
+          <p class="desk-hint">Pick a book off the shelf to read it here.</p>
           <button class="desk-prop desk-lamp lamp" type="button" aria-pressed="true" aria-label="Desk lamp">
             <svg viewBox="0 0 16 20" width="64" height="80" shape-rendering="crispEdges">
               <path fill="#2a1f1a" d="M3 18h10v2H3zM7 8h2v10H7z"/>
@@ -98,6 +99,6 @@
         </div>
 {{cards}}
         <div class="desk-top"></div>
-        <div class="desk-legs"><span aria-hidden="true"></span><p class="desk-hint">Pick a book off the shelf to read it here.</p><span aria-hidden="true"></span></div>
+        <div class="desk-legs" aria-hidden="true"><span></span><span></span></div>
       </div>
     </section>
