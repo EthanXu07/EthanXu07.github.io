@@ -738,6 +738,7 @@ main.subpage { padding-top: 5rem; }
 .open-book-desc { margin: 0 0 .9rem; font-size: .98rem; line-height: 1.55rem; }   /* sits on the ruled lines */
 .open-book-plate { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: .9rem; box-shadow: 0 0 0 3px var(--edge); }
 .open-book .catalog-meta { margin-bottom: 0; }
+.open-book-left .quest-list { margin-bottom: 0; }
 .open-book .checkout-label { margin-top: .6rem; }
 .open-book .quest-list { margin: 0 0 1.1rem; }
 .open-book-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: auto; }
