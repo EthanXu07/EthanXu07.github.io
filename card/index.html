@@ -140,17 +140,35 @@
         { color: '#040409', par: 0.45, list: pines(34 * S + 16, 70, 90, 202) },
       ];
       moon = { x: W * (W < 640 ? 0.86 : 0.91), y: horizon * 0.26, r: 22 * S + 10 };
-      // Fire-ring rocks: lumpy polygons, sized and placed once
-      const rn = W < 640 ? 11 : 14;
-      rocks = Array.from({ length: rn }, (_, i) => {
-        const a = (i / rn) * 6.283 + 0.12 + (seeded(i + 60) - 0.5) * 0.18;
-        const w = (17 + seeded(i) * 12) * S, h = (11 + seeded(i + 4) * 7) * S;
-        const verts = Array.from({ length: 10 }, (_, j) => {
-          const th = (j / 10) * 6.283, r = 0.82 + seeded(i * 10 + j) * 0.3;
-          return [Math.cos(th) * w * r, Math.sin(th) * h * r * (Math.sin(th) > 0 ? 0.55 : 1)];
+      // Fire ring: a tight circle of mismatched stones (touching, some overlapping) plus a few loose pebbles
+      // outside it. Shapes, tones, creases and speckles are generated once per resize.
+      const TONES = [['#6a5a52', '#2b2220'], ['#5c5048', '#241d1b'], ['#746253', '#2e2420'], ['#514744', '#1f1a1a'], ['#66564a', '#28201c']];
+      const makeRock = (i, a, w, h, rad) => {
+        const n = 9, skew = (seeded(i + 11) - 0.5) * 0.22;
+        const verts = Array.from({ length: n }, (_, j) => {
+          const th = ((j + (seeded(i * 13 + j) - 0.5) * 0.5) / n) * 6.283, r = 0.8 + seeded(i * 10 + j) * 0.34;
+          const vy = Math.sin(th) * h * r * (Math.sin(th) > 0 ? 0.6 : 1);
+          return [Math.cos(th) * w * r + vy * skew, vy];
         });
-        return { a, w, h, verts, front: Math.sin(a) > 0.05 };
+        // top plane: the upper outline pulled in, so the stone reads as faceted instead of a blob
+        const facet = verts.filter(([, vy]) => vy < -h * 0.15).map(([vx, vy]) => [vx * 0.66 + w * (seeded(i + 21) - 0.5) * 0.2, vy * 0.8 + h * 0.3]);
+        const crease = Array.from({ length: 2 }, (_, k) => {
+          const sx = (seeded(i * 7 + k) - 0.5) * w * 1.1;
+          return [[sx, -h * 0.75], [sx + (seeded(i * 7 + k + 3) - 0.5) * w * 0.5, -h * 0.15], [sx + (seeded(i * 7 + k + 5) - 0.5) * w * 0.8, h * 0.3]];
+        });
+        const specks = Array.from({ length: 9 }, (_, k) => [(seeded(i * 17 + k) - 0.5) * w * 1.5, (seeded(i * 19 + k) - 0.75) * h * 1.3, (0.35 + seeded(i * 23 + k) * 0.6) * S, seeded(i * 29 + k) > 0.5]);
+        return { a, w, h, rad, verts, facet, crease, specks, tone: TONES[Math.floor(seeded(i + 31) * TONES.length)], front: Math.sin(a) > 0.05 };
+      };
+      const rn = W < 640 ? 15 : 21;
+      rocks = Array.from({ length: rn }, (_, i) => {
+        const big = seeded(i + 2) > 0.6;
+        return makeRock(i, (i / rn) * 6.283 + 0.12 + (seeded(i + 60) - 0.5) * 0.16, (19 + seeded(i) * 13 + (big ? 7 : 0)) * S, (12 + seeded(i + 4) * 9 + (big ? 5 : 0)) * S, 0.64 + (seeded(i + 8) - 0.5) * 0.05);
       });
+      for (let i = 0; i < (W < 640 ? 5 : 9); i++) {     // loose pebbles and a couple of spare stones
+        rocks.push(makeRock(100 + i, seeded(i + 400) * 6.283, (6 + seeded(i + 410) * 9) * S, (4 + seeded(i + 420) * 6) * S, 0.8 + seeded(i + 430) * 0.22));
+      }
+      rocks.sort((p, q) => Math.sin(p.a) * p.rad - Math.sin(q.a) * q.rad);   // far to near
+      rocks.forEach(paintRock);
       coals = Array.from({ length: 10 }, (_, i) => ({ u: (seeded(i + 300) - 0.5) * 0.7, v: seeded(i + 320), r: (2 + seeded(i + 340) * 3) * S, ph: seeded(i + 360) * 6.28 }));
       // Put the card in the white-hot core of the fire
       card.style.setProperty('--fx', `${fx}px`);
@@ -390,36 +408,148 @@
     }
 
     // ---------- Fire ring, logs, flames ----------
-    function stones(front) {
-      const rx = baseW * 0.64, ry = rx * 0.3;
+    // Each stone is painted once per resize into two small off-screen layers (the stone itself, and the
+    // firelight falling on it); every frame just stamps them, fading the light layer with the flicker.
+    function paintRock(rk) {
+      const lx = fx, ly = fy - flameH * 0.12;               // where the light comes from
+      const rx = baseW * rk.rad, ry = rx * 0.3, { w, h, front } = rk;
+      rk.x = fx + Math.cos(rk.a) * rx; rk.y = fy + Math.sin(rk.a) * ry + 8 * S;
+      const d = Math.hypot(lx - rk.x, ly - rk.y) || 1, ux = (lx - rk.x) / d, uy = (ly - rk.y) / d;
+      rk.pw = w * 5; rk.ph = h * 4.4;                        // layer size (CSS px), stone centred at (pw/2, ph*0.55)
+      const layer = () => {
+        const c = document.createElement('canvas');
+        c.width = Math.ceil(rk.pw * dpr); c.height = Math.ceil(rk.ph * dpr);
+        const g2 = c.getContext('2d'); g2.scale(dpr, dpr); g2.translate(rk.pw / 2, rk.ph * 0.55);
+        return [c, g2];
+      };
+      const outline = (c) => {                             // worn edges: curve through the midpoints of the polygon's sides
+        const v = rk.verts, n = v.length, mid = (j) => [(v[j][0] + v[(j + 1) % n][0]) / 2, (v[j][1] + v[(j + 1) % n][1]) / 2];
+        c.beginPath(); c.moveTo(...mid(n - 1));
+        for (let j = 0; j < n; j++) c.quadraticCurveTo(v[j][0], v[j][1], ...mid(j));
+        c.closePath();
+      };
+      const [base, b] = layer();
+      // soft shadow thrown away from the fire
+      const sh = b.createRadialGradient(-ux * w * 0.5, h * 1.05, 0, -ux * w * 0.5, h * 1.05, w * 1.5);
+      sh.addColorStop(0, 'rgba(0,0,0,0.6)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+      b.save(); b.scale(1, 0.4); b.fillStyle = sh; b.beginPath(); b.arc(-ux * w * 0.5, h * 1.05, w * 1.5, 0, 6.283); b.fill(); b.restore();
+      // body
+      const g = b.createLinearGradient(0, -h, 0, h * 0.55);
+      g.addColorStop(0, rk.tone[0]); g.addColorStop(0.55, rk.tone[1]); g.addColorStop(1, '#0f0b0b');
+      outline(b); b.fillStyle = g; b.fill();
+      b.save(); outline(b); b.clip();
+      // top plane catches a little more light
+      b.fillStyle = 'rgba(255,236,214,0.09)';
+      b.beginPath(); rk.facet.forEach(([vx, vy], j) => (j ? b.lineTo(vx, vy) : b.moveTo(vx, vy))); b.closePath(); b.fill();
+      // the side turned away from the fire falls into shadow
+      const dk = b.createLinearGradient(ux * w, 0, -ux * w, 0);
+      dk.addColorStop(0, 'rgba(0,0,0,0)'); dk.addColorStop(1, `rgba(0,0,0,${front ? 0.5 : 0.4})`);
+      b.fillStyle = dk; b.fillRect(-w * 2, -h * 2, w * 4, h * 4);
+      if (front) { b.fillStyle = 'rgba(6,4,6,0.28)'; b.fillRect(-w * 2, -h * 0.35, w * 4, h * 3); }   // we see the back of the near stones
+      // creases and mineral speckle
+      b.lineWidth = Math.max(1, S); b.lineJoin = 'round';
+      rk.crease.forEach((cr, k) => {
+        b.strokeStyle = `rgba(0,0,0,${k ? 0.16 : 0.28})`;
+        b.beginPath(); cr.forEach(([vx, vy], j) => (j ? b.lineTo(vx, vy) : b.moveTo(vx, vy))); b.stroke();
+      });
+      for (const [sx, sy, sr, lightSpeck] of rk.specks) {
+        b.fillStyle = lightSpeck ? 'rgba(255,225,190,0.1)' : 'rgba(0,0,0,0.2)';
+        b.beginPath(); b.arc(sx, sy, sr, 0, 6.283); b.fill();
+      }
+      // soot where the stone meets the ash
+      const so = b.createLinearGradient(0, h * 0.05, 0, h * 0.55);
+      so.addColorStop(0, 'rgba(0,0,0,0)'); so.addColorStop(1, 'rgba(0,0,0,0.55)');
+      b.fillStyle = so; b.fillRect(-w * 2, 0, w * 4, h);
+      b.restore();
+      outline(b); b.strokeStyle = 'rgba(10,6,7,0.55)'; b.lineWidth = Math.max(1, S * 0.9); b.stroke();
+      // firelight: far stones show their lit faces, near stones only a warm rim along the top
+      const [lit, l] = layer();
+      const cx = ux * w * (front ? 0.7 : 0.45), cy = front ? -h * 1.0 : uy * h * 0.5, r = w * (front ? 1.45 : 2.1);
+      const fl = l.createRadialGradient(cx, cy, 0, cx, cy, r);
+      fl.addColorStop(0, `rgba(255,176,98,${front ? 0.85 : 0.66})`); fl.addColorStop(0.45, 'rgba(214,96,48,0.28)'); fl.addColorStop(1, 'rgba(160,50,30,0)');
+      outline(l); l.clip(); l.fillStyle = fl; l.fillRect(-w * 2, -h * 2, w * 4, h * 4);
+      rk.base = base; rk.lit = lit;
+    }
+    function stones(front, glow = 1) {
       for (const rk of rocks) {
         if (rk.front !== front) continue;
-        const x = fx + Math.cos(rk.a) * rx, y = fy + Math.sin(rk.a) * ry + 8 * S;
-        ctx.save(); ctx.translate(x, y);
-        // contact shadow
-        ctx.fillStyle = 'rgba(0,0,0,0.45)';
-        ctx.beginPath(); ctx.ellipse(0, rk.h * 0.45, rk.w * 1.05, rk.h * 0.35, 0, 0, 6.283); ctx.fill();
-        // body: back-row rocks face the fire (lit), front-row rocks are lit only on their far edge
-        const g = ctx.createLinearGradient(0, -rk.h, 0, rk.h * 0.6);
-        if (front) { g.addColorStop(0, '#9a6244'); g.addColorStop(0.3, '#4a3229'); g.addColorStop(1, '#171012'); }
-        else { g.addColorStop(0, '#b0714a'); g.addColorStop(0.5, '#5b3a2d'); g.addColorStop(1, '#1c1517'); }
-        ctx.fillStyle = g;
-        ctx.beginPath(); rk.verts.forEach(([vx, vy], j) => (j ? ctx.lineTo(vx, vy) : ctx.moveTo(vx, vy))); ctx.closePath(); ctx.fill();
-        // a crack + speckle for texture
-        ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = Math.max(1, S);
-        ctx.beginPath(); ctx.moveTo(-rk.w * 0.25, -rk.h * 0.5); ctx.lineTo(-rk.w * 0.05, -rk.h * 0.1); ctx.lineTo(rk.w * 0.1, rk.h * 0.1); ctx.stroke();
-        ctx.fillStyle = front ? 'rgba(255,170,110,0.2)' : 'rgba(255,200,150,0.25)';
-        ctx.beginPath(); ctx.ellipse(rk.w * 0.2, -rk.h * 0.55, rk.w * 0.35, rk.h * 0.18, -0.2, 0, 6.283); ctx.fill();
-        ctx.restore();
+        const x = rk.x - rk.pw / 2, y = rk.y - rk.ph * 0.55;
+        ctx.drawImage(rk.base, x, y, rk.pw, rk.ph);
+        ctx.globalAlpha = Math.min(1, glow); ctx.drawImage(rk.lit, x, y, rk.pw, rk.ph); ctx.globalAlpha = 1;
       }
     }
 
-    function log(x0, y0, x1, y1, thick, bark) {
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = bark; ctx.lineWidth = thick;
-      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
-      ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = thick * 0.25;       // bark sheen
-      ctx.beginPath(); ctx.moveTo(x0, y0 - thick * 0.2); ctx.lineTo(x1, y1 - thick * 0.2); ctx.stroke();
+    // A split piece of firewood from its outer end (x0, y0) to the end in the fire (x1, y1): tapered, barked,
+    // charred toward the fire with glowing cracks, and a cut face with growth rings on the outer end.
+    function log(x0, y0, x1, y1, thick, bark, { seed = 0, glow = 1, char = 0.6, face = true, topGlow = 0, tip = 0.7 } = {}) {
+      const L = Math.hypot(x1 - x0, y1 - y0), ang = Math.atan2(y1 - y0, x1 - x0);
+      const up = Math.cos(ang) >= 0 ? -1 : 1;              // which local side faces up on screen
+      const t0 = thick / 2, t1 = t0 * 0.8, bump = thick * 0.05;
+      ctx.save(); ctx.translate(x0, y0); ctx.rotate(ang);
+      const body = () => {
+        ctx.beginPath(); ctx.moveTo(0, -t0);
+        ctx.quadraticCurveTo(L * 0.3, -t0 - bump, L * 0.6, -t0 * 0.92 + bump); ctx.lineTo(L - t1 * 0.5, -t1);
+        ctx.quadraticCurveTo(L + t1 * 0.5, 0, L - t1 * 0.5, t1);
+        ctx.quadraticCurveTo(L * 0.5, t0 + bump, 0, t0); ctx.closePath();
+      };
+      body(); ctx.fillStyle = bark; ctx.fill();
+      ctx.save(); body(); ctx.clip();
+      // round it: lit along the upper side, dark underneath
+      const rg = ctx.createLinearGradient(0, up * t0, 0, -up * t0);
+      rg.addColorStop(0, 'rgba(255,190,130,0.16)'); rg.addColorStop(0.35, 'rgba(0,0,0,0)'); rg.addColorStop(1, 'rgba(0,0,0,0.6)');
+      ctx.fillStyle = rg; ctx.fillRect(-thick, -thick, L + thick * 2, thick * 2);
+      // bark: broken furrows running along the grain, and a knot
+      ctx.lineCap = 'round'; ctx.lineWidth = Math.max(1, thick * 0.06);
+      for (let k = 0; k < 7; k++) {
+        const yy = (seeded(seed * 9 + k) - 0.5) * thick * 0.85, a0 = seeded(seed * 9 + k + 40) * L * 0.5, len = (0.18 + seeded(seed * 9 + k + 80) * 0.4) * L;
+        ctx.strokeStyle = k % 3 ? 'rgba(0,0,0,0.38)' : 'rgba(255,205,160,0.1)';
+        ctx.beginPath(); ctx.moveTo(a0, yy); ctx.quadraticCurveTo(a0 + len * 0.5, yy + (seeded(seed + k + 5) - 0.5) * thick * 0.22, a0 + len, yy + (seeded(seed + k + 6) - 0.5) * thick * 0.1); ctx.stroke();
+      }
+      const kx = L * (0.22 + seeded(seed + 50) * 0.2), ky = (seeded(seed + 51) - 0.5) * thick * 0.35;
+      ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.beginPath(); ctx.ellipse(kx, ky, thick * 0.13, thick * 0.07, 0.3, 0, 6.283); ctx.fill();
+      // charred toward the fire, ending in live embers
+      const cg = ctx.createLinearGradient(0, 0, L, 0);
+      cg.addColorStop(0, 'rgba(0,0,0,0)'); cg.addColorStop(Math.max(0.05, 1 - char), 'rgba(0,0,0,0)');
+      cg.addColorStop(Math.min(0.97, 1 - char * 0.45), 'rgba(12,6,5,0.85)'); cg.addColorStop(1, tip ? `rgba(255,96,30,${tip * glow})` : 'rgba(12,6,5,0.85)');
+      ctx.fillStyle = cg; ctx.fillRect(-thick, -thick, L + thick * 2, thick * 2);
+      if (topGlow) {                                       // lying under the flames: scorched and lit along the top
+        const tg = ctx.createLinearGradient(0, up * t0, 0, -up * t0);
+        tg.addColorStop(0, `rgba(255,150,60,${0.8 * topGlow * glow})`); tg.addColorStop(0.4, 'rgba(110,34,12,0.3)'); tg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = tg; ctx.fillRect(L * 0.08, -thick, L, thick * 2);
+      }
+      // embers: the char splits into a crazed pattern with fire showing through the cracks
+      ctx.globalCompositeOperation = 'lighter'; ctx.lineJoin = 'round';
+      const from = topGlow ? 0.1 : 1 - char * 0.6;
+      for (let k = 0; k < (topGlow ? 7 : 3); k++) {
+        const u = from + seeded(seed * 5 + k + 120) * (0.95 - from), cxk = u * L;
+        const cyk = topGlow ? up * t0 * (0.1 + seeded(seed + k + 130) * 0.7) : (seeded(seed + k + 130) - 0.5) * thick * 0.6;
+        const fl = (reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(t * 0.07 + k * 1.7 + seed)) * glow;
+        const eg = ctx.createRadialGradient(cxk, cyk, 0, cxk, cyk, thick * 0.42);
+        eg.addColorStop(0, `rgba(255,120,40,${0.4 * fl})`); eg.addColorStop(1, 'rgba(255,80,20,0)');
+        ctx.fillStyle = eg; ctx.beginPath(); ctx.arc(cxk, cyk, thick * 0.42, 0, 6.283); ctx.fill();
+        ctx.strokeStyle = `rgba(255,${Math.round(150 + 50 * fl)},70,${0.7 * fl})`; ctx.lineWidth = Math.max(0.8, thick * 0.035);
+        ctx.beginPath(); ctx.moveTo(cxk - thick * 0.45, cyk + (seeded(seed + k * 3 + 140) - 0.5) * thick * 0.2);
+        for (let q = 1; q <= 4; q++) ctx.lineTo(cxk - thick * 0.45 + q * thick * 0.24, cyk + (seeded(seed + k * 3 + q + 150) - 0.5) * thick * 0.26);
+        ctx.moveTo(cxk, cyk); ctx.lineTo(cxk + (seeded(seed + k + 160) - 0.5) * thick * 0.3, cyk - up * thick * 0.24);   // a short branch across the grain
+        ctx.stroke();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.restore();
+      body(); ctx.strokeStyle = 'rgba(10,6,6,0.6)'; ctx.lineWidth = Math.max(1, S * 0.9); ctx.stroke();
+      if (face) {
+        // cut face: bark rim, pale sapwood, darker heartwood, growth rings and a drying crack
+        const ex = t0 * 0.42, hx = (seeded(seed + 70) - 0.5) * ex * 0.4, hy = (seeded(seed + 71) - 0.5) * t0 * 0.3;
+        ctx.fillStyle = '#20130c'; ctx.beginPath(); ctx.ellipse(0, 0, ex * 1.12, t0 * 1.04, 0, 0, 6.283); ctx.fill();
+        const wg = ctx.createRadialGradient(hx, hy, 0, 0, 0, t0);
+        wg.addColorStop(0, '#6b4429'); wg.addColorStop(0.45, '#8e623d'); wg.addColorStop(1, '#a87a4f');
+        ctx.fillStyle = wg; ctx.beginPath(); ctx.ellipse(0, 0, ex * 0.88, t0 * 0.86, 0, 0, 6.283); ctx.fill();
+        ctx.strokeStyle = 'rgba(60,34,18,0.55)'; ctx.lineWidth = Math.max(0.8, S * 0.7);
+        for (const k of [0.28, 0.5, 0.7]) { ctx.beginPath(); ctx.ellipse(hx * (1 - k), hy * (1 - k), ex * 0.88 * k, t0 * 0.86 * k, 0, 0, 6.283); ctx.stroke(); }
+        const ca = seeded(seed + 72) * 6.283;
+        ctx.strokeStyle = 'rgba(30,16,8,0.7)'; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + Math.cos(ca) * ex * 0.75, hy + Math.sin(ca) * t0 * 0.75); ctx.stroke();
+        ctx.fillStyle = 'rgba(8,5,8,0.35)'; ctx.beginPath(); ctx.ellipse(0, 0, ex * 1.12, t0 * 1.04, 0, 0, 6.283); ctx.fill();   // it faces away from the fire
+      }
+      ctx.restore();
     }
 
     // Logs lean in toward the middle like a teepee. Back logs are drawn before the
@@ -432,22 +562,8 @@
     function teepeeLog(deg, i, portion, front, glow) {
       const { ox, oy, ax, ay } = logEnds(deg);
       const ex = ox + (ax - ox) * portion, ey = oy + (ay - oy) * portion;
-      const th = (17 + seeded(i + 70) * 7) * S;
-      log(ox, oy, ex, ey, th, ['#3a2216', '#301b12', '#40261a', '#2a1810'][i % 4]);
-      // charred, glowing section toward the fire
-      const cg = ctx.createLinearGradient(ox, oy, ex, ey);
-      cg.addColorStop(0, 'rgba(0,0,0,0)'); cg.addColorStop(0.55, 'rgba(20,8,6,0.65)'); cg.addColorStop(1, `rgba(255,110,40,${0.75 * glow})`);
-      ctx.strokeStyle = cg; ctx.lineWidth = th * 0.8; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ex, ey); ctx.stroke();
-      if (front) {
-        // end grain on the outer end
-        const ang = Math.atan2(ey - oy, ex - ox);
-        ctx.save(); ctx.translate(ox, oy); ctx.rotate(ang);
-        ctx.fillStyle = '#7d5638'; ctx.beginPath(); ctx.ellipse(0, 0, th * 0.28, th * 0.5, 0, 0, 6.283); ctx.fill();
-        ctx.strokeStyle = '#4e331f'; ctx.lineWidth = Math.max(1, S);
-        ctx.beginPath(); ctx.ellipse(0, 0, th * 0.14, th * 0.26, 0, 0, 6.283); ctx.stroke();
-        ctx.restore();
-      }
+      const th = (19 + seeded(i + 70) * 9) * S;
+      log(ox, oy, ex, ey, th, ['#3d2619', '#33201a', '#44291b', '#2f1c13'][i % 4], { seed: i + 1, glow, char: 0.62, face: front });
     }
 
     function logs(glow = 1) {
@@ -487,15 +603,10 @@
       ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(fx, fy + fr * 0.6, baseW * 0.4, fr * 1.2, 0, 0, 6.283); ctx.fill();
       ctx.restore();
       // one log lying along the front of the pit, below the flames (the fire sits on it)
-      const x0 = fx - baseW * 0.4, y0 = fy + fr * 0.95, x1 = fx + baseW * 0.36, y1 = fy + fr * 1.2, th = 20 * S;
-      log(x0, y0, x1, y1, th, '#2e1a11');
-      const cg = ctx.createLinearGradient(0, y0 - th / 2, 0, y0 + th / 2);            // top edge glowing where the flames touch
-      cg.addColorStop(0, `rgba(255,140,50,${0.75 * glow})`); cg.addColorStop(0.45, 'rgba(120,40,15,0.25)'); cg.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.strokeStyle = cg; ctx.lineWidth = th; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
-      ctx.fillStyle = '#7d5638'; ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.3, th * 0.5, 0, 0, 6.283); ctx.fill();
-      ctx.strokeStyle = '#4e331f'; ctx.lineWidth = Math.max(1, S);
-      ctx.beginPath(); ctx.ellipse(x1 + th * 0.2, y1, th * 0.15, th * 0.25, 0, 0, 6.283); ctx.stroke();
+      // (a shorter split piece leans against it so it does not read as one straight bar)
+      const th = 24 * S;
+      log(fx + baseW * 0.37, fy + fr * 1.2, fx - baseW * 0.36, fy + fr * 0.92, th, '#34201a', { seed: 31, glow, char: 0.25, topGlow: 1, tip: 0 });
+      log(fx - baseW * 0.43, fy + fr * 1.5, fx - baseW * 0.02, fy + fr * 1.02, th * 0.7, '#3b2418', { seed: 37, glow, char: 0.4, topGlow: 0.6, tip: 0.35 });
     }
 
     const sparks = [], embers = [];
@@ -640,12 +751,12 @@
 
       ctx.save(); ctx.translate(-look * 26, 0);
       card.style.transform = `translate(calc(-50% + ${(-look * 26).toFixed(1)}px), -50%)`;
-      stones(false);
+      stones(false, glow);
       logs(glow);
       spawn();
       drawFire(glow);
       frontLogs(glow);
-      stones(true);
+      stones(true, glow);
       ctx.restore();
 
       you(-look * 40, toast);
