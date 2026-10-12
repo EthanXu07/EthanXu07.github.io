@@ -159,13 +159,16 @@
         const specks = Array.from({ length: 9 }, (_, k) => [(seeded(i * 17 + k) - 0.5) * w * 1.5, (seeded(i * 19 + k) - 0.75) * h * 1.3, (0.35 + seeded(i * 23 + k) * 0.6) * S, seeded(i * 29 + k) > 0.5]);
         return { a, w, h, rad, verts, facet, crease, specks, tone: TONES[Math.floor(seeded(i + 31) * TONES.length)], front: Math.sin(a) > 0.05 };
       };
-      const rn = W < 640 ? 15 : 21;
+      const rn = W < 640 ? 18 : 26;
       rocks = Array.from({ length: rn }, (_, i) => {
         const big = seeded(i + 2) > 0.6;
-        return makeRock(i, (i / rn) * 6.283 + 0.12 + (seeded(i + 60) - 0.5) * 0.16, (19 + seeded(i) * 13 + (big ? 7 : 0)) * S, (12 + seeded(i + 4) * 9 + (big ? 5 : 0)) * S, 0.64 + (seeded(i + 8) - 0.5) * 0.05);
+        return makeRock(i, (i / rn) * 6.283 + 0.12 + (seeded(i + 60) - 0.5) * 0.14, (19 + seeded(i) * 13 + (big ? 7 : 0)) * S, (12 + seeded(i + 4) * 9 + (big ? 5 : 0)) * S, 0.64 + (seeded(i + 8) - 0.5) * 0.05);
       });
-      for (let i = 0; i < (W < 640 ? 5 : 9); i++) {     // loose pebbles and a couple of spare stones
-        rocks.push(makeRock(100 + i, seeded(i + 400) * 6.283, (6 + seeded(i + 410) * 9) * S, (4 + seeded(i + 420) * 6) * S, 0.8 + seeded(i + 430) * 0.22));
+      for (let i = 0; i < (W < 640 ? 6 : 10); i++) {    // a second, looser row of stones chocked against the ring
+        rocks.push(makeRock(200 + i, (i / (W < 640 ? 6 : 10)) * 6.283 + 0.5 + (seeded(i + 500) - 0.5) * 0.5, (14 + seeded(i + 510) * 11) * S, (9 + seeded(i + 520) * 8) * S, 0.74 + seeded(i + 530) * 0.05));
+      }
+      for (let i = 0; i < (W < 640 ? 9 : 18); i++) {    // loose pebbles scattered around the pit
+        rocks.push(makeRock(100 + i, seeded(i + 400) * 6.283, (5 + seeded(i + 410) * 9) * S, (3.5 + seeded(i + 420) * 6) * S, 0.84 + seeded(i + 430) * 0.34));
       }
       rocks.sort((p, q) => Math.sin(p.a) * p.rad - Math.sin(q.a) * q.rad);   // far to near
       rocks.forEach(paintRock);
@@ -509,8 +512,8 @@
       ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.beginPath(); ctx.ellipse(kx, ky, thick * 0.13, thick * 0.07, 0.3, 0, 6.283); ctx.fill();
       // charred toward the fire, ending in live embers
       const cg = ctx.createLinearGradient(0, 0, L, 0);
-      cg.addColorStop(0, 'rgba(0,0,0,0)'); cg.addColorStop(Math.max(0.05, 1 - char), 'rgba(0,0,0,0)');
-      cg.addColorStop(Math.min(0.97, 1 - char * 0.45), 'rgba(12,6,5,0.85)'); cg.addColorStop(1, tip ? `rgba(255,96,30,${tip * glow})` : 'rgba(12,6,5,0.85)');
+      cg.addColorStop(0, 'rgba(0,0,0,0)'); cg.addColorStop(char ? Math.max(0.05, 1 - char) : 1, 'rgba(0,0,0,0)');
+      if (char) { cg.addColorStop(Math.min(0.97, 1 - char * 0.45), 'rgba(12,6,5,0.85)'); cg.addColorStop(1, tip ? `rgba(255,96,30,${tip * glow})` : 'rgba(12,6,5,0.85)'); }
       ctx.fillStyle = cg; ctx.fillRect(-thick, -thick, L + thick * 2, thick * 2);
       if (topGlow) {                                       // lying under the flames: scorched and lit along the top
         const tg = ctx.createLinearGradient(0, up * t0, 0, -up * t0);
@@ -520,7 +523,7 @@
       // embers: the char splits into a crazed pattern with fire showing through the cracks
       ctx.globalCompositeOperation = 'lighter'; ctx.lineJoin = 'round';
       const from = topGlow ? 0.1 : 1 - char * 0.6;
-      for (let k = 0; k < (topGlow ? 7 : 3); k++) {
+      for (let k = 0; k < (topGlow ? 7 : char ? 3 : 0); k++) {
         const u = from + seeded(seed * 5 + k + 120) * (0.95 - from), cxk = u * L;
         const cyk = topGlow ? up * t0 * (0.1 + seeded(seed + k + 130) * 0.7) : (seeded(seed + k + 130) - 0.5) * thick * 0.6;
         const fl = (reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(t * 0.07 + k * 1.7 + seed)) * glow;
@@ -554,7 +557,7 @@
 
     // Logs lean in toward the middle like a teepee. Back logs are drawn before the
     // flames (mostly hidden), front logs after them (their lower ends show).
-    const LOG_ANGLES_BACK = [192, 232, 300, 348], LOG_ANGLES_FRONT = [150, 38];
+    const LOG_ANGLES_BACK = [192, 212, 232, 268, 300, 325, 348], LOG_ANGLES_FRONT = [150, 122, 60, 38, 12];
     function logEnds(deg) {
       const th = deg * Math.PI / 180, back = Math.sin(th) < 0, R = baseW * (back ? 0.56 : 0.58), ry = baseW * (back ? 0.13 : 0.17);
       return { ox: fx + Math.cos(th) * R, oy: fy + Math.sin(th) * ry + 4 * S, ax: fx + Math.cos(th) * baseW * 0.06, ay: fy - flameH * (back ? 0.2 : 0.12) };
@@ -581,7 +584,7 @@
       ctx.beginPath(); ctx.ellipse(fx, fy, baseW * 0.45, baseW * 0.13, 0, 0, 6.283); ctx.fill();
       // the log pile: all of it sits under the flames; only the ends show around the base
       LOG_ANGLES_BACK.forEach((d, i) => teepeeLog(d, i, 1, true, glow));
-      LOG_ANGLES_FRONT.forEach((d, i) => teepeeLog(d, i + 5, 0.75, true, glow));
+      LOG_ANGLES_FRONT.forEach((d, i) => teepeeLog(d, i + 9, 0.75, true, glow));
       const fr = baseW * 0.11;
       for (const c of coals) {
         const x = fx + c.u * baseW * 0.8, y = fy + fr * (0.45 + c.v * 0.35);
@@ -607,6 +610,25 @@
       const th = 24 * S;
       log(fx + baseW * 0.37, fy + fr * 1.2, fx - baseW * 0.36, fy + fr * 0.92, th, '#34201a', { seed: 31, glow, char: 0.25, topGlow: 1, tip: 0 });
       log(fx - baseW * 0.43, fy + fr * 1.5, fx - baseW * 0.02, fy + fr * 1.02, th * 0.7, '#3b2418', { seed: 37, glow, char: 0.4, topGlow: 0.6, tip: 0.35 });
+      log(fx + baseW * 0.46, fy + fr * 1.55, fx + baseW * 0.1, fy + fr * 1.12, th * 0.62, '#41281b', { seed: 43, glow, char: 0.45, topGlow: 0.5, tip: 0.3 });
+    }
+
+    // Spare firewood stacked beside the pit (wide screens only: there is no room for it on a phone)
+    function woodpile(glow) {
+      if (W < 640) return;
+      const px = fx - baseW * 0.98, py = fy + baseW * 0.2, len = baseW * 0.3, th = 21 * S;
+      ctx.save(); ctx.translate(px + len * 0.45, py + th * 0.55); ctx.scale(1, 0.22);
+      const sh = ctx.createRadialGradient(0, 0, 0, 0, 0, len * 0.85);
+      sh.addColorStop(0, 'rgba(0,0,0,0.6)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(0, 0, len * 0.85, 0, 6.283); ctx.fill();
+      ctx.restore();
+      const BARK = ['#3d2619', '#33201a', '#44291b', '#2f1c13', '#3a2317', '#48301f'];
+      // [row, slot]: three on the ground, two resting in the gaps, one on top
+      [[0, 0], [0, 1], [0, 2], [1, 0.5], [1, 1.5], [2, 1]].forEach(([row, slot], i) => {
+        const x0 = px + slot * th * 0.5 + (seeded(i + 600) - 0.5) * th * 0.5, y0 = py - row * th * 0.78 + slot * th * 0.22;
+        const l = len * (0.82 + seeded(i + 610) * 0.3), tilt = (seeded(i + 620) - 0.5) * 0.1 - 0.06;
+        log(x0, y0, x0 + Math.cos(tilt) * l, y0 + Math.sin(tilt) * l, th * (0.82 + seeded(i + 630) * 0.3), BARK[i], { seed: 50 + i, glow, char: 0, tip: 0 });
+      });
     }
 
     const sparks = [], embers = [];
@@ -757,6 +779,7 @@
       drawFire(glow);
       frontLogs(glow);
       stones(true, glow);
+      woodpile(glow);
       ctx.restore();
 
       you(-look * 40, toast);
