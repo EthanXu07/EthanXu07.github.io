@@ -78,12 +78,12 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 (() => {
   const el = $('#dialogText');
   if (!el) return;
-  const text = "Hey, I'm Ethan. I study CS at Berkeley, build ML models, scrape messy data, and write research papers about what I find.";
+  const text = "Hey, I'm Ethan! I'm the kind of person who can't leave a good question alone. I love picking up new things, sharing what I figure out, and jumping into whatever comes next. Still early in the game, and ready to learn a lot more.";
   if (reduceMotion) { el.textContent = text; return; }
   let i = 0;
   const tick = () => {
     el.textContent = text.slice(0, ++i);
-    if (i < text.length) timer = setTimeout(tick, text[i - 1] === '.' ? 260 : 26);
+    if (i < text.length) timer = setTimeout(tick, '.!'.includes(text[i - 1]) ? 260 : 22);
   };
   let timer = setTimeout(tick, 600);
   $('.dialog').addEventListener('click', () => { clearTimeout(timer); el.textContent = text; });
