@@ -78,7 +78,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 (() => {
   const el = $('#dialogText');
   if (!el) return;
-  const text = "Hey, I'm Ethan. I get curious about pretty much everything and I like figuring out how stuff works. I'll try most things once. Still got a ton to learn, and honestly that's the fun part.";
+  const text = "Hey, I'm Ethan. I study CS at Berkeley, where I'm a Regents' and Chancellor's Scholar. When something grabs me I go all in, and there's still a lot I want to learn.";
   if (reduceMotion) { el.textContent = text; return; }
   let i = 0;
   const tick = () => {
