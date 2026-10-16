@@ -169,11 +169,8 @@ kbd {
     repeating-linear-gradient(90deg, var(--gold) 0 10px, var(--gold-dark) 10px 12px);
   transition: width .12s steps(3);
 }
-/* bright leading edge */
-.xp-fill::after { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 2px; background: var(--paper); opacity: .8; }
-.xp-fill[style*="width: 0"]::after { display: none; }
 .xp-tick { position: absolute; top: -3px; bottom: -3px; width: 2px; transform: translateX(-1px); background: var(--ink-3); z-index: 1; }
-.xp-tick.reached { background: var(--paper); }
+.xp-tick.reached { background: var(--gold-dark); }
 @media (prefers-reduced-motion: reduce) { .xp-fill { transition: none; } .xp-lv.up b { animation: none; } }
 @media (max-width: 30rem) { .xp-pct { display: none; } }
 
