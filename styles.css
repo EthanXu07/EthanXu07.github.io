@@ -156,7 +156,7 @@ kbd {
 .xp-lv.up b { animation: lv-up .5s steps(4); }
 @keyframes lv-up { 30% { transform: translateY(-4px) scale(1.4); color: var(--paper); } }
 .xp-pct { min-width: 4ch; text-align: right; color: var(--text-light-2); }
-/* Pixel-bordered gauge: dark well, segmented gold fill with a highlight row, checkpoint notches */
+/* Pixel-bordered gauge: dark well, segmented gold fill */
 .xp-track {
   position: relative; flex: 1; height: 10px;
   background: var(--edge);
@@ -165,12 +165,10 @@ kbd {
 .xp-fill {
   position: relative; height: 100%; width: 0;
   background:
-    linear-gradient(to bottom, rgba(255, 255, 255, .35) 0 2px, transparent 2px calc(100% - 2px), rgba(0, 0, 0, .25) calc(100% - 2px)),
+    linear-gradient(to bottom, transparent calc(100% - 2px), rgba(0, 0, 0, .25) calc(100% - 2px)),
     repeating-linear-gradient(90deg, var(--gold) 0 10px, var(--gold-dark) 10px 12px);
   transition: width .12s steps(3);
 }
-.xp-tick { position: absolute; top: -3px; bottom: -3px; width: 2px; transform: translateX(-1px); background: var(--ink-3); z-index: 1; }
-.xp-tick.reached { background: var(--gold-dark); }
 @media (prefers-reduced-motion: reduce) { .xp-fill { transition: none; } .xp-lv.up b { animation: none; } }
 @media (max-width: 30rem) { .xp-pct { display: none; } }
 

@@ -108,15 +108,8 @@ function drawSprite(ctx, rows, x, y, flip = false) {
     track?.insertBefore(flag, heroCanvas);
     return flag;
   });
-  const xpTrack = $('#xpTrack');
   const lvEl = $('#xpLv');
   const pctEl = $('#xpPct');
-  const ticks = checkpoints.map(() => {
-    const t = document.createElement('i');
-    t.className = 'xp-tick';
-    xpTrack?.appendChild(t);
-    return t;
-  });
   // Save file: how far you've read each page, kept across pages and visits.
   // Reading a page to the bottom clears it, and every cleared page is a level.
   const SAVE_KEY = 'xp-save';
@@ -161,12 +154,6 @@ function drawSprite(ctx, rows, x, y, flip = false) {
     if (Math.round(seen * 100) > Math.round(best * 100)) { best = seen; record(); }
     fill.style.width = `${best * 100}%`;
     const at = checkpoints.map((s) => Math.min(1, Math.max(0, (s.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3) / maxScroll())));
-    at.forEach((a, i) => {
-      // checkpoints at the very ends would just sit on the bar's edges
-      ticks[i].hidden = a < 0.02 || a > 0.98;
-      ticks[i].style.left = `${a * 100}%`;
-      ticks[i].classList.toggle('reached', best >= a - 0.001);
-    });
     if (lvEl) lvEl.textContent = level;
     if (pctEl) pctEl.textContent = `${Math.round(best * 100)}%`;
     if (!track || getComputedStyle(track).display === 'none') return;
