@@ -110,13 +110,15 @@ function drawSprite(ctx, rows, x, y, flip = false) {
   });
   const lvEl = $('#xpLv');
   const pctEl = $('#xpPct');
-  // Save file: how far you've read each page, kept across pages and visits.
+  // Save file: how far you've read each page, kept across pages for this
+  // visit only (sessionStorage), so every new visit starts back at LV 1.
   // Reading a page to the bottom clears it, and every cleared page is a level.
   const SAVE_KEY = 'xp-save';
   const CLEAR_AT = 0.98;
   const page = location.pathname.replace(/index\.html$/, '').replace(/([^/])$/, '$1/');
-  const load = () => { try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch { return {}; } };
+  const load = () => { try { return JSON.parse(sessionStorage.getItem(SAVE_KEY)) || {}; } catch { return {}; } };
   const levelOf = (save) => 1 + Object.values(save).filter((v) => v >= CLEAR_AT).length;
+  try { localStorage.removeItem(SAVE_KEY); } catch {} // old saves were kept forever
   let save = load();
   let best = Math.min(1, Math.max(0, +save[page] || 0)); // XP is earned, never lost
   let level = levelOf(save);
@@ -131,7 +133,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
     // re-read first so pages cleared in another tab aren't overwritten
     save = load();
     save[page] = Math.max(+save[page] || 0, best);
-    try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch {}
+    try { sessionStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch {}
     const next = levelOf(save);
     if (next > level && lvEl) {
       lvEl.parentElement.classList.remove('up');
