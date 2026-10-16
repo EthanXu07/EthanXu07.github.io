@@ -111,21 +111,42 @@ function drawSprite(ctx, rows, x, y, flip = false) {
   const xpTrack = $('#xpTrack');
   const lvEl = $('#xpLv');
   const pctEl = $('#xpPct');
-  // Pages without checkpoints still level up, every quarter of the page
-  const stops = checkpoints.length ? checkpoints : [0.25, 0.5, 0.75];
-  const ticks = stops.map(() => {
+  const ticks = checkpoints.map(() => {
     const t = document.createElement('i');
     t.className = 'xp-tick';
     xpTrack?.appendChild(t);
     return t;
   });
-  let level = 0;
-  let best = 0; // XP is earned, never lost: the bar keeps its high-water mark
+  // Save file: how far you've read each page, kept across pages and visits.
+  // Reading a page to the bottom clears it, and every cleared page is a level.
+  const SAVE_KEY = 'xp-save';
+  const CLEAR_AT = 0.98;
+  const page = location.pathname.replace(/index\.html$/, '').replace(/([^/])$/, '$1/');
+  const load = () => { try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch { return {}; } };
+  const levelOf = (save) => 1 + Object.values(save).filter((v) => v >= CLEAR_AT).length;
+  let save = load();
+  let best = Math.min(1, Math.max(0, +save[page] || 0)); // XP is earned, never lost
+  let level = levelOf(save);
   let walkFrame = 0;
   let lastY = window.scrollY;
   let idleTimer;
 
   const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  const fitsOnScreen = () => document.documentElement.scrollHeight - window.innerHeight <= 1;
+
+  function record() {
+    // re-read first so pages cleared in another tab aren't overwritten
+    save = load();
+    save[page] = Math.max(+save[page] || 0, best);
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch {}
+    const next = levelOf(save);
+    if (next > level && lvEl) {
+      lvEl.parentElement.classList.remove('up');
+      void lvEl.offsetWidth;
+      lvEl.parentElement.classList.add('up');
+    }
+    level = Math.max(level, next);
+  }
   const drawHero = (frame) => {
     if (!hctx) return;
     hctx.clearRect(0, 0, 12, 16);
@@ -135,28 +156,18 @@ function drawSprite(ctx, rows, x, y, flip = false) {
   function update() {
     // clamp: rubber-band overscroll reports scrollY < 0 (and past the end)
     const p = Math.min(1, Math.max(0, window.scrollY / maxScroll()));
-    best = Math.max(best, p);
+    // a page with nothing to scroll is read as soon as it's open
+    const seen = fitsOnScreen() ? 1 : p;
+    if (Math.round(seen * 100) > Math.round(best * 100)) { best = seen; record(); }
     fill.style.width = `${best * 100}%`;
-    const at = stops.map((s) => typeof s === 'number' ? s
-      : Math.min(1, Math.max(0, (s.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3) / maxScroll())));
-    let reached = 1;
+    const at = checkpoints.map((s) => Math.min(1, Math.max(0, (s.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3) / maxScroll())));
     at.forEach((a, i) => {
-      const hit = best >= a - 0.001;
-      // a checkpoint at the very top is where you start, not a level
+      // checkpoints at the very ends would just sit on the bar's edges
       ticks[i].hidden = a < 0.02 || a > 0.98;
       ticks[i].style.left = `${a * 100}%`;
-      ticks[i].classList.toggle('reached', hit);
-      if (hit && a >= 0.02) reached++;
+      ticks[i].classList.toggle('reached', best >= a - 0.001);
     });
-    if (reached > level) {
-      if (level && lvEl) {
-        lvEl.parentElement.classList.remove('up');
-        void lvEl.offsetWidth;
-        lvEl.parentElement.classList.add('up');
-      }
-      level = reached;
-    }
-    if (lvEl) lvEl.textContent = best >= 0.999 ? 'MAX' : level;
+    if (lvEl) lvEl.textContent = level;
     if (pctEl) pctEl.textContent = `${Math.round(best * 100)}%`;
     if (!track || getComputedStyle(track).display === 'none') return;
 
