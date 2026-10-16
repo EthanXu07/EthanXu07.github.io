@@ -150,10 +150,32 @@ kbd {
 @media (max-width: 30rem) { .hud-nav a:first-child { display: none; } .hud-nav { justify-content: space-around; } }
 @media (max-width: 24rem) { .hud .hud-nav a { padding-inline: .1rem; font-size: .38rem; } .hud .nav-icon { width: 16px; height: 16px; } }
 
-.xp { display: flex; align-items: center; gap: .6rem; max-width: 76rem; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem) .5rem; }
-.xp-label { font: .5rem var(--pixel); color: var(--gold); }
-.xp-track { flex: 1; height: 6px; background: var(--ink-3); }
-.xp-fill { height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--gold) 0 8px, var(--gold-dark) 8px 10px); }
+.xp { display: flex; align-items: center; gap: .6rem; max-width: 76rem; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem) .55rem; font: .5rem var(--pixel); }
+.xp-lv { display: flex; align-items: baseline; gap: .3em; color: var(--sage); white-space: nowrap; }
+.xp-lv b { display: inline-block; min-width: 2ch; font-weight: normal; color: var(--gold); text-shadow: 1px 1px 0 var(--edge); }
+.xp-lv.up b { animation: lv-up .5s steps(4); }
+@keyframes lv-up { 30% { transform: translateY(-4px) scale(1.4); color: var(--paper); } }
+.xp-pct { min-width: 4ch; text-align: right; color: var(--text-light-2); }
+/* Pixel-bordered gauge: dark well, segmented gold fill with a highlight row, checkpoint notches */
+.xp-track {
+  position: relative; flex: 1; height: 10px;
+  background: var(--edge);
+  box-shadow: 0 0 0 2px var(--ink-3), inset 0 2px 0 rgba(0, 0, 0, .45);
+}
+.xp-fill {
+  position: relative; height: 100%; width: 0;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, .35) 0 2px, transparent 2px calc(100% - 2px), rgba(0, 0, 0, .25) calc(100% - 2px)),
+    repeating-linear-gradient(90deg, var(--gold) 0 10px, var(--gold-dark) 10px 12px);
+  transition: width .12s steps(3);
+}
+/* bright leading edge */
+.xp-fill::after { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 2px; background: var(--paper); opacity: .8; }
+.xp-fill[style*="width: 0"]::after { display: none; }
+.xp-tick { position: absolute; top: -3px; bottom: -3px; width: 2px; transform: translateX(-1px); background: var(--ink-3); z-index: 1; }
+.xp-tick.reached { background: var(--paper); }
+@media (prefers-reduced-motion: reduce) { .xp-fill { transition: none; } .xp-lv.up b { animation: none; } }
+@media (max-width: 30rem) { .xp-pct { display: none; } }
 
 @media (max-width: 52rem) {
   .hud-row { flex-wrap: wrap; row-gap: .25rem; }
