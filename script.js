@@ -108,6 +108,18 @@ function drawSprite(ctx, rows, x, y, flip = false) {
     track?.insertBefore(flag, heroCanvas);
     return flag;
   });
+  const xpTrack = $('#xpTrack');
+  const lvEl = $('#xpLv');
+  const pctEl = $('#xpPct');
+  // Pages without checkpoints still level up, every quarter of the page
+  const stops = checkpoints.length ? checkpoints : [0.25, 0.5, 0.75];
+  const ticks = stops.map(() => {
+    const t = document.createElement('i');
+    t.className = 'xp-tick';
+    xpTrack?.appendChild(t);
+    return t;
+  });
+  let level = 0;
   let walkFrame = 0;
   let lastY = window.scrollY;
   let idleTimer;
@@ -122,14 +134,34 @@ function drawSprite(ctx, rows, x, y, flip = false) {
   function update() {
     const p = Math.min(1, window.scrollY / maxScroll());
     fill.style.width = `${p * 100}%`;
+    const at = stops.map((s) => typeof s === 'number' ? s
+      : Math.min(1, Math.max(0, (s.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3) / maxScroll())));
+    let reached = 1;
+    at.forEach((a, i) => {
+      const hit = p >= a - 0.001;
+      // a checkpoint at the very top is where you start, not a level
+      ticks[i].hidden = a < 0.02 || a > 0.98;
+      ticks[i].style.left = `${a * 100}%`;
+      ticks[i].classList.toggle('reached', hit);
+      if (hit && a >= 0.02) reached++;
+    });
+    if (reached !== level) {
+      if (level && reached > level && lvEl) {
+        lvEl.parentElement.classList.remove('up');
+        void lvEl.offsetWidth;
+        lvEl.parentElement.classList.add('up');
+      }
+      level = reached;
+    }
+    if (lvEl) lvEl.textContent = p >= 0.999 ? 'MAX' : level;
+    if (pctEl) pctEl.textContent = `${Math.round(p * 100)}%`;
     if (!track || getComputedStyle(track).display === 'none') return;
 
     const h = track.clientHeight;
     heroCanvas.style.top = `${p * h}px`;
     checkpoints.forEach((section, i) => {
-      const at = Math.min(1, Math.max(0, (section.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3) / maxScroll()));
-      flags[i].style.top = `${at * h}px`;
-      flags[i].classList.toggle('reached', p >= at - 0.001);
+      flags[i].style.top = `${at[i] * h}px`;
+      flags[i].classList.toggle('reached', p >= at[i] - 0.001);
     });
     // Alternate legs while scrolling; stand still when you stop
     if (Math.abs(window.scrollY - lastY) > 24) {
