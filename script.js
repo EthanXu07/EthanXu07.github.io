@@ -120,6 +120,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
     return t;
   });
   let level = 0;
+  let best = 0; // XP is earned, never lost: the bar keeps its high-water mark
   let walkFrame = 0;
   let lastY = window.scrollY;
   let idleTimer;
@@ -132,36 +133,38 @@ function drawSprite(ctx, rows, x, y, flip = false) {
   };
 
   function update() {
-    const p = Math.min(1, window.scrollY / maxScroll());
-    fill.style.width = `${p * 100}%`;
+    // clamp: rubber-band overscroll reports scrollY < 0 (and past the end)
+    const p = Math.min(1, Math.max(0, window.scrollY / maxScroll()));
+    best = Math.max(best, p);
+    fill.style.width = `${best * 100}%`;
     const at = stops.map((s) => typeof s === 'number' ? s
       : Math.min(1, Math.max(0, (s.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3) / maxScroll())));
     let reached = 1;
     at.forEach((a, i) => {
-      const hit = p >= a - 0.001;
+      const hit = best >= a - 0.001;
       // a checkpoint at the very top is where you start, not a level
       ticks[i].hidden = a < 0.02 || a > 0.98;
       ticks[i].style.left = `${a * 100}%`;
       ticks[i].classList.toggle('reached', hit);
       if (hit && a >= 0.02) reached++;
     });
-    if (reached !== level) {
-      if (level && reached > level && lvEl) {
+    if (reached > level) {
+      if (level && lvEl) {
         lvEl.parentElement.classList.remove('up');
         void lvEl.offsetWidth;
         lvEl.parentElement.classList.add('up');
       }
       level = reached;
     }
-    if (lvEl) lvEl.textContent = p >= 0.999 ? 'MAX' : level;
-    if (pctEl) pctEl.textContent = `${Math.round(p * 100)}%`;
+    if (lvEl) lvEl.textContent = best >= 0.999 ? 'MAX' : level;
+    if (pctEl) pctEl.textContent = `${Math.round(best * 100)}%`;
     if (!track || getComputedStyle(track).display === 'none') return;
 
     const h = track.clientHeight;
     heroCanvas.style.top = `${p * h}px`;
     checkpoints.forEach((section, i) => {
       flags[i].style.top = `${at[i] * h}px`;
-      flags[i].classList.toggle('reached', p >= at[i] - 0.001);
+      flags[i].classList.toggle('reached', best >= at[i] - 0.001);
     });
     // Alternate legs while scrolling; stand still when you stop
     if (Math.abs(window.scrollY - lastY) > 24) {
