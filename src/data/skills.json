@@ -76,6 +76,11 @@
           "code": "Fl"
         },
         {
+          "id": "django",
+          "name": "Django",
+          "code": "Dj"
+        },
+        {
           "id": "fastapi",
           "name": "FastAPI",
           "code": "FA"
