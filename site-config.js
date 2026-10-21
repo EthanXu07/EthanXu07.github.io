@@ -22,11 +22,11 @@ window.SITE = {
   // Instagram profile URL, e.g. "https://www.instagram.com/yourhandle/" (the button hides while empty)
   instagram: "https://www.instagram.com/ethan_xu__/",
 
-  // Title-screen game leaderboard (speedrun + high score). Leave empty to keep
-  // scores in each visitor's browser only. For a shared global board, create a
-  // free Supabase project, run tools/leaderboard.sql in its SQL editor, and paste
-  // the Project URL and the anon public key (Settings → API) here.
-  leaderboard: {
+  // Supabase project behind the game leaderboard (tools/leaderboard.sql) and the
+  // library's guest wall (tools/guest-wall.sql). The anon key is public by design:
+  // table rules only let visitors read, add scores and place pixels.
+  // Leave empty and the leaderboard stays in each visitor's browser, the guest wall hides.
+  supabase: {
     url: "https://hhwhzcclwqiwmqhowhha.supabase.co",
     anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhod2h6Y2Nsd3Fpd21xaG93aGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1NTM4MzksImV4cCI6MjEwODEyOTgzOX0.JzO_PceesCi688UiED0mHoXD3Cmx3KPs6szPeXcZDy8",
   },

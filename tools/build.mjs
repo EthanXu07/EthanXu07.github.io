@@ -463,6 +463,7 @@ const libraryStats = [`${interests.length} volumes`, `${sectionCount} sections`,
 page({
   out: 'interests/index.html', path: '/interests/', page: 'interests', title: 'The library · Ethan Xu', description: 'What Ethan Xu does when he is not coding.',
   content: fill(src('pages/interests.html'), { spines, cards, chips, upNextBooks, upNextLine, stats: libraryStats }),
+  scripts: '  <script src="/guest-wall.js"></script>\n',
 });
 
 const interestTpl = src('pages/interest.html');

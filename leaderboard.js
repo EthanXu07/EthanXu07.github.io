@@ -2,11 +2,11 @@
 //  Leaderboard for the title-screen platformer (home.js).
 //  Two boards: "speed" (fastest clear, ms, lower is better) and "score"
 //  (highest score, higher is better).
-//  Global when SITE.leaderboard has a Supabase url + anon key (table setup in
+//  Global when SITE.supabase has a Supabase url + anon key (table setup in
 //  tools/leaderboard.sql); otherwise scores are kept in this browser only.
 // =====================================================================
 window.Leaderboard = (() => {
-  const cfg = window.SITE?.leaderboard || {};
+  const cfg = window.SITE?.supabase || {};
   const global = !!(cfg.url && cfg.anonKey);
   const LOCAL_KEY = 'leaderboard:v1';
   const NAME_KEY = 'leaderboard:name';
