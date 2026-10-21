@@ -375,7 +375,7 @@ const DESC = 'Ethan Xu: Computer Science at UC Berkeley. ML research, data pipel
 page({
   out: 'index.html', path: '/', page: 'home', sub: false, title: 'Ethan Xu', description: DESC,
   content: src('pages/home-title.html') + src('pages/home-player.html') + fill(src('pages/home-levels.html'), { exploreCards: exploreCards() }),
-  scripts: '  <script src="/home.js"></script>\n',
+  scripts: '  <script src="/leaderboard.js"></script>\n  <script src="/home.js"></script>\n',
 });
 
 page({

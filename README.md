@@ -18,6 +18,7 @@ node tools/build.mjs
 | `src/data/on-hold.json` | The "Up next" pile of books on the bottom shelf of the library bookcase: one per hobby to pick up next (shown as one line under the shelf when the pile has no room). The brass plaque on the base (volumes, sections, last shelved) is computed at build time |
 | `src/pages/*.html` | Page bodies (home, contact, templates) |
 | `src/layout.html` | Nav bar, footer and résumé pop-up shared by every game page |
+| `leaderboard.js` + `tools/leaderboard.sql` | Title-screen game leaderboard (speedrun time + high score). Until `SITE.leaderboard` in `site-config.js` has a Supabase URL + anon key, scores are only saved in each visitor's browser. To make it global: create a free Supabase project, run `tools/leaderboard.sql` in its SQL editor, then paste the Project URL and anon key into `site-config.js` |
 | `card/index.html` | 🔥 Secret business card (hand-written, not generated). Reached by clearing the title-screen level and walking past the castle to the campfire, or directly at `/card/`. Links come from `site-config.js` |
 
 Edit, rebuild, then commit the generated `index.html` files along with `src/`.

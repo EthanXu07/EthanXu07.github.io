@@ -21,4 +21,10 @@ window.SITE = {
   linkedin: "https://www.linkedin.com/in/EthanXu07/",
   // Instagram profile URL, e.g. "https://www.instagram.com/yourhandle/" (the button hides while empty)
   instagram: "https://www.instagram.com/ethan_xu__/",
+
+  // Title-screen game leaderboard (speedrun + high score). Leave empty to keep
+  // scores in each visitor's browser only. For a shared global board, create a
+  // free Supabase project, run tools/leaderboard.sql in its SQL editor, and paste
+  // the Project URL and the anon public key (Settings → API) here.
+  leaderboard: { url: "", anonKey: "" },
 };

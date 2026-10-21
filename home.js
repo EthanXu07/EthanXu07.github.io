@@ -6,7 +6,8 @@
 //  the flag and into the castle for the fireworks. Secret: after the level is
 //  clear, a campfire lights up past the castle. Stand by it and press Enter
 //  to sit down at the fire (/card/, the business card).
-//  Run out of hearts and it's game over. Before Start only the scenery shows;
+//  Run out of hearts and it's game over. Clears (time + score) and game-over
+//  scores can be sent to the leaderboard (leaderboard.js). Before Start only the scenery shows;
 //  on Start the level drops into place and the name + bio card slides into
 //  the corner.
 //  World coordinates: the ground surface is y = 0 and "up" is negative.
@@ -24,7 +25,7 @@
 
   const PW = 10;
   const PH = 16;
-  const JUMP_V = -4.9;
+  const JUMP_V = -5.8; // ~57 px: enough to land on the 52 px-high brick rows
   const GRAV = 0.28;
   const MAX_HEARTS = 5;
   const START_HEARTS = 3;
@@ -92,7 +93,7 @@
 
   // ---------- State ----------
   const keys = { left: false, right: false, jump: false, down: false };
-  let p, enemies, items, coins, cam, t, playing = false, startT = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, jumpBuffer = 0, coyote = 0, jumpT = 99, checkpoint, popups, particles, winT, near, phase, phaseT, hidePlayer;
+  let p, enemies, items, coins, cam, t, playing = false, startT = 0, runFrames = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, jumpBuffer = 0, coyote = 0, jumpT = 99, checkpoint, popups, particles, winT, near, phase, phaseT, hidePlayer;
   let stars = [], clouds = [];
 
   function newGame() {
@@ -113,6 +114,8 @@
     checkpoint = START_X;
     popups = []; particles = [];
     winT = 0; near = null; phase = null; phaseT = 0; hidePlayer = false;
+    runFrames = 0;
+    resetSubmit();
     overEl.hidden = true;
     prompt.el.hidden = true;
   }
@@ -167,6 +170,7 @@
   }
   $id('pressStart')?.addEventListener('click', (e) => { e.preventDefault(); start(); });
   $id('exploreRetry').addEventListener('click', () => newGame());
+  $id('exploreAgain').addEventListener('click', () => newGame());
 
   // ---------- Input ----------
   const KEYMAP = {
@@ -187,6 +191,7 @@
         return;
       }
     }
+    if ((e.key === 'q' || e.key === 'Q') && playing && !e.repeat) { newGame(); return; } // quick restart (R is the site-wide résumé shortcut)
     const k = KEYMAP[e.key];
     if (!k) return;
     if (onControl && e.key === ' ') return; // Space still presses a focused button
@@ -227,15 +232,99 @@
       prompt.desc.textContent = 'Some friends are gathered around the fire. Press Enter to pull up a log.';
       prompt.go.href = '/card/';
       prompt.go.firstChild.textContent = 'Sit down ';
+      forms.clear.hidden = true;
+      $id('exploreAgain').hidden = true;
     } else {
       prompt.label.textContent = 'Level clear!';
-      prompt.title.textContent = `Score ${score}`;
+      prompt.title.textContent = `${Leaderboard.fmtTime(clearMs())} · Score ${score}`;
       prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Nice run! Press Enter to get in touch. Something is glowing past the castle…`;
+      forms.clear.hidden = false;
+      $id('exploreAgain').hidden = false;
       prompt.go.href = '#contact';
       prompt.go.firstChild.textContent = 'Contact ';
     }
     prompt.el.hidden = false;
   }
+
+  // ---------- Leaderboard ----------
+  const clearMs = () => Math.round((runFrames * 1000) / 60);
+  const forms = {};
+  section.querySelectorAll('.run-submit').forEach((f) => { forms[f.dataset.mode] = f; });
+  function resetSubmit() {
+    for (const f of Object.values(forms)) {
+      f.hidden = true;
+      f.elements.name.disabled = false; f.querySelector('button').disabled = false;
+      f.elements.name.value = Leaderboard.savedName();
+      f.querySelector('.run-submit-msg').textContent = '';
+      f.classList.remove('done');
+    }
+  }
+  for (const f of Object.values(forms)) {
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = Leaderboard.cleanName(f.elements.name.value);
+      const msg = f.querySelector('.run-submit-msg');
+      f.elements.name.disabled = true; f.querySelector('button').disabled = true;
+      msg.textContent = 'Saving…';
+      try {
+        let tab;
+        if (f.dataset.mode === 'clear') {
+          const [speedRank, scoreRank] = await Promise.all([Leaderboard.submit('speed', name, clearMs()), Leaderboard.submit('score', name, score)]);
+          msg.textContent = `Saved! Speedrun #${speedRank} · High score #${scoreRank}`;
+          tab = 'speed';
+        } else {
+          const rank = await Leaderboard.submit('score', name, score);
+          msg.textContent = `Saved! High score #${rank}`;
+          tab = 'score';
+        }
+        f.classList.add('done');
+        openBoard(tab, name);
+      } catch {
+        msg.textContent = "Couldn't reach the leaderboard. Try again?";
+        f.elements.name.disabled = false; f.querySelector('button').disabled = false;
+      }
+    });
+  }
+
+  const board = { el: $id('boardModal'), list: $id('boardList'), note: $id('boardNote'), tab: 'speed', mine: '' };
+  async function renderBoard() {
+    const mode = board.tab;
+    board.el.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === mode)));
+    board.note.textContent = (mode === 'speed' ? 'Fastest clears to the flag. ' : 'Best scores, cleared or not. ') + (Leaderboard.global ? '' : 'Saved in this browser.');
+    board.list.replaceChildren();
+    board.list.setAttribute('aria-busy', 'true');
+    let rows;
+    try { rows = await Leaderboard.top(mode); } catch { rows = null; }
+    if (mode !== board.tab) return; // tab switched while loading
+    board.list.removeAttribute('aria-busy');
+    if (!rows || !rows.length) {
+      const li = document.createElement('li');
+      li.className = 'board-empty';
+      li.textContent = rows ? 'No runs yet. Be the first!' : "Couldn't load the leaderboard.";
+      board.list.append(li);
+      return;
+    }
+    for (const r of rows) {
+      const li = document.createElement('li');
+      if (board.mine && r.name === board.mine) li.classList.add('mine');
+      const n = document.createElement('span'); n.className = 'board-name'; n.textContent = r.name;
+      const v = document.createElement('span'); v.className = 'board-value'; v.textContent = Leaderboard.fmt(mode, r.value);
+      li.append(n, v);
+      board.list.append(li);
+    }
+  }
+  function openBoard(tab = board.tab, mine = Leaderboard.savedName()) {
+    board.tab = tab; board.mine = mine;
+    for (const k in keys) keys[k] = false;
+    if (!board.el.open) board.el.showModal();
+    renderBoard();
+  }
+  section.querySelectorAll('[data-board]').forEach((b) => b.addEventListener('click', () => openBoard()));
+  board.el.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { board.tab = b.dataset.tab; renderBoard(); }));
+  $id('boardClose').addEventListener('click', () => board.el.close());
+  board.el.addEventListener('click', (e) => { if (e.target === board.el) board.el.close(); }); // backdrop
+  // If focus can't go back (the submit button is disabled by now), don't leave it in the closed dialog or the game ignores keys
+  board.el.addEventListener('close', () => { if (board.el.contains(document.activeElement)) document.activeElement.blur(); });
 
   // Secret: walk from the level into the campfire card (glow → darkness spreads from the fire → /card/)
   let leaving = false;
@@ -286,6 +375,7 @@
     state = 'over';
     hearts = 0;
     $id('exploreOverStats').textContent = `Score ${score} · ${coinCount} coins`;
+    forms.score.hidden = score <= 0;
     overEl.hidden = false;
     prompt.el.hidden = true;
     near = null;
@@ -359,6 +449,7 @@
     if (magnet > 0) magnet--;
     if (feather > 0) feather--;
     if (!playing || t - startT < 30) return; // let the level finish dropping in
+    if (state === 'play') runFrames++; // speedrun clock: fixed 60 steps a second, so it can't drift with frame rate
 
     for (const m of movers) { m.x += m.vx; if (m.x < m.minX || m.x > m.maxX) m.vx *= -1; }
 
@@ -688,13 +779,20 @@
     ctx.fillStyle = '#f3c969'; ctx.fillRect(x + 4, top, 6, 8);
     ctx.fillStyle = '#0f1714'; ctx.fillText(String(coinCount), x + 14, top + 1);
     ctx.fillStyle = '#f3c969'; ctx.fillText(String(coinCount), x + 13, top);
+    // Speedrun clock (stops at the flag)
+    const clock = Leaderboard.fmtTime(clearMs());
+    const clockX = narrow ? W - 6 - ctx.measureText(clock).width : x + 13 + ctx.measureText(String(coinCount)).width + 8;
+    const clockY = narrow ? top + 12 : top;
+    ctx.fillStyle = '#0f1714'; ctx.fillText(clock, clockX + 1, clockY + 1);
+    ctx.fillStyle = state === 'won' ? '#f3c969' : '#f1e6cc'; ctx.fillText(clock, clockX, clockY);
     // Active power-ups with seconds left
     const powers = [[star, 'STAR'], [magnet, 'MAGNET'], [feather, '2x JUMP']].filter(([f]) => f > 0).map(([f, n]) => `${n} ${Math.ceil(f / 60)}`);
     if (powers.length) {
       ctx.textAlign = narrow ? 'right' : 'center';
       const px = narrow ? W - 6 : Math.round(W / 2);
-      ctx.fillStyle = '#0f1714'; ctx.fillText(powers.join('  '), px + 1, top + 13);
-      ctx.fillStyle = '#fff3c4'; ctx.fillText(powers.join('  '), px, top + 12);
+      const py = top + (narrow ? 24 : 12);
+      ctx.fillStyle = '#0f1714'; ctx.fillText(powers.join('  '), px + 1, py + 1);
+      ctx.fillStyle = '#fff3c4'; ctx.fillText(powers.join('  '), px, py);
     }
     ctx.textBaseline = 'alphabetic';
   }
@@ -908,7 +1006,7 @@
   // Test hook: ?debug exposes state for automated play-testing
   if (new URLSearchParams(location.search).has('debug')) {
     window.__mover = () => movers[0].x;
-    window.__explorer = () => ({ flock, phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, near });
+    window.__explorer = () => ({ runFrames, flock, phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, near });
   }
 
   let resizeTimer;
