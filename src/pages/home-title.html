@@ -13,9 +13,7 @@
         <div class="title-actions">
           <a class="btn btn-tomato btn-lg" id="pressStart" href="#player">▶ Press start</a>
           <a class="btn btn-paper btn-lg" data-link="resume" href="/resume/">View resume</a>
-          <button class="btn btn-ghost btn-lg" type="button" data-board>🏆 Leaderboard</button>
         </div>
-        <button class="btn btn-ghost btn-sm board-mini" type="button" data-board>🏆 Leaderboard</button>
         <p class="hint"><kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> run · <kbd>Space</kbd> jump · <kbd>Q</kbd> restart · bump the <kbd>?</kbd> blocks</p>
         <a class="explore-scroll" href="#player">Scroll down for more ▾</a>
       </div>
@@ -30,7 +28,10 @@
           <div class="run-submit-row"><input id="overName" name="name" maxlength="12" autocomplete="nickname" placeholder="Your name" required><button class="btn btn-gold btn-sm">Submit</button></div>
           <p class="run-submit-msg" role="status"></p>
         </form>
-        <button class="btn btn-tomato" id="exploreRetry">Try again</button>
+        <div class="explore-actions">
+          <button class="btn btn-tomato" id="exploreRetry">Try again</button>
+          <button class="btn btn-paper" type="button" data-board>🏆 Leaderboard</button>
+        </div>
         <p class="explore-desc">or press <kbd>Enter</kbd></p>
       </div>
       <div class="explore-prompt" id="explorePrompt" hidden>
@@ -45,6 +46,7 @@
         <div class="explore-actions">
           <a class="btn btn-gold btn-sm" id="exploreGo" href="/">Enter <span class="tri" aria-hidden="true"></span></a>
           <button class="btn btn-paper btn-sm" type="button" id="exploreAgain" hidden>↻ Play again</button>
+          <button class="btn btn-paper btn-sm" type="button" id="exploreBoard" data-board hidden>🏆 Leaderboard</button>
         </div>
       </div>
       <div class="touch-pad explore-pad" aria-hidden="true">

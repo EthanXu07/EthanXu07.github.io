@@ -994,9 +994,8 @@ main.subpage { padding-top: 5rem; }
 @keyframes veilText { to { opacity: 1; } }
 
 /* ---------- Game leaderboard (leaderboard.js + home.js) ---------- */
-.board-mini { display: none; margin-top: .9rem; }
-.title-screen.playing .board-mini { display: inline-flex; }
 .explore-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.explore-over .explore-actions { justify-content: center; }
 .run-submit { display: grid; grid-template-columns: minmax(0, 1fr); gap: .35rem; margin: 0 0 .8rem; text-align: left; }
 .run-submit label { font: .5rem/1.6 var(--pixel); color: var(--text-dark-2); }
 .explore-over .run-submit { width: 100%; margin: .2rem 0 .4rem; }
