@@ -13,8 +13,10 @@
         <div class="title-actions">
           <a class="btn btn-tomato btn-lg" id="pressStart" href="#player">▶ Press start</a>
           <a class="btn btn-paper btn-lg" data-link="resume" href="/resume/">View resume</a>
+          <button class="btn btn-ghost btn-lg" type="button" data-board>🏆 Leaderboard</button>
         </div>
-        <p class="hint"><kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> run · <kbd>Space</kbd> jump · bump the <kbd>?</kbd> blocks</p>
+        <button class="btn btn-ghost btn-sm board-mini" type="button" data-board>🏆 Leaderboard</button>
+        <p class="hint"><kbd class="arrow">←</kbd> <kbd class="arrow">→</kbd> run · <kbd>Space</kbd> jump · <kbd>Q</kbd> restart · bump the <kbd>?</kbd> blocks</p>
         <a class="explore-scroll" href="#player">Scroll down for more ▾</a>
       </div>
 
@@ -23,6 +25,11 @@
         <p class="world-num">GAME OVER</p>
         <p class="explore-over-title">Out of hearts!</p>
         <p class="explore-desc" id="exploreOverStats"></p>
+        <form class="run-submit" data-mode="score" hidden>
+          <label for="overName">Enter your name for the high score board</label>
+          <div class="run-submit-row"><input id="overName" name="name" maxlength="12" autocomplete="nickname" placeholder="Your name" required><button class="btn btn-gold btn-sm">Submit</button></div>
+          <p class="run-submit-msg" role="status"></p>
+        </form>
         <button class="btn btn-tomato" id="exploreRetry">Try again</button>
         <p class="explore-desc">or press <kbd>Enter</kbd></p>
       </div>
@@ -30,12 +37,34 @@
         <p class="objectives-label" id="exploreLabel">Warp pipe</p>
         <p class="explore-title" id="exploreTitle"></p>
         <p class="explore-desc" id="exploreDesc"></p>
-        <a class="btn btn-gold btn-sm" id="exploreGo" href="/">Enter <span class="tri" aria-hidden="true"></span></a>
+        <form class="run-submit" data-mode="clear" hidden>
+          <label for="clearName">Enter your name for the leaderboard</label>
+          <div class="run-submit-row"><input id="clearName" name="name" maxlength="12" autocomplete="nickname" placeholder="Your name" required><button class="btn btn-tomato btn-sm">Submit</button></div>
+          <p class="run-submit-msg" role="status"></p>
+        </form>
+        <div class="explore-actions">
+          <a class="btn btn-gold btn-sm" id="exploreGo" href="/">Enter <span class="tri" aria-hidden="true"></span></a>
+          <button class="btn btn-paper btn-sm" type="button" id="exploreAgain" hidden>↻ Play again</button>
+        </div>
       </div>
       <div class="touch-pad explore-pad" aria-hidden="true">
         <button data-key="left">◀</button><button data-key="right">▶</button><button data-key="jump" class="jump">JUMP</button>
       </div>
 
       <div class="dirt" aria-hidden="true"></div>
+
+      <!-- Leaderboard pop-up (leaderboard.js + home.js) -->
+      <dialog class="board-modal" id="boardModal" aria-labelledby="boardTitle">
+        <div class="board-bar">
+          <h2 id="boardTitle">Leaderboard</h2>
+          <button class="btn btn-paper btn-sm" type="button" id="boardClose" aria-label="Close leaderboard">✕</button>
+        </div>
+        <div class="board-tabs" role="tablist">
+          <button type="button" role="tab" data-tab="speed" aria-selected="true">Speedrun</button>
+          <button type="button" role="tab" data-tab="score" aria-selected="false">High score</button>
+        </div>
+        <p class="board-note" id="boardNote"></p>
+        <ol class="board-list" id="boardList"></ol>
+      </dialog>
     </section>
 
