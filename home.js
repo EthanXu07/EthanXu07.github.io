@@ -32,6 +32,7 @@
   const FALL_Y = 70;
   const JUMP_BUFFER = 10; // frames a jump press is remembered (so pressing just before landing still jumps)
   const COYOTE = 8;      // frames you can still jump after running off a ledge
+  const CORNER = 4;      // px: clipping a ledge's corner with your head slides you past it instead of ending the jump
 
   // ---------- Viewport ----------
   let W = 320, H = 200, G = 176, scale = 4;
@@ -109,6 +110,7 @@
     blocks.forEach((b) => { b.used = false; b.hits = b.content === 'multi' ? 5 : 1; b.bump = 0; b.hidden = b.content === 'heart'; });
     movers.forEach((m) => { m.x = m.minX + 2; m.vx = 0.5; });
     cam = 0; t = 0;
+    startT = 0; // t restarts at 0, so a retry replays the drop-in instead of freezing until t catches up with the old startT
     state = 'play'; // play | won | over
     hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0; magnet = 0; feather = 0; airJumps = 0; jumpBuffer = 0; coyote = 0;
     checkpoint = START_X;
@@ -257,6 +259,7 @@
       f.elements.name.value = Leaderboard.savedName();
       f.querySelector('.run-submit-msg').textContent = '';
       f.classList.remove('done');
+      f.ranks = {}; // boards this run is already on, so a retry after a failed save doesn't add it twice
     }
   }
   for (const f of Object.values(forms)) {
@@ -267,21 +270,15 @@
       f.elements.name.disabled = true; f.querySelector('button').disabled = true;
       msg.textContent = 'Saving…';
       try {
-        let tab;
-        if (f.dataset.mode === 'clear') {
-          const [speedRank, scoreRank] = await Promise.all([Leaderboard.submit('speed', name, clearMs()), Leaderboard.submit('score', name, score)]);
-          msg.textContent = `Saved! Speedrun #${speedRank} · High score #${scoreRank}`;
-          tab = 'speed';
-        } else {
-          const rank = await Leaderboard.submit('score', name, score);
-          msg.textContent = `Saved! High score #${rank}`;
-          tab = 'score';
-        }
+        const entries = f.dataset.mode === 'clear' ? [['speed', clearMs()], ['score', score]] : [['score', score]];
+        await Promise.all(entries.map(async ([mode, value]) => { f.ranks[mode] ??= await Leaderboard.submit(mode, name, value); }));
+        msg.textContent = `Saved! ${entries.map(([mode]) => `${mode === 'speed' ? 'Speedrun' : 'High score'} #${f.ranks[mode]}`).join(' · ')}`;
         f.classList.add('done');
-        openBoard(tab, name);
+        openBoard(entries[0][0], name);
       } catch {
         msg.textContent = "Couldn't reach the leaderboard. Try again?";
         f.elements.name.disabled = false; f.querySelector('button').disabled = false;
+        f.elements.name.focus(); // it lost focus while disabled; keep Enter retrying instead of reaching the game
       }
     });
   }
@@ -383,7 +380,7 @@
 
   // ---------- Physics helpers ----------
   // Move an actor with gravity against solids; reports a head bump.
-  function moveActor(a, solids, { turnAtWalls = false } = {}) {
+  function moveActor(a, solids, { turnAtWalls = false, cornerSlide = false } = {}) {
     let bumpedHead = null;
     a.x += a.vx;
     for (const s of solids) if (hitTest(a, s)) { a.x = a.vx > 0 ? s.x - a.w : s.x + s.w; a.vx = turnAtWalls ? -a.vx : 0; }
@@ -394,6 +391,19 @@
     // Decide falling vs rising once: landing across two side-by-side blocks used to
     // treat the second one as a head bump and push you down through them
     const falling = a.vy > 0;
+    // Corner correction: jumping up beside a ledge, a head that only just overlaps
+    // its edge gets nudged out sideways so the jump carries you up onto it
+    if (!falling && cornerSlide) {
+      const hits = solids.filter((s) => hitTest(a, s));
+      if (hits.length) {
+        const out = [-Math.max(...hits.map((s) => a.x + a.w - s.x)), Math.max(...hits.map((s) => s.x + s.w - a.x))].sort((u, v) => Math.abs(u) - Math.abs(v));
+        for (const dx of out) {
+          if (Math.abs(dx) > CORNER) continue;
+          const moved = { x: a.x + dx, y: a.y, w: a.w, h: a.h };
+          if (!solids.some((s) => hitTest(moved, s))) { a.x += dx; break; }
+        }
+      }
+    }
     for (const s of solids) {
       if (!hitTest(a, s)) continue;
       if (falling) { a.y = s.y - a.h; a.onGround = true; } else { a.y = s.y + s.h; bumpedHead = s; }
@@ -498,7 +508,7 @@
     jumpT++;
     if (!keys.jump && jumpT > 6 && p.vy < -2.2) p.vy = -2.2; // even a quick tap is a solid hop
 
-    const { bumpedHead, prevBottom } = moveActor(p, solids);
+    const { bumpedHead, prevBottom } = moveActor(p, solids, { cornerSlide: true });
     if (bumpedHead?.kind === 'block') bumpBlock(bumpedHead);
     // Hidden blocks only become solid when hit from below
     for (const b of blocks) {
