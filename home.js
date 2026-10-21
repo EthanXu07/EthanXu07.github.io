@@ -235,13 +235,13 @@
       prompt.go.href = '/card/';
       prompt.go.firstChild.textContent = 'Sit down ';
       forms.clear.hidden = true;
-      $id('exploreAgain').hidden = true;
+      $id('exploreAgain').hidden = $id('exploreBoard').hidden = true;
     } else {
       prompt.label.textContent = 'Level clear!';
       prompt.title.textContent = `${Leaderboard.fmtTime(clearMs())} · Score ${score}`;
       prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Nice run! Press Enter to get in touch. Something is glowing past the castle…`;
       forms.clear.hidden = false;
-      $id('exploreAgain').hidden = false;
+      $id('exploreAgain').hidden = $id('exploreBoard').hidden = false;
       prompt.go.href = '#contact';
       prompt.go.firstChild.textContent = 'Contact ';
     }
