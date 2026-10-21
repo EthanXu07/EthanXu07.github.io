@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=4bb4642f">
+  <link rel="stylesheet" href="/styles.css?v=d838af12">
   <script src="/site-config.js?v=66b597e7"></script>
 </head>
 <body data-page="interests">
@@ -150,6 +150,9 @@
         </div>
       </div>
 
+      <!-- Points up at the shelf; hidden while a book is open (script.js) -->
+      <p class="desk-hint" id="shelfPrompt">Pick a book off the shelf to read it below.</p>
+
       <!-- Guest wall: shared r/place-style pixel canvas (guest-wall.js, tools/guest-wall.sql) -->
       <section class="guest-wall" id="guestWall" aria-labelledby="guestWallTitle">
         <div class="guest-head">
@@ -181,7 +184,6 @@
       <div class="reading-desk">
         <!-- Desk scene, shown while every book is on the shelf -->
         <div class="desk-empty" id="shelfHint">
-          <p class="desk-hint">Pick a book off the shelf to read it here.</p>
           <button class="desk-prop desk-lamp lamp" type="button" aria-pressed="true" aria-label="Desk lamp">
             <svg viewBox="0 0 16 20" width="64" height="80" shape-rendering="crispEdges">
               <path fill="#2a1f1a" d="M3 18h10v2H3zM7 8h2v10H7z"/>
@@ -608,7 +610,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="/resume-viewer.js?v=5a13180f"></script>
-  <script src="/script.js?v=a445e984"></script>
+  <script src="/script.js?v=8283312c"></script>
   <script src="/guest-wall.js?v=b26f7289"></script>
 
 </body>

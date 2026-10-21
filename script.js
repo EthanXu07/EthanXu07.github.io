@@ -219,7 +219,7 @@ $$('.chip').forEach((chip) => {
 (() => {
   const spines = $$('[data-book]');
   if (!spines.length) return;
-  const hint = $('#shelfHint');
+  const hints = $$('#shelfHint, #shelfPrompt'); // desk scene + the prompt under the shelf
   let openSlug = null;
 
   function close(focusSpine) {
@@ -230,7 +230,7 @@ $$('.chip').forEach((chip) => {
     spine.closest('.book').classList.remove('is-out');
     if (focusSpine) spine.focus();
     openSlug = null;
-    if (hint) hint.hidden = false;
+    hints.forEach((h) => { h.hidden = false; });
   }
 
   function open(slug) {
@@ -241,7 +241,7 @@ $$('.chip').forEach((chip) => {
     spine.setAttribute('aria-expanded', 'true');
     spine.closest('.book').classList.add('is-out');
     openSlug = slug;
-    if (hint) hint.hidden = true;
+    hints.forEach((h) => { h.hidden = true; });
     book.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
   }
 
