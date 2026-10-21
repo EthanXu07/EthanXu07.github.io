@@ -12,7 +12,7 @@ window.SITE = {
   // To swap in a new version, run ./update-resume.sh (grabs the newest
   // Ethan_Xu_Resume*.pdf from Downloads and bumps ?v= below). If you replace
   // assets/resume.pdf by hand, change ?v= too so browsers don't show a cached copy.
-  resumeFile: "/assets/resume.pdf?v=30b4da72",
+  resumeFile: "/assets/resume.pdf?v=8167ea1c",
   resumeDownloadName: "Ethan_Xu_Resume.pdf",   // filename when they click Download
 
   email: "ethan_xu@berkeley.edu",
