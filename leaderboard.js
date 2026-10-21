@@ -22,7 +22,8 @@ window.Leaderboard = (() => {
   async function api(path, opts = {}) {
     const res = await fetch(`${cfg.url.replace(/\/$/, '')}/rest/v1/${path}`, {
       ...opts,
-      headers: { apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}`, 'Content-Type': 'application/json', ...opts.headers },
+      // Legacy anon keys are JWTs and also go in Authorization; new sb_publishable_ keys only go in apikey
+      headers: { apikey: cfg.anonKey, ...(cfg.anonKey.startsWith('eyJ') && { Authorization: `Bearer ${cfg.anonKey}` }), 'Content-Type': 'application/json', ...opts.headers },
     });
     if (!res.ok) throw new Error(`Leaderboard ${res.status}`);
     return res.status === 201 || res.status === 204 ? null : res.json();

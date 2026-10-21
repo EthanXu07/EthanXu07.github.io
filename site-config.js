@@ -26,5 +26,8 @@ window.SITE = {
   // scores in each visitor's browser only. For a shared global board, create a
   // free Supabase project, run tools/leaderboard.sql in its SQL editor, and paste
   // the Project URL and the anon public key (Settings → API) here.
-  leaderboard: { url: "", anonKey: "" },
+  leaderboard: {
+    url: "https://hhwhzcclwqiwmqhowhha.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhod2h6Y2Nsd3Fpd21xaG93aGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1NTM4MzksImV4cCI6MjEwODEyOTgzOX0.JzO_PceesCi688UiED0mHoXD3Cmx3KPs6szPeXcZDy8",
+  },
 };
