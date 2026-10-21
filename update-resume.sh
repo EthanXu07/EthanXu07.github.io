@@ -18,7 +18,9 @@ cp "$src" assets/resume.pdf
 # Version the URL so browsers fetch the new file instead of a cached copy
 v=$(md5 -q assets/resume.pdf | cut -c1-8)
 sed -i '' -E "s|(resumeFile: \"/assets/resume\.pdf)(\?v=[^\"]*)?\"|\1?v=$v\"|" site-config.js
-git add assets/resume.pdf site-config.js
+# Rebuild so every page links the new site-config.js (its ?v= hash changes too)
+node tools/build.mjs > /dev/null
+git add assets/resume.pdf site-config.js $(git ls-files -m -- '*.html')
 if git diff --cached --quiet; then echo "Already up to date."; exit 0; fi
 git commit -m "Update résumé ($(basename "$src"))"
 git push
