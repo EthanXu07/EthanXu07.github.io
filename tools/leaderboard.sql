@@ -1,6 +1,6 @@
 -- Global leaderboard for the title-screen platformer (leaderboard.js).
 -- Run once in the Supabase SQL editor, then put the project URL and the
--- anon (public) key in site-config.js → SITE.leaderboard.
+-- anon (public) key in site-config.js → SITE.supabase.
 -- Anyone can read and add rows; nobody can edit or delete them with the anon key.
 -- The checks reject obviously impossible runs (the fastest possible clear is
 -- ~9.7 s and the maximum score is 9,600).
