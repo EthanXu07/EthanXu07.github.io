@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=2a1d9667">
+  <link rel="stylesheet" href="/styles.css?v=4bb4642f">
   <script src="/site-config.js?v=cbf3392e"></script>
 </head>
 <body data-page="interests">
@@ -154,13 +154,24 @@
       <section class="guest-wall" id="guestWall" aria-labelledby="guestWallTitle">
         <div class="guest-head">
           <h2 class="guest-plaque" id="guestWallTitle">Guest wall</h2>
-          <p class="guest-lede">Leave your mark. Pick a colour, click a square: it stays for every visitor until someone paints over it. One pixel every 15 seconds.</p>
+          <p class="guest-lede">Leave your mark. Pick a colour and paint: click, or drag to draw. Everyone shares this wall, and what you paint stays until someone paints over it.</p>
         </div>
         <div class="guest-scroll">
-          <canvas class="guest-canvas" tabindex="0" role="img" aria-label="Shared pixel wall, 64 by 24 squares. Use the arrow keys to move and Enter to place a pixel."></canvas>
+          <canvas class="guest-canvas" tabindex="0" role="img" aria-label="Shared pixel wall, 160 by 60 squares. Use the arrow keys to move, Enter to paint, Shift and arrows to paint a line."></canvas>
         </div>
         <div class="guest-bar">
           <div class="guest-palette" role="group" aria-label="Colour"></div>
+          <div class="guest-tools">
+            <div class="guest-seg" role="group" aria-label="Brush size">
+              <button type="button" data-brush="1" aria-label="Brush size 1"><i style="--s:2px"></i></button>
+              <button type="button" data-brush="2" aria-label="Brush size 2"><i style="--s:5px"></i></button>
+              <button type="button" data-brush="4" aria-label="Brush size 4"><i style="--s:9px"></i></button>
+            </div>
+            <div class="guest-seg guest-modes" role="group" aria-label="Touch mode">
+              <button type="button" data-mode="paint" aria-pressed="true">Paint</button>
+              <button type="button" data-mode="move" aria-pressed="false">Move</button>
+            </div>
+          </div>
           <p class="guest-status" role="status" aria-live="polite"></p>
           <p class="guest-coords" aria-hidden="true"></p>
         </div>
@@ -598,7 +609,7 @@
 
   <script src="/resume-viewer.js?v=5a13180f"></script>
   <script src="/script.js?v=a445e984"></script>
-  <script src="/guest-wall.js?v=ecdd83c9"></script>
+  <script src="/guest-wall.js?v=b26f7289"></script>
 
 </body>
 </html>

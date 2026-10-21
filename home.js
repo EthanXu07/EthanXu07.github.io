@@ -317,6 +317,8 @@
     renderBoard();
   }
   section.querySelectorAll('[data-board]').forEach((b) => b.addEventListener('click', () => openBoard()));
+  // Fetch both boards in the background once the page settles, so opening one is instant
+  (window.requestIdleCallback || setTimeout)(() => Leaderboard.prefetch(), { timeout: 3000 });
   board.el.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { board.tab = b.dataset.tab; renderBoard(); }));
   $id('boardClose').addEventListener('click', () => board.el.close());
   board.el.addEventListener('click', (e) => { if (e.target === board.el) board.el.close(); }); // backdrop

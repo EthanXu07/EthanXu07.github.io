@@ -20,7 +20,15 @@ window.Leaderboard = (() => {
   const sortRows = (mode, rows) => rows.sort((a, b) => (asc(mode) ? a.value - b.value : b.value - a.value) || a.created_at.localeCompare(b.created_at));
 
   async function api(path, opts = {}) {
-    const res = await fetch(`${cfg.url.replace(/\/$/, '')}/rest/v1/${path}`, {
+    const url = `${cfg.url.replace(/\/$/, '')}/rest/v1/${path}`;
+    // Reads put the key in the URL and send no custom headers, so the browser skips
+    // the CORS preflight round trip
+    if (!opts.method) {
+      const res = await fetch(`${url}&apikey=${encodeURIComponent(cfg.anonKey)}`);
+      if (!res.ok) throw new Error(`Leaderboard ${res.status}`);
+      return res.json();
+    }
+    const res = await fetch(url, {
       ...opts,
       // Legacy anon keys are JWTs and also go in Authorization; new sb_publishable_ keys only go in apikey
       headers: { apikey: cfg.anonKey, ...(cfg.anonKey.startsWith('eyJ') && { Authorization: `Bearer ${cfg.anonKey}` }), 'Content-Type': 'application/json', ...opts.headers },
@@ -29,10 +37,18 @@ window.Leaderboard = (() => {
     return res.status === 201 || res.status === 204 ? null : res.json();
   }
 
-  async function top(mode, n = TOP) {
-    if (!global) return sortRows(mode, store.read()[mode] || []).slice(0, n);
-    return api(`leaderboard?select=name,value,created_at&mode=eq.${mode}&order=value.${asc(mode) ? 'asc' : 'desc'},created_at.asc&limit=${n}`);
+  // Global boards are cached for a minute (and fetched ahead of time by prefetch())
+  // so the leaderboard opens instantly
+  const cache = {};
+  function top(mode, n = TOP) {
+    if (!global) return Promise.resolve(sortRows(mode, store.read()[mode] || []).slice(0, n));
+    const hit = cache[mode];
+    if (n === TOP && hit && Date.now() - hit.at < 60000) return hit.rows;
+    const rows = api(`leaderboard?select=name,value,created_at&mode=eq.${mode}&order=value.${asc(mode) ? 'asc' : 'desc'},created_at.asc&limit=${n}`);
+    if (n === TOP) { cache[mode] = { at: Date.now(), rows }; rows.catch(() => { delete cache[mode]; }); }
+    return rows;
   }
+  const prefetch = () => { if (global) ['speed', 'score'].forEach((m) => top(m)); };
 
   // Returns the 1-based rank this entry landed at
   async function submit(mode, name, value) {
@@ -42,6 +58,7 @@ window.Leaderboard = (() => {
     const created_at = new Date().toISOString();
     if (global) {
       await api('leaderboard', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ mode, name, value }) });
+      delete cache[mode];
       const better = await api(`leaderboard?select=value&mode=eq.${mode}&value=${asc(mode) ? 'lt' : 'gt'}.${value}&limit=1000`);
       return better.length + 1;
     }
@@ -55,5 +72,5 @@ window.Leaderboard = (() => {
   const fmtTime = (ms) => { const s = ms / 1000, m = Math.floor(s / 60); return `${m}:${(s - m * 60).toFixed(2).padStart(5, '0')}`; };
   const fmt = (mode, v) => (mode === 'speed' ? fmtTime(v) : v.toLocaleString());
 
-  return { global, top, submit, savedName, fmt, fmtTime, cleanName };
+  return { global, top, prefetch, submit, savedName, fmt, fmtTime, cleanName };
 })();
