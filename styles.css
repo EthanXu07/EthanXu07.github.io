@@ -871,7 +871,6 @@ main.subpage { padding-top: 5rem; }
   font-size: .9rem;
 }
 .credits p { margin: 0 0 1rem; }
-.thanks { font: .8rem var(--pixel); color: var(--gold) !important; animation: blink 1.4s steps(1) infinite; }
 
 
 /* ---------- Skill tree ---------- */
