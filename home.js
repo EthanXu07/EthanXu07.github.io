@@ -75,6 +75,31 @@
     x, y: -top, w: 12, h: 12, kind: 'block', content, hidden: !!hidden, used: false, hits: content === 'multi' ? 5 : 1, bump: 0,
   }));
 
+  // Pits: the spaces between ground segments, flooded with bay water
+  const WATER_Y = 5;
+  const pits = ground.slice(1).map((g, i) => ({ a: ground[i].x + ground[i].w, b: g.x }));
+  function drawPits() {
+    for (const { a, b } of pits) {
+      const w = b - a;
+      ctx.fillStyle = '#2a1d16'; ctx.fillRect(a, 0, w, H);                        // shadowed back wall
+      ctx.fillStyle = '#3a281d'; for (let x = a + 3; x < b - 2; x += 7) ctx.fillRect(x, 1 + (x % 2), 2, 1); // pebbles in the wall
+      ctx.fillStyle = '#244b5a'; ctx.fillRect(a, WATER_Y, w, H);                  // water
+      ctx.fillStyle = '#1b3946'; ctx.fillRect(a, WATER_Y + 3, w, H);              // deeper water
+      for (let x = a; x < b; x++) {                                                 // rippling surface
+        const k = Math.sin(x * 0.7 + t * 0.12) + Math.sin(x * 0.23 - t * 0.05);
+        ctx.fillStyle = k > 0.9 ? '#9fd0d6' : '#4f8c9b';
+        ctx.fillRect(x, WATER_Y + (k < -1.1 ? 1 : 0), 1, 1);
+        if (Math.sin(x * 1.9 + t * 0.07) > 0.97) { ctx.fillStyle = '#efb074'; ctx.fillRect(x, WATER_Y + 2, 1, 1); } // sunset glints
+      }
+      ctx.fillStyle = '#5a3a28'; ctx.fillRect(a, 2, 1, H); ctx.fillRect(b - 1, 2, 1, H);       // dirt face of each ledge
+      ctx.fillStyle = '#7aa35a'; ctx.fillRect(a, 0, 2, 1); ctx.fillRect(b - 2, 0, 2, 1);         // grass lip curling over
+      ctx.fillStyle = '#5c8a44'; ctx.fillRect(a + 1, 1, 1, 2); ctx.fillRect(b - 2, 1, 1, 3);     // hanging roots
+    }
+  }
+  function splash(x) {
+    for (let i = 0; i < 8; i++) particles.push({ x: x + (i - 3.5) * 1.5, y: WATER_Y, vx: (i - 3.5) * 0.25, vy: -1.2 - (i % 3) * 0.4, life: 18, color: i % 2 ? '#9fd0d6' : '#4f8c9b' });
+  }
+
   const movers = [{ x: 724, y: -20, w: 36, h: 5, minX: 722, maxX: 764, vx: 0.5 }]; // right end reaches the far ledge
 
   const coinSpots = [
@@ -524,6 +549,8 @@
     }
     p.x = Math.max(0, Math.min(WORLD_W - PW, p.x));
 
+    // Splash into the water at the bottom of a pit
+    if (prevBottom < WATER_Y && p.y + PH >= WATER_Y && !solidAt(p.x + PW / 2, WATER_Y + 1, ground)) splash(p.x + PW / 2);
     // Fell into a pit
     if (p.y > FALL_Y) {
       hearts--;
@@ -919,13 +946,14 @@
       const h = 12 + ((i * 7) % 8);
       for (let r = 0; r < h; r++) { const half = Math.floor(r / 2.2); ctx.fillRect(x - half, G - h + r, half * 2 + 1, 1); }
     }
-    ctx.fillStyle = '#1c2a25'; ctx.fillRect(0, G, W, H - G); // pits look like dark gaps
+    ctx.fillStyle = '#1c2a25'; ctx.fillRect(0, G, W, H - G);
 
     // --- World space: ground surface at y = 0 ---
     ctx.save();
     ctx.translate(-cx, G);
 
     drawCampanile(26);
+    drawPits();
     for (const g of ground) {
       ctx.fillStyle = '#8a5a3c'; ctx.fillRect(g.x, 4, g.w, g.h);
       ctx.fillStyle = '#7aa35a'; ctx.fillRect(g.x, 0, g.w, 2);
