@@ -1,6 +1,6 @@
 // =====================================================================
 //  Title screen: a small side-scrolling platformer.
-//  Run right from the Campanile, bump "?" blocks (prizes partly reshuffled each run: coins, coffee = +1 heart,
+//  Run right from the Campanile (the layout shifts slightly each run), bump "?" blocks (prizes partly reshuffled: coins, coffee = +1 heart,
 //  star = invincibility, coin magnet, double jump, a hidden 1-up), stomp bugs, dodge
 //  spiky viruses, cross pits and a moving platform, then climb the stairs to
 //  the flag and into the castle for the fireworks. Secret: after the level is
@@ -55,25 +55,65 @@
   const WORLD_W = 1430;
   const FIRE_X = 1392; // secret campfire past the castle (lit after the level is clear)
 
-  // Ground with three gaps (the middle one has a moving platform)
-  const ground = [[0, 470], [510, 720], [800, 1060], [1090, WORLD_W]].map(([a, b]) => ({ x: a, y: 0, w: b - a, h: 60, kind: 'ground' }));
-  const pipes = [{ x: 330, h: 24 }, { x: 410, h: 32 }, { x: 1010, h: 20 }].map((pp) => ({ x: pp.x, y: -pp.h, w: 22, h: pp.h, kind: 'pipe' }));
-  const stairs = [];
-  for (let c = 0; c < 5; c++) for (let r = 0; r <= c; r++) stairs.push({ x: 1110 + c * 12, y: -12 * (r + 1), w: 12, h: 12, kind: 'stone' });
+  // The layout is rebuilt each run with small random nudges: pits, pipes, block rows, coins and
+  // enemies shift a few px and pits/pipes change size slightly, but the counts, the order and the
+  // flag/castle stay fixed, so every run is about the same length and difficulty.
+  // The bounds keep every pit jumpable, pipes clear of the block rows and enemies on open ground.
+  const rand = (lo, hi) => Math.round(lo + Math.random() * (hi - lo));
+  let ground, pipes, stairs, blocks, pits, movers, coinSpots, enemySpots;
+  function buildLevel() {
+    const s1 = rand(-12, 12), w1 = rand(-4, 6);   // first pit: shift, extra width (36-46 px)
+    const s2 = rand(-10, 10);                     // moving-platform pit: shift only (its width sets the platform's reach)
+    const s3 = rand(-4, 8), w3 = rand(-3, 5);     // last pit (27-35 px)
+    const rowA = rand(-10, 10), rowB = rand(-10, 10); // the two brick rows
+    // Ground with three gaps (the middle one has a moving platform)
+    ground = [[0, 470 + s1], [510 + s1 + w1, 720 + s2], [800 + s2, 1060 + s3], [1090 + s3 + w3, WORLD_W]].map(([a, b]) => ({ x: a, y: 0, w: b - a, h: 60, kind: 'ground' }));
+    pits = ground.slice(1).map((g, k) => ({ a: ground[k].x + ground[k].w, b: g.x }));
+    pipes = [{ x: 330 + rand(-10, 10), h: 24 + rand(-4, 4) }, { x: 410 + rand(-10, 10), h: 32 + rand(-4, 4) }, { x: 1010 + rand(-6, 4), h: 20 + rand(-3, 4) }]
+      .map((pp) => ({ x: pp.x, y: -pp.h, w: 22, h: pp.h, kind: 'pipe' }));
+    stairs = [];
+    for (let c = 0; c < 5; c++) for (let r = 0; r <= c; r++) stairs.push({ x: 1110 + c * 12, y: -12 * (r + 1), w: 12, h: 12, kind: 'stone' });
 
-  // Blocks: y is the block's top edge. "hidden" blocks are invisible until bumped.
-  const blockDefs = [
-    [160, 52, 'coin'],
-    [220, 52, 'brick'], [232, 52, 'coffee'], [244, 52, 'brick'], [256, 52, 'coin'], [268, 52, 'brick'],
-    [244, 96, 'magnet'],                     // coins fly to you
-    [560, 52, 'multi'],                      // looks like a brick, pays out 5 coins
-    [680, 52, 'star'],
-    [830, 52, 'heart', true],                // hidden
-    [880, 52, 'coin'], [892, 52, 'brick'], [904, 52, 'feather'], [916, 52, 'brick'], [928, 52, 'coin'],
-  ];
-  const blocks = blockDefs.map(([x, top, content, hidden]) => ({
-    x, y: -top, w: 12, h: 12, kind: 'block', base: content, content, hidden: !!hidden, used: false, hits: content === 'multi' ? 5 : 1, bump: 0,
-  }));
+    // Blocks: y is the block's top edge. "hidden" blocks are invisible until bumped.
+    const blockDefs = [
+      [160 + rand(-8, 8), 52, 'coin'],
+      [220 + rowA, 52, 'brick'], [232 + rowA, 52, 'coffee'], [244 + rowA, 52, 'brick'], [256 + rowA, 52, 'coin'], [268 + rowA, 52, 'brick'],
+      [244 + rowA, 96, 'magnet'],                     // coins fly to you
+      [560 + rand(-10, 10), 52, 'multi'],             // looks like a brick, pays out 5 coins
+      [680 + rand(-6, 6), 52, 'star'],
+      [830 + rand(-8, 8), 52, 'heart', true],         // hidden
+      [880 + rowB, 52, 'coin'], [892 + rowB, 52, 'brick'], [904 + rowB, 52, 'feather'], [916 + rowB, 52, 'brick'], [928 + rowB, 52, 'coin'],
+    ];
+    blocks = blockDefs.map(([x, top, content, hidden]) => ({
+      x, y: -top, w: 12, h: 12, kind: 'block', base: content, content, hidden: !!hidden, used: false, hits: content === 'multi' ? 5 : 1, bump: 0,
+    }));
+
+    movers = [{ x: 724 + s2, y: -20, w: 36, h: 5, minX: 722 + s2, maxX: 764 + s2, vx: 0.5 }]; // right end reaches the far ledge
+
+    const c1 = rand(-6, 6), c2 = rand(-10, 10), c3 = rand(-6, 6);
+    coinSpots = [
+      ...[0, 1, 2].map((k) => [pits[0].a + 10 + (w1 >> 1) + k * 12, -50]), // arc over the first pit
+      ...[0, 1, 2].map((k) => [226 + rowA + k * 18, -66]),               // above the first brick row
+      [190 + c1, -12], [202 + c1, -12], [600 + c2, -12], [612 + c2, -12], [624 + c2, -12],
+      ...[0, 1, 2, 3].map((k) => [730 + s2 + k * 14, -48 + rand(-4, 4)]),  // over the moving platform
+      ...[0, 1, 2, 3].map((k) => [886 + rowB + k * 12, -66]),
+      [960 + c3, -12], [972 + c3, -12], [1126, -44], [1150, -68],
+    ];
+
+    // Enemies spawn somewhere inside a stretch of open ground between pipes and pits
+    const [p1, p2, p3] = pipes;
+    const zone = (lo, hi) => rand(lo, Math.max(lo, hi));
+    enemySpots = [
+      { type: 'bug', x: zone(255, p1.x - 14), vx: -0.4 },
+      { type: 'bug', x: zone(p1.x + 26, p2.x - 14), vx: 0.4 },
+      { type: 'bug', x: zone(575, 615), vx: -0.4 },
+      { type: 'bug', x: zone(635, pits[1].a - 30), vx: 0.4 },
+      { type: 'bug', x: zone(pits[1].b + 15, 870), vx: -0.4 },
+      { type: 'virus', x: zone(935, 965), vx: 0.35 },
+      { type: 'bug', x: zone(p3.x + 26, pits[2].a - 12), vx: -0.4 },
+    ];
+  }
+
   // Each new run, every "?" block keeps its usual prize half the time and rolls a random one otherwise
   // (bricks, the multi-coin brick and the hidden 1-up stay put)
   const PRIZES = ['coin', 'coin', 'coin', 'coin', 'coffee', 'coffee', 'magnet', 'feather', 'star'];
@@ -81,7 +121,6 @@
 
   // Pits: the spaces between ground segments, flooded with bay water
   const WATER_Y = 5;
-  const pits = ground.slice(1).map((g, i) => ({ a: ground[i].x + ground[i].w, b: g.x }));
   function drawPits() {
     for (const { a, b } of pits) {
       const w = b - a;
@@ -104,17 +143,6 @@
     for (let i = 0; i < 8; i++) particles.push({ x: x + (i - 3.5) * 1.5, y: WATER_Y, vx: (i - 3.5) * 0.25, vy: -1.2 - (i % 3) * 0.4, life: 18, color: i % 2 ? '#9fd0d6' : '#4f8c9b' });
   }
 
-  const movers = [{ x: 724, y: -20, w: 36, h: 5, minX: 722, maxX: 764, vx: 0.5 }]; // right end reaches the far ledge
-
-  const coinSpots = [
-    ...[0, 1, 2].map((k) => [480 + k * 12, -50]),            // arc over the first pit
-    ...[0, 1, 2].map((k) => [226 + k * 18, -66]),            // above the first brick row
-    [190, -12], [202, -12], [600, -12], [612, -12], [624, -12],
-    ...[0, 1, 2, 3].map((k) => [730 + k * 14, -48]),         // over the moving platform
-    ...[0, 1, 2, 3].map((k) => [886 + k * 12, -66]),
-    [960, -12], [972, -12], [1126, -44], [1150, -68],
-  ];
-
   function solidList() {
     return [...ground, ...pipes, ...stairs, ...blocks.filter((b) => !b.hidden)];
   }
@@ -128,12 +156,8 @@
 
   function newGame() {
     p = { x: START_X, y: -PH, w: PW, h: PH, vx: 0, vy: 0, dir: 1, onGround: true, jumpHeld: false };
-    enemies = [
-      { type: 'bug', x: 290, vx: -0.4 }, { type: 'bug', x: 372, vx: 0.4 },
-      { type: 'bug', x: 600, vx: -0.4 }, { type: 'bug', x: 650, vx: 0.4 },
-      { type: 'bug', x: 850, vx: -0.4 },
-      { type: 'virus', x: 950, vx: 0.35 }, { type: 'bug', x: 1040, vx: -0.4 },
-    ].map((e) => ({ ...e, y: -8, w: 10, h: 8, vy: 0, alive: true, squash: 0, onGround: true }));
+    buildLevel();
+    enemies = enemySpots.map((e) => ({ ...e, y: -8, w: 10, h: 8, vy: 0, alive: true, squash: 0, onGround: true }));
     items = [];
     coins = coinSpots.map(([x, y]) => ({ x, y, taken: false }));
     blocks.forEach((b) => { b.content = rollPrize(b); b.used = false; b.hits = b.content === 'multi' ? 5 : 1; b.bump = 0; b.hidden = b.content === 'heart'; });
@@ -1050,7 +1074,7 @@
   // Test hook: ?debug exposes state for automated play-testing
   if (new URLSearchParams(location.search).has('debug')) {
     window.__mover = () => movers[0].x;
-    window.__explorer = () => ({ runFrames, flock, phase, hidePlayer, keys, movers, magnet, feather, p, enemies, blocks, items, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, near });
+    window.__explorer = () => ({ runFrames, flock, phase, hidePlayer, keys, movers, ground, pipes, pits, coins, magnet, feather, p, enemies, blocks, items, FLAG_X, MID_CHECKPOINT, state, hearts, star, coinCount, score, playing, near });
   }
 
   let resizeTimer;
