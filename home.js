@@ -1,6 +1,6 @@
 // =====================================================================
 //  Title screen: a small side-scrolling platformer.
-//  Run right from the Campanile, bump "?" blocks (coins, coffee = +1 heart,
+//  Run right from the Campanile, bump "?" blocks (prizes partly reshuffled each run: coins, coffee = +1 heart,
 //  star = invincibility, coin magnet, double jump, a hidden 1-up), stomp bugs, dodge
 //  spiky viruses, cross pits and a moving platform, then climb the stairs to
 //  the flag and into the castle for the fireworks. Secret: after the level is
@@ -72,8 +72,12 @@
     [880, 52, 'coin'], [892, 52, 'brick'], [904, 52, 'feather'], [916, 52, 'brick'], [928, 52, 'coin'],
   ];
   const blocks = blockDefs.map(([x, top, content, hidden]) => ({
-    x, y: -top, w: 12, h: 12, kind: 'block', content, hidden: !!hidden, used: false, hits: content === 'multi' ? 5 : 1, bump: 0,
+    x, y: -top, w: 12, h: 12, kind: 'block', base: content, content, hidden: !!hidden, used: false, hits: content === 'multi' ? 5 : 1, bump: 0,
   }));
+  // Each new run, every "?" block keeps its usual prize half the time and rolls a random one otherwise
+  // (bricks, the multi-coin brick and the hidden 1-up stay put)
+  const PRIZES = ['coin', 'coin', 'coin', 'coin', 'coffee', 'coffee', 'magnet', 'feather', 'star'];
+  const rollPrize = (b) => (b.base === 'brick' || b.base === 'multi' || b.base === 'heart' || Math.random() < 0.5 ? b.base : PRIZES[Math.floor(Math.random() * PRIZES.length)]);
 
   // Pits: the spaces between ground segments, flooded with bay water
   const WATER_Y = 5;
@@ -132,7 +136,7 @@
     ].map((e) => ({ ...e, y: -8, w: 10, h: 8, vy: 0, alive: true, squash: 0, onGround: true }));
     items = [];
     coins = coinSpots.map(([x, y]) => ({ x, y, taken: false }));
-    blocks.forEach((b) => { b.used = false; b.hits = b.content === 'multi' ? 5 : 1; b.bump = 0; b.hidden = b.content === 'heart'; });
+    blocks.forEach((b) => { b.content = rollPrize(b); b.used = false; b.hits = b.content === 'multi' ? 5 : 1; b.bump = 0; b.hidden = b.content === 'heart'; });
     movers.forEach((m) => { m.x = m.minX + 2; m.vx = 0.5; });
     cam = 0; t = 0;
     startT = 0; // t restarts at 0, so a retry replays the drop-in instead of freezing until t catches up with the old startT
