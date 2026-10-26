@@ -821,14 +821,8 @@ main.subpage { padding-top: 5rem; }
   image-rendering: pixelated; margin-bottom: 1.25rem;
   box-shadow: 0 0 0 3px var(--edge);
 }
-.save-fire { display: block; max-width: 22rem; }
-.save-fire:hover #fire { box-shadow: 0 0 0 3px var(--gold); }
 .save-lead { margin: 0; font: 700 clamp(1.8rem, 5vw, 2.6rem)/1.1 var(--title); color: var(--paper); }
-.save-lead a { color: inherit; text-decoration: none; }
-.save-lead a:hover, .save-lead a:focus-visible { color: var(--gold); }
-.save-go { display: inline-block; font-size: .6em; vertical-align: middle; color: var(--gold); transition: transform .15s; }
-.save-lead a:hover .save-go { transform: translateX(.25em); }
-.save-sub { margin: .6rem 0 0; color: var(--text-light-2); max-width: 30rem; }
+.save-card { margin-top: 1.1rem; }
 
 .contact-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
 .contact-row {
