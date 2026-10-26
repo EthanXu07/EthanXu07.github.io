@@ -4,6 +4,9 @@
 //  paint. Strokes save in batches through the database function
 //  paint_pixels() (tools/guest-wall.sql); no cooldown. Other visitors'
 //  painting shows up every few seconds while the wall is on screen.
+//  The first load starts as soon as the page does (not when the wall scrolls
+//  into view), and the last copy seen is kept in localStorage so a repeat
+//  visit shows the wall instantly while it catches up.
 // =====================================================================
 (() => {
   const root = document.getElementById('guestWall');
@@ -105,15 +108,29 @@
   async function fetchWall() {
     const page = (k) => api(`guest_pixels?select=x,y,color,placed_at&order=y.asc,x.asc&offset=${k * 1000}&limit=1000`);
     const first = await page(0);
-    apply(first);
-    if (first.length < 1000) return;
-    (await Promise.all(Array.from({ length: Math.ceil((COLS * ROWS) / 1000) - 1 }, (_, k) => page(k + 1)))).forEach(apply);
+    const rest = first.length < 1000 ? [] : await Promise.all(Array.from({ length: Math.ceil((COLS * ROWS) / 1000) - 1 }, (_, k) => page(k + 1)));
+    // Start from blank so squares deleted since the cached copy (a wipe) disappear
+    grid.fill(BLANK); placedAt.fill(null);
+    [first, ...rest].forEach(apply);
   }
   async function poll() {
-    if (!loaded) { await fetchWall(); loaded = true; return; }
+    if (!loaded) { await fetchWall(); loaded = true; saveSnapshot(); return; }
     // Only squares newer than the newest we've seen, overlapping by 10 s: a batch
     // saved just before one we've seen can commit slightly after it
     await fetchPixels(`&placed_at=gt.${encodeURIComponent(new Date(Date.parse(since || 0) - 10000).toISOString())}`);
+  }
+
+  // ---------- Last copy seen, for an instant first paint on the next visit ----------
+  const SNAP = 'guestwall:snapshot';
+  function saveSnapshot() {
+    const cells = [];
+    for (let i = 0; i < grid.length; i++) if (grid[i] !== BLANK && placedAt[i]) cells.push([i, grid[i], placedAt[i]]);
+    store.set(SNAP, JSON.stringify(cells));
+  }
+  function loadSnapshot() {
+    try {
+      for (const [i, c, at] of JSON.parse(store.get(SNAP)) || []) if (i >= 0 && i < grid.length && c >= 0 && c < 16) { grid[i] = c; placedAt[i] = at; }
+    } catch { /* missing or corrupt: wait for the network */ }
   }
 
   // ---------- Drawing ----------
@@ -143,9 +160,9 @@
     const s = Math.max(0, (Date.now() - Date.parse(iso)) / 1000);
     return s < 60 ? 'just now' : s < 3600 ? `${Math.floor(s / 60)}m ago` : s < 86400 ? `${Math.floor(s / 3600)}h ago` : `${Math.floor(s / 86400)}d ago`;
   };
-  let loadError = false;
+  let loadError = false, snapshotShown = false;
   function setStatus() {
-    status.textContent = !loaded ? (loadError ? "Couldn't load the wall right now." : 'Loading the wall…')
+    status.textContent = !loaded ? (loadError ? "Couldn't load the wall right now." : snapshotShown ? 'Catching up…' : 'Loading the wall…')
       : failures ? 'Connection trouble: retrying…'
       : queue.size || inflight.size ? 'Saving…'
       : 'Saved · live';
@@ -246,15 +263,18 @@
     setStatus();
     timer = visible && !document.hidden ? setTimeout(tick, POLL_MS) : null;
   }
-  const wake = () => { if (visible && !document.hidden && !timer) tick(); };
+  const wake = () => { if ((!loaded || visible) && !document.hidden && !timer) tick(); };
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; wake(); }, { rootMargin: '200px' }).observe(root);
   document.addEventListener('visibilitychange', wake);
   // Best effort when the page closes: leaving cancels a save that's still in flight,
   // so resend it with anything queued. (Browsers may drop this: the API key header
   // needs a CORS preflight, which keepalive requests can't always wait for.)
   window.addEventListener('pagehide', () => {
+    if (loaded) saveSnapshot();
     const pending = new Map([...inflight, ...queue]);
     if (pending.size) fetch(endpoint('rpc/paint_pixels'), { method: 'POST', keepalive: true, headers, body: paintBody([...pending].slice(-BATCH)) }).catch(() => {});
   });
+  loadSnapshot(); snapshotShown = grid.some((c) => c !== BLANK);
   draw(); setStatus();
+  wake(); // start the first load now instead of waiting for the wall to scroll into view
 })();
