@@ -25,7 +25,6 @@ if (SITE.email && $('#copyEmail')) {
   $('#copyEmail').dataset.email = SITE.email;
   $('#emailLabel').replaceChildren(...SITE.email.split('@').flatMap((part, i) => (i ? [document.createElement('wbr'), '@' + part] : [part])));
 }
-$('#year').textContent = new Date().getFullYear();
 
 // =====================================================================
 //  Pixel sprite helpers
