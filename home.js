@@ -5,7 +5,7 @@
 //  spiky viruses, cross pits and a moving platform, then climb the stairs to
 //  the flag and into the castle for the fireworks. Secret: after the level is
 //  clear, a campfire lights up past the castle. Stand by it and press Enter
-//  to sit down at the fire (/card/, the business card).
+//  to sit down at the fire (/campfire/, a s'mores mini-game).
 //  Run out of hearts and it's game over. Clears (time + score) and game-over
 //  scores can be sent to the leaderboard (leaderboard.js). Before Start only the scenery shows;
 //  on Start the level drops into place and the name + bio card slides into
@@ -284,8 +284,8 @@
     if (kind === 'fire') {
       prompt.label.textContent = 'Secret found';
       prompt.title.textContent = 'A campfire';
-      prompt.desc.textContent = 'Some friends are gathered around the fire. Press Enter to pull up a log.';
-      prompt.go.href = '/card/';
+      prompt.desc.textContent = "Some campers are gathered around the fire, and they're hungry. Press Enter to pull up a log and make s'mores.";
+      prompt.go.href = '/campfire/';
       prompt.go.firstChild.textContent = 'Sit down ';
       forms.clear.hidden = true;
       $id('exploreAgain').hidden = $id('exploreBoard').hidden = true;
@@ -378,12 +378,12 @@
   // If focus can't go back (the submit button is disabled by now), don't leave it in the closed dialog or the game ignores keys
   board.el.addEventListener('close', () => { if (board.el.contains(document.activeElement)) document.activeElement.blur(); });
 
-  // Secret: walk from the level into the campfire card (glow → darkness spreads from the fire → /card/)
+  // Secret: walk from the level to the campfire (glow → darkness spreads from the fire → /campfire/, the s'mores game)
   let leaving = false;
   function sitByFire() {
     if (leaving) return;
     leaving = true;
-    if (reduceMotion) { window.location.href = '/card/'; return; }
+    if (reduceMotion) { window.location.href = '/campfire/'; return; }
     for (const k in keys) keys[k] = false;
     prompt.el.hidden = true;
     const r = canvas.getBoundingClientRect();
@@ -401,7 +401,7 @@
     section.style.setProperty('--x', `${x - sr.left}px`);
     section.style.setProperty('--y', `${y - sr.top}px`);
     section.classList.add('leaning');
-    setTimeout(() => { window.location.href = '/card/'; }, 2300);
+    setTimeout(() => { window.location.href = '/campfire/'; }, 2300);
   }
   prompt.go.addEventListener('click', (e) => { if (near === 'fire') { e.preventDefault(); sitByFire(); } });
   // Coming back with the browser's Back button: clear the veil
