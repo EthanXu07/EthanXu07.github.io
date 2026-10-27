@@ -3,9 +3,8 @@
 //  Run right from the Campanile (the layout shifts slightly each run), bump "?" blocks (prizes partly reshuffled: coins, coffee = +1 heart,
 //  star = invincibility, coin magnet, double jump, a hidden 1-up), stomp bugs, dodge
 //  spiky viruses, cross pits and a moving platform, then climb the stairs to
-//  the flag and into the castle for the fireworks. Secret: after the level is
-//  clear, a campfire lights up past the castle. Stand by it and press Enter
-//  to sit down at the fire (/campfire/, a s'mores mini-game).
+//  the flag and into the castle for the fireworks. Past the castle stands a
+//  wooden leaderboard (fastest clears + high scores) you can walk along.
 //  Run out of hearts and it's game over. Clears (time + score) and game-over
 //  scores can be sent to the leaderboard (leaderboard.js). Before Start only the scenery shows;
 //  on Start the level drops into place and the name + bio card slides into
@@ -52,8 +51,8 @@
   const FLAG_X = 1230;
   const CASTLE_X = 1270;
   const DOOR_X = 1295; // castle door (CASTLE_X + 25)
-  const WORLD_W = 1430;
-  const FIRE_X = 1392; // secret campfire past the castle (lit after the level is clear)
+  const WORLD_W = 1640;
+  const BOARD_X = 1372, BOARD_W = 230; // the physical leaderboard past the castle
 
   // The layout is rebuilt each run with small random nudges: pits, pipes, block rows, coins and
   // enemies shift a few px and pits/pipes change size slightly, but the counts, the order and the
@@ -235,13 +234,12 @@
   const inView = () => { const r = section.getBoundingClientRect(); return r.bottom > window.innerHeight * 0.35 && r.top < window.innerHeight * 0.5; };
   window.addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.('input, textarea, select, dialog')) return;
-    if (!inView() || leaving) return;
+    if (!inView()) return;
     const onControl = e.target.closest?.('a, button');
     if (e.key === 'Enter' && !onControl && playing) {
       if (state === 'over') { e.preventDefault(); newGame(); return; }
       if (state === 'won' && phase === 'ready') {
         e.preventDefault();
-        if (near === 'fire') { sitByFire(); return; }
         document.getElementById('contact')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
         return;
       }
@@ -281,23 +279,13 @@
     if (kind === near) return;
     near = kind;
     if (!kind) { prompt.el.hidden = true; return; }
-    if (kind === 'fire') {
-      prompt.label.textContent = 'Secret found';
-      prompt.title.textContent = 'A campfire';
-      prompt.desc.textContent = "Some campers are gathered around the fire, and they're hungry. Press Enter to pull up a log and make s'mores.";
-      prompt.go.href = '/campfire/';
-      prompt.go.firstChild.textContent = 'Sit down ';
-      forms.clear.hidden = true;
-      $id('exploreAgain').hidden = $id('exploreBoard').hidden = true;
-    } else {
-      prompt.label.textContent = 'Level clear!';
-      prompt.title.textContent = `${Leaderboard.fmtTime(clearMs())} · Score ${score}`;
-      prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Nice run! Press Enter to get in touch. Something is glowing past the castle…`;
-      forms.clear.hidden = false;
-      $id('exploreAgain').hidden = $id('exploreBoard').hidden = false;
-      prompt.go.href = '#contact';
-      prompt.go.firstChild.textContent = 'Contact ';
-    }
+    prompt.label.textContent = 'Level clear!';
+    prompt.title.textContent = `${Leaderboard.fmtTime(clearMs())} · Score ${score}`;
+    prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Nice run! Press Enter to get in touch, or walk past the castle to see the leaderboard →`;
+    forms.clear.hidden = false;
+    $id('exploreAgain').hidden = $id('exploreBoard').hidden = false;
+    prompt.go.href = '#contact';
+    prompt.go.firstChild.textContent = 'Contact ';
     prompt.el.hidden = false;
   }
 
@@ -327,6 +315,7 @@
         await Promise.all(entries.map(async ([mode, value]) => { f.ranks[mode] ??= await Leaderboard.submit(mode, name, value); }));
         msg.textContent = `Saved! ${entries.map(([mode]) => `${mode === 'speed' ? 'Speedrun' : 'High score'} #${f.ranks[mode]}`).join(' · ')}`;
         f.classList.add('done');
+        refreshWall(true);
         openBoard(entries[0][0], name);
       } catch {
         msg.textContent = "Couldn't reach the leaderboard. Try again?";
@@ -371,41 +360,12 @@
   }
   section.querySelectorAll('[data-board]').forEach((b) => b.addEventListener('click', () => openBoard()));
   // Fetch both boards in the background once the page settles, so opening one is instant
-  (window.requestIdleCallback || setTimeout)(() => Leaderboard.prefetch(), { timeout: 3000 });
+  (window.requestIdleCallback || setTimeout)(() => { Leaderboard.prefetch(); refreshWall(); }, { timeout: 3000 });
   board.el.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { board.tab = b.dataset.tab; renderBoard(); }));
   $id('boardClose').addEventListener('click', () => board.el.close());
   board.el.addEventListener('click', (e) => { if (e.target === board.el) board.el.close(); }); // backdrop
   // If focus can't go back (the submit button is disabled by now), don't leave it in the closed dialog or the game ignores keys
   board.el.addEventListener('close', () => { if (board.el.contains(document.activeElement)) document.activeElement.blur(); });
-
-  // Secret: walk from the level to the campfire (glow → darkness spreads from the fire → /campfire/, the s'mores game)
-  let leaving = false;
-  function sitByFire() {
-    if (leaving) return;
-    leaving = true;
-    if (reduceMotion) { window.location.href = '/campfire/'; return; }
-    for (const k in keys) keys[k] = false;
-    prompt.el.hidden = true;
-    const r = canvas.getBoundingClientRect();
-    const x = r.left + (FIRE_X - Math.round(cam)) * (r.width / W);
-    const y = r.top + (G - 8) * (r.height / H);
-    const veil = document.createElement('div');
-    veil.className = 'fire-veil';
-    veil.style.setProperty('--x', `${x}px`);
-    veil.style.setProperty('--y', `${y}px`);
-    veil.innerHTML = '<div class="fire-veil-glow"></div><div class="fire-veil-dark"></div><p class="fire-veil-text">You pull up a log…</p>';
-    document.body.append(veil);
-    document.body.style.overflow = 'hidden';
-    // zoom origin is relative to the title section
-    const sr = section.getBoundingClientRect();
-    section.style.setProperty('--x', `${x - sr.left}px`);
-    section.style.setProperty('--y', `${y - sr.top}px`);
-    section.classList.add('leaning');
-    setTimeout(() => { window.location.href = '/campfire/'; }, 2300);
-  }
-  prompt.go.addEventListener('click', (e) => { if (near === 'fire') { e.preventDefault(); sitByFire(); } });
-  // Coming back with the browser's Back button: clear the veil
-  window.addEventListener('pageshow', () => { document.querySelector('.fire-veil')?.remove(); section.classList.remove('leaning'); document.body.style.overflow = ''; leaving = false; });
 
   // ---------- Damage, death, game over ----------
   function hurt() {
@@ -662,8 +622,9 @@
       popup(FLAG_X, -72, 'Level clear!', 120, true);
     }
     if (state === 'won') {
-      const byFire = phase === 'ready' && Math.abs(p.x + PW / 2 - FIRE_X) < 20;
-      setPrompt(byFire ? 'fire' : 'clear');
+      // Step aside in front of the leaderboard so the prompt card doesn't cover it
+      setPrompt(phase === 'ready' && p.x + PW / 2 > BOARD_X - 10 ? null : 'clear');
+      if (p.x + PW / 2 > BOARD_X - 120) refreshWall(); // cached for a minute
     }
   }
 
@@ -801,32 +762,103 @@
     ctx.fillStyle = '#d4553a'; ctx.fillRect(x + 30, -88, 1, 13);
     if (state === 'won' && phase !== 'walk') ctx.fillRect(x + 31, -88, 7, 5); // castle flag goes up
   }
-  // Secret campfire: cold logs until the level is clear, then it lights up
-  function drawCampfire(x) {
-    const lit = state === 'won' && phase !== 'walk' && phase !== 'inside';
-    if (lit) {
-      const glow = 0.3 + Math.sin(t * 0.2) * 0.05;
-      const g = ctx.createRadialGradient(x, -6, 0, x, -6, 30);
-      g.addColorStop(0, `rgba(243,169,58,${glow})`); g.addColorStop(1, 'rgba(243,169,58,0)');
-      ctx.fillStyle = g; ctx.fillRect(x - 30, -36, 60, 36);
+  // ---------- The physical leaderboard past the castle ----------
+  // Two chalkboards on a wooden frame. Text uses a tiny 3x5 pixel font so it stays crisp at any
+  // scale; the board is drawn to an offscreen canvas and only redrawn when its rows change.
+  const FONT = {
+    A: '010101111101101', B: '110101110101110', C: '011100100100011', D: '110101101101110', E: '111100110100111',
+    F: '111100110100100', G: '011100101101011', H: '101101111101101', I: '111010010010111', J: '001001001101010',
+    K: '101101110101101', L: '100100100100111', M: '101111111101101', N: '110101101101101', O: '010101101101010',
+    P: '110101110100100', Q: '010101101110011', R: '110101110101101', S: '011100010001110', T: '111010010010010',
+    U: '101101101101111', V: '101101101101010', W: '101101111111101', X: '101101010101101', Y: '101101010010010',
+    Z: '111001010100111', 0: '111101101101111', 1: '010110010010111', 2: '110001010100111', 3: '110001010001110',
+    4: '101101111001001', 5: '111100110001110', 6: '011100111101111', 7: '111001010010010', 8: '111101111101111',
+    9: '111101111001110', ':': '000010000010000', '.': '000000000000010', '-': '000000111000000', _: '000000000000111',
+    '#': '101111101111101', '?': '110001010000010', ',': '000000000010100', '!': '010010010000010', ' ': '000000000000000',
+  };
+  const textW = (str) => String(str).length * 4 - 1;
+  function pixText(c, str, x, y, color) {
+    c.fillStyle = color;
+    let cx = Math.round(x);
+    for (const ch of String(str).toUpperCase()) {
+      const g = FONT[ch] ?? FONT['?'];
+      for (let i = 0; i < 15; i++) if (g[i] === '1') c.fillRect(cx + (i % 3), y + Math.floor(i / 3), 1, 1);
+      cx += 4;
     }
-    ctx.fillStyle = '#6b4630'; ctx.fillRect(x - 8, -3, 16, 3);
-    ctx.fillStyle = '#4a2f20'; ctx.fillRect(x - 6, -5, 3, 2); ctx.fillRect(x + 3, -5, 3, 2);
-    ctx.fillStyle = '#8b949c'; ctx.fillRect(x - 11, -2, 3, 2); ctx.fillRect(x + 8, -2, 3, 2);
-    if (!lit) {
-      if (Math.floor(t / 30) % 3 === 0) { ctx.fillStyle = 'rgba(185,179,156,0.5)'; ctx.fillRect(x, -9 - (t % 30) / 6, 1, 2); }
-      return;
+  }
+  const wall = { speed: null, score: null, at: 0, key: '' };
+  function refreshWall(force = false) {
+    if (!force && Date.now() - wall.at < 60000) return;
+    wall.at = Date.now();
+    for (const m of ['speed', 'score']) Promise.resolve(Leaderboard.top(m)).then((rows) => { wall[m] = rows; }, () => { if (!wall[m]) wall[m] = 'error'; });
+  }
+  const BOARD_H = 104, BOARD_TOP = -BOARD_H - 22;
+  const boardCanvas = document.createElement('canvas');
+  boardCanvas.width = BOARD_W; boardCanvas.height = BOARD_H;
+  function renderBoardImage() {
+    const c = boardCanvas.getContext('2d'), mine = Leaderboard.savedName();
+    c.clearRect(0, 0, BOARD_W, BOARD_H);
+    // Frame + header plank
+    c.fillStyle = '#0f1714'; c.fillRect(0, 0, BOARD_W, BOARD_H);
+    c.fillStyle = '#6b4630'; c.fillRect(1, 1, BOARD_W - 2, BOARD_H - 2);
+    c.fillStyle = '#8a5a3c'; c.fillRect(1, 1, BOARD_W - 2, 2);
+    c.fillStyle = '#4a2f20'; for (let x = 9; x < BOARD_W; x += 23) c.fillRect(x, 4, 1, 9);
+    const title = 'LEADERBOARD';
+    pixText(c, title, (BOARD_W - textW(title)) / 2 + 1, 6, '#0f1714');
+    pixText(c, title, (BOARD_W - textW(title)) / 2, 5, '#f3c969');
+    const panelW = (BOARD_W - 12) / 2;
+    [['speed', 'FASTEST CLEARS'], ['score', 'HIGH SCORES']].forEach(([mode, label], k) => {
+      const px = 4 + k * (panelW + 4), py = 15;
+      c.fillStyle = '#0f1714'; c.fillRect(px - 1, py - 1, panelW + 2, BOARD_H - py - 3);
+      c.fillStyle = '#1f3329'; c.fillRect(px, py, panelW, BOARD_H - py - 5);
+      c.fillStyle = 'rgba(241,230,204,0.05)'; c.fillRect(px + 3, py + 30, panelW - 20, 1); c.fillRect(px + 12, py + 58, panelW - 30, 1); // chalk smudges
+      pixText(c, label, px + (panelW - textW(label)) / 2, py + 3, '#e2d2ac');
+      c.fillStyle = 'rgba(226,210,172,0.35)'; c.fillRect(px + 4, py + 10, panelW - 8, 1);
+      const rows = wall[mode];
+      if (!Array.isArray(rows) || !rows.length) {
+        const note = rows === 'error' ? 'OFFLINE' : rows ? 'NO RUNS YET' : 'LOADING...';
+        pixText(c, note, px + (panelW - textW(note)) / 2, py + 38, '#b9b39c');
+        return;
+      }
+      rows.slice(0, 10).forEach((r, i) => {
+        const y = py + 14 + i * 7, isMine = mine && r.name === mine;
+        const rank = String(i + 1).padStart(2, ' ');
+        const value = Leaderboard.fmt(mode, r.value);
+        if (isMine) { c.fillStyle = 'rgba(232,169,58,0.18)'; c.fillRect(px + 2, y - 1, panelW - 4, 7); }
+        pixText(c, rank, px + 4, y, ['#f3c969', '#c9d1d6', '#d29a6a'][i] || '#8b949c');
+        pixText(c, r.name.slice(0, 12), px + 14, y, isMine ? '#f3c969' : '#f1e6cc');
+        pixText(c, value, px + panelW - 4 - textW(value), y, isMine ? '#f3c969' : '#e2d2ac');
+      });
+    });
+  }
+  function drawLeaderboard(x) {
+    const key = JSON.stringify([wall.speed, wall.score, Leaderboard.savedName()]);
+    if (key !== wall.key) { wall.key = key; renderBoardImage(); }
+    // Posts into the ground, with a lantern on each
+    for (const px of [x + 14, x + BOARD_W - 18]) {
+      ctx.fillStyle = '#0f1714'; ctx.fillRect(px - 1, BOARD_TOP + 4, 6, -BOARD_TOP - 4);
+      ctx.fillStyle = '#5a3a28'; ctx.fillRect(px, BOARD_TOP + 4, 4, -BOARD_TOP - 4);
+      ctx.fillStyle = '#7a5238'; ctx.fillRect(px, BOARD_TOP + 4, 1, -BOARD_TOP - 4);
     }
-    const FL = ['#fff1b8', '#f3c969', '#e8a93a', '#d4553a'];
-    for (let i = -4; i <= 4; i++) {
-      const h = Math.max(1, Math.round((5 - Math.abs(i)) * 2.2 + Math.random() * 3));
-      for (let y = 0; y < h; y++) { ctx.fillStyle = FL[Math.min(3, Math.floor(((h - y) / h) * 4 * 0.99))]; ctx.fillRect(x + i, -4 - y, 1, 1); }
+    const glow = 0.22 + Math.sin(t * 0.15) * 0.03;
+    for (const lx of [x - 3, x + BOARD_W]) {
+      const g = ctx.createRadialGradient(lx + 1.5, BOARD_TOP + 8, 0, lx + 1.5, BOARD_TOP + 8, 34);
+      g.addColorStop(0, `rgba(243,201,105,${glow})`); g.addColorStop(1, 'rgba(243,201,105,0)');
+      ctx.fillStyle = g; ctx.fillRect(lx - 34, BOARD_TOP - 26, 70, 70);
     }
-    if (Math.random() > 0.6) { ctx.fillStyle = '#f3c969'; ctx.fillRect(x - 3 + Math.floor(Math.random() * 7), -18 - Math.floor(Math.random() * 6), 1, 1); }
-    // two friends sitting by the fire
-    ctx.fillStyle = '#1c2a25';
-    for (const fxo of [-20, 17]) { ctx.fillRect(x + fxo, -9, 4, 9); ctx.fillRect(x + fxo, -13, 4, 4); }
-    ctx.fillStyle = 'rgba(243,169,58,0.55)'; ctx.fillRect(x - 17, -13, 1, 13); ctx.fillRect(x + 17, -13, 1, 13);
+    ctx.drawImage(boardCanvas, x, BOARD_TOP);
+    for (const lx of [x - 4, x + BOARD_W]) {
+      ctx.fillStyle = '#0f1714'; ctx.fillRect(lx, BOARD_TOP + 4, 4, 7);
+      ctx.fillStyle = '#f3c969'; ctx.fillRect(lx + 1, BOARD_TOP + 6, 2, 4);
+    }
+    // Your run, on a plaque under the board
+    if (state === 'won') {
+      const line = `YOUR RUN  ${Leaderboard.fmtTime(clearMs())}  ${score.toLocaleString()}`;
+      const w = textW(line) + 8, lx = Math.round(x + (BOARD_W - w) / 2);
+      ctx.fillStyle = '#0f1714'; ctx.fillRect(lx - 1, -21, w + 2, 11);
+      ctx.fillStyle = '#e2d2ac'; ctx.fillRect(lx, -20, w, 9);
+      pixText(ctx, line, lx + 4, -18, '#2a1f1a');
+    }
   }
 
   function drawHud() {
@@ -1015,7 +1047,7 @@
       const flagDrop = state === 'won' ? Math.min(66, Math.round((t - winT) * 1.5)) : 0;
       ctx.fillStyle = '#d4553a'; ctx.fillRect(FLAG_X - 14, -78 + flagDrop, 14, 10 - (Math.floor(t / 10) % 2));
       drawCastle(CASTLE_X);
-      drawCampfire(FIRE_X);
+      drawLeaderboard(BOARD_X);
       ctx.restore();
       if (drop === 0) {
         for (const c of coins) {
