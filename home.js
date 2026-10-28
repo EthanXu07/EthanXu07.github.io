@@ -150,7 +150,7 @@
 
   // ---------- State ----------
   const keys = { left: false, right: false, jump: false, down: false };
-  let p, enemies, items, coins, cam, t, playing = false, startT = 0, runFrames = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, jumpBuffer = 0, coyote = 0, jumpT = 99, checkpoint, popups, particles, winT, near, phase, phaseT, hidePlayer;
+  let p, enemies, items, coins, cam, t, playing = false, startT = 0, runFrames = 0, state, hearts, score, coinCount, invuln, star, magnet, feather, airJumps, jumpBuffer = 0, coyote = 0, jumpT = 99, checkpoint, popups, particles, sparks, confetti, partyT, winT, near, phase, phaseT, hidePlayer;
   let stars = [], clouds = [];
 
   function newGame() {
@@ -166,7 +166,7 @@
     state = 'play'; // play | won | over
     hearts = START_HEARTS; score = 0; coinCount = 0; invuln = 0; star = 0; magnet = 0; feather = 0; airJumps = 0; jumpBuffer = 0; coyote = 0;
     checkpoint = START_X;
-    popups = []; particles = [];
+    popups = []; particles = []; sparks = []; confetti = []; partyT = -1;
     winT = 0; near = null; phase = null; phaseT = 0; hidePlayer = false;
     runFrames = 0;
     resetSubmit();
@@ -274,6 +274,73 @@
     for (let i = 0; i < n; i++) particles.push({ x, y, vx: Math.cos((i / n) * 6.283) * 1.1, vy: Math.sin((i / n) * 6.283) * 1.1 - 1, life: 22, color });
   };
 
+  // ---------- Celebration: fireworks and confetti ----------
+  const PARTY = ['#e8a93a', '#d4553a', '#8fb8c9', '#f3c969', '#9fd0d6', '#c77dab', '#fff3c4'];
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  // A firework: a ring of sparks that drift, droop and twinkle out
+  function explode(x, y, color = pick(PARTY), n = 40) {
+    const second = Math.random() < 0.4 ? pick(PARTY) : color;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * 6.283 + Math.random() * 0.2, v = 1 + Math.random() * 0.7;
+      sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 50 + Math.floor(Math.random() * 25), color: i % 2 ? second : color });
+    }
+    sparks.push({ x, y, vx: 0, vy: 0, life: 6, flash: true, color: '#fff3c4' });
+  }
+  // A rocket climbs from the ground, trailing sparks, and bursts near the top of the screen
+  function launch(x) {
+    const h = G * (0.5 + Math.random() * 0.3);
+    sparks.push({ x, y: 0, vx: (Math.random() - 0.5) * 0.3, vy: -Math.sqrt(2 * 0.04 * h), life: 999, rocket: true, color: pick(PARTY) });
+  }
+  // Party poppers: confetti fired up and out from x, or fluttering down from the top of the screen
+  function popConfetti(x, y, n = 40, dir = 0) {
+    for (let i = 0; i < n; i++) {
+      const side = dir || (Math.random() < 0.5 ? -1 : 1);
+      confetti.push({ x, y, vx: side * (0.4 + Math.random() * 1.8), vy: -2.2 - Math.random() * 2.4, ph: Math.random() * 6.283, spin: 0.1 + Math.random() * 0.2, life: 400, color: pick(PARTY) });
+    }
+  }
+  function rainConfetti(x0, x1) {
+    confetti.push({ x: x0 + Math.random() * (x1 - x0), y: -G - 4, vx: (Math.random() - 0.5) * 0.4, vy: 0.3, ph: Math.random() * 6.283, spin: 0.1 + Math.random() * 0.2, life: 400, color: pick(PARTY) });
+  }
+  function stepParty() {
+    for (const q of sparks) {
+      if (q.rocket) {
+        q.x += q.vx; q.y += q.vy; q.vy += 0.04;
+        if (t % 2 === 0) sparks.push({ x: q.x, y: q.y + 1, vx: 0, vy: 0.2, life: 12, color: '#e2d2ac' });
+        if (q.vy > -0.5) { q.life = 0; explode(q.x, q.y, q.color); }
+      } else {
+        q.vx *= 0.97; q.vy = q.vy * 0.97 + 0.025;
+        q.x += q.vx; q.y += q.vy; q.life--;
+      }
+    }
+    sparks = sparks.filter((q) => q.life > 0);
+    for (const c of confetti) {
+      if (c.y >= -1) { c.y = -1; c.life = Math.min(c.life, 90) - 1; continue; } // landed: lie in the grass a moment
+      c.vx *= 0.98; c.vy = Math.min(c.vy + 0.05, 0.55);
+      c.x += c.vx + Math.sin(t * 0.08 + c.ph) * 0.25; c.y += c.vy; c.life--;
+    }
+    confetti = confetti.filter((c) => c.life > 0);
+  }
+  function drawSparks() {
+    for (const q of sparks) {
+      if (q.flash) { ctx.fillStyle = q.color; ctx.fillRect(Math.round(q.x) - 2, Math.round(q.y) - 2, 5, 5); continue; }
+      if (!q.rocket && q.life < 20 && (q.life + Math.floor(q.x)) % 3 === 0) continue; // twinkle out
+      ctx.globalAlpha = q.rocket ? 1 : Math.min(1, q.life / 25);
+      ctx.fillStyle = q.color;
+      ctx.fillRect(Math.round(q.x), Math.round(q.y), 1, q.rocket ? 2 : 1);
+    }
+    ctx.globalAlpha = 1;
+  }
+  function drawConfetti() {
+    for (const c of confetti) {
+      ctx.globalAlpha = Math.min(1, c.life / 30);
+      ctx.fillStyle = c.color;
+      const flip = Math.cos(t * c.spin + c.ph); // tumbling: the piece turns edge-on and back
+      if (c.y >= -1) ctx.fillRect(Math.round(c.x), -1, 2, 1);
+      else ctx.fillRect(Math.round(c.x), Math.round(c.y), Math.abs(flip) > 0.4 ? 2 : 1, flip > -0.4 ? 2 : 1);
+    }
+    ctx.globalAlpha = 1;
+  }
+
   // ---------- Prompt ----------
   function setPrompt(kind) {
     if (kind === near) return;
@@ -316,6 +383,7 @@
         msg.textContent = `Saved! ${entries.map(([mode]) => `${mode === 'speed' ? 'Speedrun' : 'High score'} #${f.ranks[mode]}`).join(' · ')}`;
         f.classList.add('done');
         refreshWall(true);
+        popConfetti(p.x + PW / 2, p.y, 40);
         openBoard(entries[0][0], name);
       } catch {
         msg.textContent = "Couldn't reach the leaderboard. Try again?";
@@ -461,6 +529,7 @@
     t++;
     particles.forEach((q) => { q.x += q.vx; q.y += q.vy; q.vy += 0.1; q.life--; });
     particles = particles.filter((q) => q.life > 0);
+    stepParty();
     popups.forEach((pp) => { pp.life--; pp.y -= 0.3; });
     popups = popups.filter((pp) => pp.life > 0);
     blocks.forEach((b) => { if (b.bump > 0) b.bump--; });
@@ -488,7 +557,7 @@
         const dt = t - phaseT;
         if (dt === 12 || dt === 28 || dt === 44) {
           const fx = CASTLE_X + 10 + ((dt * 7) % 40), fy = -95 - (dt % 20);
-          burst(fx, fy, ['#e8a93a', '#d4553a', '#8fb8c9'][dt % 3], 14);
+          explode(fx, fy, ['#e8a93a', '#d4553a', '#8fb8c9'][dt % 3], 24);
         }
         if (dt > 60) { phase = 'out'; phaseT = t; hidePlayer = false; }
       } else if (phase === 'out') {
@@ -625,6 +694,21 @@
       // Step aside in front of the leaderboard so the prompt card doesn't cover it
       setPrompt(phase === 'ready' && p.x + PW / 2 > BOARD_X - 10 ? null : 'clear');
       if (p.x + PW / 2 > BOARD_X - 120) refreshWall(); // cached for a minute
+      // At the leaderboard: a party. Poppers from both posts on arrival, then
+      // fireworks overhead and confetti drifting down for as long as you stay.
+      if (phase === 'ready' && p.x + PW / 2 > BOARD_X - 30) {
+        if (partyT < 0) {
+          partyT = 0;
+          popConfetti(BOARD_X + 16, BOARD_TOP + 8, reduceMotion ? 20 : 50, 1);
+          popConfetti(BOARD_X + BOARD_W - 16, BOARD_TOP + 8, reduceMotion ? 20 : 50, -1);
+          popup(BOARD_X + BOARD_W / 2, BOARD_TOP - 10, 'You made it!', 120, true);
+        }
+        partyT++;
+        if (!reduceMotion) {
+          if (partyT % 55 === 1 || (partyT < 120 && partyT % 25 === 1)) launch(cam + 20 + Math.random() * (W - 40));
+          if (partyT % 5 === 0) rainConfetti(cam, cam + W);
+        } else if (partyT % 12 === 0) rainConfetti(cam, cam + W);
+      }
     }
   }
 
@@ -1046,6 +1130,7 @@
       ctx.fillStyle = '#e8a93a'; ctx.fillRect(FLAG_X - 1, -83, 4, 4);
       const flagDrop = state === 'won' ? Math.min(66, Math.round((t - winT) * 1.5)) : 0;
       ctx.fillStyle = '#d4553a'; ctx.fillRect(FLAG_X - 14, -78 + flagDrop, 14, 10 - (Math.floor(t / 10) % 2));
+      drawSparks();
       drawCastle(CASTLE_X);
       drawLeaderboard(BOARD_X);
       ctx.restore();
@@ -1071,6 +1156,7 @@
     }
 
     for (const q of particles) { ctx.fillStyle = q.color; ctx.fillRect(Math.round(q.x), Math.round(q.y), 1, 1); }
+    drawConfetti();
     ctx.textAlign = 'center';
     for (const pp of popups) {
       ctx.font = pp.big ? 'bold 8px monospace' : '7px monospace';
