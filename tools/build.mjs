@@ -517,7 +517,7 @@ write('contact/index.html', `<!doctype html><meta charset="utf-8"><title>Contact
 // ethanxu.dev/home/: the whole site again, with a different résumé and grad date.
 // Links stay inside the copy; canonical URLs still point at the main site.
 const COPIES = [
-  { dir: 'home', grad: 'May 2030', resumeFile: '/assets/resume-freshman.pdf?v=69189190' },
+  { dir: 'home', grad: 'May 2030', resumeFile: '/assets/resume-freshman.pdf?v=8d304a68' },
 ];
 const GRAD = /(<dt>Grad<\/dt><dd>)[^<]*(<\/dd>)/;
 const resumePage = readFileSync(join(ROOT, 'resume/index.html'), 'utf8');
