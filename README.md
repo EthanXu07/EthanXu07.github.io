@@ -21,6 +21,7 @@ node tools/build.mjs
 | `leaderboard.js` + `tools/leaderboard.sql` | Title-screen game leaderboard (speedrun time + high score). Until `SITE.supabase` in `site-config.js` has a Supabase URL + anon key, scores are only saved in each visitor's browser. To make it global: create a free Supabase project, run `tools/leaderboard.sql` in its SQL editor, then paste the Project URL and anon key into `site-config.js` |
 | `guest-wall.js` + `tools/guest-wall.sql` | Guest wall on the library page: a shared r/place-style 160×60 pixel canvas between the bookcase and the desk. Click or drag to paint, eraser, brush sizes 1/2/4, no cooldown; live for every visitor. Wipe it with `delete from public.guest_pixels;` in the Supabase SQL editor, or an area with `... where x between 10 and 40 and y between 0 and 20` |
 | `card/index.html` | Business card (hand-written, not generated). Linked from the Contact section's button, or directly at `/card/`. Links come from `site-config.js` |
+| `COPIES` in `tools/build.mjs` | `ethanxu.dev/home/`: a full copy of the site (every page, links stay inside it) with its own résumé (`assets/resume-freshman.pdf`) and Grad date. The main site is unchanged. To swap that résumé, replace the PDF, bump its `?v=` there and rebuild |
 
 Edit, rebuild, then commit the generated `index.html` files along with `src/`.
 

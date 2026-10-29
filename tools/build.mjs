@@ -250,10 +250,12 @@ function page({ out, path, page, title, description, content, sub = true, script
     resumeModal: src('pages/_resume-modal.html'),
     scripts,
   });
-  write(out, html);
+  write(out, html, { copy: true });
 }
 
-function write(out, html) {
+const built = []; // game pages, copied under each COPIES dir at the end
+function write(out, html, { copy = false } = {}) {
+  if (copy) built.push([out, html]);
   const file = join(ROOT, out);
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, stamp(html));
@@ -510,5 +512,25 @@ write('contact/index.html', `<!doctype html><meta charset="utf-8"><title>Contact
 <meta http-equiv="refresh" content="0; url=/#contact"><link rel="canonical" href="https://ethanxu.dev/#contact">
 <a href="/#contact">Contact Ethan Xu</a>
 `);
+
+// ---------------------------------------------------------------- Site copies
+// ethanxu.dev/home/: the whole site again, with a different résumé and grad date.
+// Links stay inside the copy; canonical URLs still point at the main site.
+const COPIES = [
+  { dir: 'home', grad: 'May 2030', resumeFile: '/assets/resume-freshman.pdf?v=69189190' },
+];
+const GRAD = /(<dt>Grad<\/dt><dd>)[^<]*(<\/dd>)/;
+const resumePage = readFileSync(join(ROOT, 'resume/index.html'), 'utf8');
+for (const c of COPIES) {
+  const prefix = (html) => html.replace(/href="\/(?=(?:experience|projects|skills|interests|resume)\/|#|")/g, `href="/${c.dir}/`);
+  const config = (html) => html.replaceAll('"/assets/resume.pdf"', JSON.stringify(c.resumeFile)).replace(/(<script src="[./]*site-config\.js[^"]*"><\/script>)/,
+    `$1\n  <script>window.SITE = Object.assign(window.SITE || {}, { resumeFile: ${JSON.stringify(c.resumeFile)} });</script>`);
+  for (const [out, html] of built) {
+    if (out === 'index.html' && !GRAD.test(html)) throw new Error('home page has no Grad line to change');
+    write(`${c.dir}/${out}`, config(prefix(html.replace(GRAD, `$1${esc(c.grad)}$2`))));
+  }
+  // /resume/ is hand-written with relative paths; make them absolute for the deeper folder
+  write(`${c.dir}/resume/index.html`, config(resumePage.replace(/(href|src)="\.\.\/(?=\w)/g, '$1="/')));
+}
 
 console.log('Done.');
