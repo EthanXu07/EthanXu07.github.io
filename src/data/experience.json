@@ -20,7 +20,7 @@
     "status": "active",
     "start": "2026-09",
     "when": "Sep 2026 – Now",
-    "title": "Data Science Intern",
+    "title": "Machine Learning Researcher",
     "org": "Climformatics",
     "bullets": [
       "Building a <strong>meteorological forecasting model</strong> from GHI, DNI, DHI, temperature and wind-speed data that predicts at <strong>hourly resolution up to 14 days out</strong>, verified against ground-truth solar data."
