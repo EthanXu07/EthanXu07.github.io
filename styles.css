@@ -950,6 +950,9 @@ main.subpage { padding-top: 5rem; }
   padding: clamp(.75rem, 3vw, 1.5rem);
   background: repeating-linear-gradient(45deg, var(--ink-2) 0 8px, var(--ink) 8px 16px);
 }
+.resume-sheet { position: relative; width: 100%; max-width: 900px; flex: none; }
+.resume-link { position: absolute; border-radius: 2px; }
+.resume-link:hover, .resume-link:focus-visible { background: rgba(232, 169, 58, .25); box-shadow: 0 0 0 2px var(--gold); outline: none; }
 .resume-page { display: block; width: 100%; max-width: 900px; height: auto; background: #fff; box-shadow: 0 0 0 3px var(--edge), 6px 6px 0 rgba(0,0,0,.4); image-rendering: auto; }
 .resume-frame { width: 100%; max-width: 900px; flex: 1; min-height: 70vh; border: 0; background: #fff; }
 .resume-loading { margin: auto; font: .65rem var(--pixel); color: var(--paper); animation: blink 1s steps(1) infinite; }
