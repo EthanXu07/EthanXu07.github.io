@@ -5,11 +5,11 @@
 #
 #   ./update-resume.sh                     main site (ethanxu.dev)
 #   ./update-resume.sh --home [path]       the copy at ethanxu.dev/home     (newest *Resume*.pdf)
-#   ./update-resume.sh --freshman [path]   the copy at ethanxu.dev/freshman (newest *Resume*.pdf)
+#   ./update-resume.sh --root [path]       the copy at ethanxu.dev/root     (newest *Resume*.pdf)
 set -e
 cd "$(dirname "$0")"
 
-if [[ "$1" == --home || "$1" == --freshman ]]; then
+if [[ "$1" == --home || "$1" == --root ]]; then
   copy=${1#--}; shift
   pattern='*Resume*.pdf'; dest=assets/resume-$copy.pdf; url=https://ethanxu.dev/$copy/resume
 else
@@ -36,7 +36,7 @@ else
 fi
 # Rebuild so every page links the new file (and site-config.js's new ?v= hash)
 node tools/build.mjs > /dev/null
-git add "$dest" site-config.js tools/build.mjs home freshman $(git ls-files -m -- '*.html')
+git add "$dest" site-config.js tools/build.mjs home root $(git ls-files -m -- '*.html')
 if git diff --cached --quiet; then echo "Already up to date."; exit 0; fi
 git commit -m "Update résumé ($(basename "$src") → $f)"
 git push
