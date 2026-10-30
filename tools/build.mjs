@@ -519,7 +519,7 @@ write('contact/index.html', `<!doctype html><meta charset="utf-8"><title>Contact
 // Swap a copy's résumé with ./update-resume.sh --<dir> path/to/new.pdf
 const COPIES = [
   { dir: 'home', grad: 'May 2029', resumeFile: '/assets/resume-home.pdf?v=8d304a68' },
-  { dir: 'root', grad: 'May 2030', resumeFile: '/assets/resume-root.pdf?v=621c1bde' },
+  { dir: 'root', grad: 'May 2030', resumeFile: '/assets/resume-root.pdf?v=060de6e1' },
 ];
 const GRAD = /(<dt>Grad<\/dt><dd>)[^<]*(<\/dd>)/;
 const resumePage = readFileSync(join(ROOT, 'resume/index.html'), 'utf8');
