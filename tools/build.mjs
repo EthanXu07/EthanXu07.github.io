@@ -514,10 +514,12 @@ write('contact/index.html', `<!doctype html><meta charset="utf-8"><title>Contact
 `);
 
 // ---------------------------------------------------------------- Site copies
-// ethanxu.dev/home/: the whole site again, with a different résumé and grad date.
-// Links stay inside the copy; canonical URLs still point at the main site.
+// ethanxu.dev/home/ and /freshman/: the whole site again, each with its own résumé and grad date.
+// Links stay inside each copy; canonical URLs still point at the main site.
+// Swap a copy's résumé with ./update-resume.sh --<dir> path/to/new.pdf
 const COPIES = [
-  { dir: 'home', grad: 'May 2029', resumeFile: '/assets/resume-freshman.pdf?v=8d304a68' },
+  { dir: 'home', grad: 'May 2029', resumeFile: '/assets/resume-home.pdf?v=8d304a68' },
+  { dir: 'freshman', grad: 'May 2030', resumeFile: '/assets/resume-freshman.pdf?v=621c1bde' },
 ];
 const GRAD = /(<dt>Grad<\/dt><dd>)[^<]*(<\/dd>)/;
 const resumePage = readFileSync(join(ROOT, 'resume/index.html'), 'utf8');
