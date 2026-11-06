@@ -70,14 +70,25 @@
           </div>
         </article>
 
+        <article class="item px-box" id="project-poker-bot">
+          <div class="item-icon" aria-hidden="true" style="--c:#d4553a">♠</div>
+          <p class="item-type">Project · AI</p>
+          <h3>No Limit Poker Bot</h3>
+          <p class="item-sub">Python · Decision trees · Monte Carlo</p>
+          <p>A bot for No Limit, the student poker-bot tournament run by Sequoia, OpenAI and Citadel Securities. Three interpretable decision trees (stack vs. table average, hand strength, opponent modeling) feed an equity and EV step, with thresholds tuned by simulating the scored tournaments. It finished 1st on an 8-bot ladder and averages +10 points per table against a tight-aggressive baseline, with every decision under 1 ms. The code is private; the overview covers the model and results.</p>
+          <div class="item-links">
+            <a class="btn btn-sm btn-ghost" href="https://github.com/EthanXu07/poker-bot-overview" target="_blank" rel="noopener">Overview ↗</a>
+          </div>
+        </article>
+
         <article class="item px-box" id="project-fintrax">
           <div class="item-icon" aria-hidden="true" style="--c:#5f9c8f">$</div>
           <p class="item-type">Project · ML</p>
           <h3>Fintrax</h3>
-          <p class="item-sub">Python · Pandas · Hugging Face · Beautiful Soup</p>
-          <p>A pretrained BERT-based confidence model that compares the sentiment of executives' prepared remarks with their open Q&amp;A answers on earnings calls, then turns the gap into buy/sell signals using transcripts scraped in real time.</p>
+          <p class="item-sub">Python · PyTorch · Hugging Face · Beautiful Soup</p>
+          <p>Scores how confident management sounds on earnings calls and turns it into BUY/HOLD/SELL signals. A FinBERT model, fine-tuned on weak labels from the Loughran-McDonald word lists plus hedge and certainty phrases, rates each sentence; call scores are z-scored against all earlier calls and backtested against SPY. Transcripts are scraped from the Motley Fool.</p>
           <div class="item-links">
-            <a class="btn btn-sm btn-ghost" href="https://github.com/EthanXu07" target="_blank" rel="noopener">GitHub ↗</a>
+            <a class="btn btn-sm btn-ghost" href="https://github.com/EthanXu07/fintrax" target="_blank" rel="noopener">GitHub ↗</a>
           </div>
         </article>
 
