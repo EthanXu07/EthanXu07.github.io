@@ -455,7 +455,6 @@ kbd {
 }
 @media (max-width: 30rem) {
   .chests { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem .75rem; }
-  .chest-tag { right: -.6rem; max-width: 5rem; }
   .pedestal-hook { font-size: .74rem; }
   .chest-art { width: 5rem; }
   .pedestal b { font-size: .42rem; }
@@ -464,7 +463,7 @@ kbd {
   position: relative; display: flex; flex-direction: column; align-items: center;
   height: 100%; padding-top: 3.2rem; color: inherit; text-decoration: none; cursor: pointer;
 }
-/* chest + its emblem (project icon on the lock plate) and a paper tag tied to the side naming the kind of project */
+/* chest + its emblem (project icon on the lock plate) */
 .chest-body { position: relative; display: block; }
 .chest-emblem {
   position: absolute; left: 50%; top: 32%; display: grid; place-items: center;
@@ -473,13 +472,6 @@ kbd {
   box-shadow: 0 0 0 3px var(--edge), inset -3px -3px 0 rgba(0,0,0,.2), inset 3px 3px 0 rgba(255,255,255,.3);
 }
 .chest-slot.is-open .chest-emblem { display: none; }
-.chest-tag {
-  position: absolute; right: -1.6rem; top: -.2rem; max-width: 7rem; padding: .25rem .4rem;
-  font: .38rem/1.6 var(--pixel); text-transform: uppercase; letter-spacing: .03em; text-align: center;
-  color: var(--text-dark); background: #fffaf0; box-shadow: 0 0 0 2px var(--edge), 2px 2px 0 2px rgba(0,0,0,.3);
-  transform: rotate(8deg); transform-origin: 0 0;
-}
-.chest-tag::before { content: ""; position: absolute; left: -.55rem; top: .35rem; width: .55rem; height: 2px; background: var(--paper-2); }
 .chest-art { display: block; width: 6.25rem; height: auto; image-rendering: pixelated; filter: drop-shadow(4px 4px 0 rgba(0,0,0,.4)); }
 .chest-art .band { fill: var(--r); }
 .chest-art .glow { fill: #fffaf0; animation: glow 1s steps(2) infinite; }
@@ -522,6 +514,8 @@ kbd {
 }
 .pedestal b { font: .5rem/1.6 var(--pixel); text-transform: uppercase; color: var(--paper); text-shadow: 2px 2px 0 var(--edge); }
 .pedestal-hook { font: .82rem/1.35 var(--body); color: #e6e0cc; text-shadow: 1px 1px 0 var(--edge); }
+.pedestal-gems { display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem; margin: .15rem 0 .1rem; }
+.pedestal-gems i { padding: .15rem .35rem; font: normal .7rem/1.3 var(--body); color: var(--text-dark); background: #c9c2a8; box-shadow: 0 0 0 2px var(--edge); }
 .pedestal small { font: .42rem var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: var(--r); text-shadow: 2px 2px 0 var(--edge); }
 .vault-base { display: flex; flex-direction: column; align-items: center; gap: .6rem; margin: 1.6rem calc(-1 * clamp(1rem, 6vw, 5.5rem)) 0; padding: .8rem 1rem; background: #2c332f; box-shadow: inset 0 4px 0 #3b443e; }
 .vault-progress { margin: 0; font: .45rem/1.8 var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: #f1dcae; text-align: center; }
