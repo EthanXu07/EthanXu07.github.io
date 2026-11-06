@@ -256,9 +256,7 @@
   window.addEventListener('keyup', (e) => { const k = KEYMAP[e.key]; if (k) keys[k] = false; });
   window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
   function pressJump() { if (playing) jumpBuffer = JUMP_BUFFER; }
-  canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); pressJump(); start(); keys.jump = true; });
-  canvas.addEventListener('pointerup', () => { keys.jump = false; });
-  canvas.addEventListener('pointerleave', () => { keys.jump = false; });
+  canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); start(); }); // clicking starts the game; only keys/pad jump
   section.querySelectorAll('.explore-pad button').forEach((b) => {
     const k = b.dataset.key;
     const on = (e) => { e.preventDefault(); if (k === 'jump') pressJump(); start(); keys[k] = true; };
