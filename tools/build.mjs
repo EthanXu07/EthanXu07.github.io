@@ -331,11 +331,11 @@ const renderChest = (p) => `          <li class="chest-slot" data-rarity="${p.ra
               <span class="chest-body">
                 ${CHEST}
                 <span class="chest-emblem" aria-hidden="true" style="--c:${p.color}">${p.icon}</span>
-                <span class="chest-tag">${esc(p.type.replace(/^Project · /, '').replace(/^Publication · (\S+).*/, '$1 paper'))}</span>
               </span>
               <span class="pedestal">
                 <b>${esc(p.title)}</b>
                 <span class="pedestal-hook">${esc(p.hook)}</span>
+                <span class="pedestal-gems">${p.skills.slice(0, 3).map((id) => `<i>${esc(skillName(id))}</i>`).join('')}</span>
                 <small>${RARITY[p.rarity]}</small>
               </span>
             </a>
@@ -450,7 +450,7 @@ page({
   content: fill(src('pages/projects.html'), {
     torch: TORCH,
     chests: projects.map(renderChest).join('\n'),
-    stats: [`${projects.length} chests`, `${projects.filter((p) => /^Publication/.test(p.type)).length} publication`, `${trophies.length} trophies`, '0 mimics']
+    stats: [`${projects.length} chests`, `${projects.filter((p) => /^Publication/.test(p.type)).length} publication`, `${trophies.length} trophies`, `${new Set(projects.flatMap((p) => p.skills)).size} skills used`]
       .map(esc).join(' <span aria-hidden="true">·</span> '),
     projects: projects.map(renderProject).join('\n\n'),
     trophies: trophies.map((t) => `          <li><span class="trophy" aria-hidden="true">${t.icon}</span><span class="trophy-label">${esc(t.label)}</span></li>`).join('\n'),
