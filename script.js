@@ -186,7 +186,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 //  Stepped reveal on scroll
 // =====================================================================
 (() => {
-  const targets = $$('.world-head, .portrait, .player-info, .overview-card, .quest, .item, .trophies, .interest, .interest-hero, .interest-section, .gallery, .bookcase, .toc-page, .save-box');
+  const targets = $$('.world-head, .portrait, .player-info, .overview-card, .quest, .vault, .trophy-case, .interest, .interest-hero, .interest-section, .gallery, .bookcase, .toc-page, .save-box');
   if (reduceMotion || !('IntersectionObserver' in window)) return;
   targets.forEach((el) => el.classList.add('reveal'));
   const io = new IntersectionObserver((entries) => {
@@ -276,6 +276,71 @@ $$('.chip').forEach((chip) => {
 })();
 
 // =====================================================================
+//  The vault: clicking a chest opens it and shows that project's loot
+//  card. Opened chests stay open; open them all to clear the vault.
+//  Without JS every card shows and each chest links to its card.
+// =====================================================================
+(() => {
+  const chests = $$('[data-chest]');
+  if (!chests.length) return;
+  const cards = $('.loot-cards');
+  const progress = $('#vaultProgress');
+  const looted = new Set();
+  cards.closest('.world').classList.add('js-vault');
+  progress.hidden = false;
+
+  function showProgress() {
+    const n = looted.size, total = chests.length;
+    progress.classList.toggle('cleared', n === total);
+    progress.innerHTML = n === total
+      ? 'Vault cleared! Every chest looted ★'
+      : `Chests opened ${n} / ${total} ${chests.map((c) => `<i class="${looted.has(c.dataset.chest) ? 'on' : ''}"></i>`).join('')}`;
+  }
+
+  function open(id, scroll) {
+    const chest = $(`[data-chest="${id}"]`);
+    if (!chest) return;
+    chests.forEach((c) => {
+      const on = c === chest;
+      c.closest('.chest-slot').classList.toggle('is-open', on);
+      c.setAttribute('aria-expanded', String(on));
+      $(`#project-${c.dataset.chest}`).classList.toggle('is-shown', on);
+    });
+    const slot = chest.closest('.chest-slot');
+    slot.classList.add('is-looted');
+    looted.add(id);
+    showProgress();
+    if (scroll) {
+      const card = $(`#project-${id}`);
+      card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+      card.querySelector('h3').focus({ preventScroll: true });
+    }
+  }
+
+  chests.forEach((c) => c.addEventListener('click', (e) => {
+    e.preventDefault();
+    open(c.dataset.chest, true);
+    history.replaceState(null, '', `#project-${c.dataset.chest}`);
+  }));
+  // Left/right arrows step between chests
+  chests.forEach((c, i) => c.addEventListener('keydown', (e) => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    chests[(i + step + chests.length) % chests.length].focus();
+  }));
+
+  // Skill tree links land on /projects/#project-<id>: open that chest
+  const fromHash = () => {
+    const m = location.hash.match(/^#project-(.+)$/);
+    return m && $(`[data-chest="${m[1]}"]`) ? m[1] : null;
+  };
+  const linked = fromHash();
+  open(linked || chests[0].dataset.chest, !!linked);
+  window.addEventListener('hashchange', () => { const id = fromHash(); if (id) open(id, true); });
+})();
+
+// =====================================================================
 //  Skill tree: pick a node to see where the skill was used
 // =====================================================================
 (() => {
@@ -312,9 +377,15 @@ $$('.chip').forEach((chip) => {
   }
 
   nodes.forEach((n) => n.addEventListener('click', () => select(n.dataset.skill, true)));
-  // Start on the most-used skill
-  const top = Object.entries(skills).sort((a, b) => b[1].used.length - a[1].used.length)[0];
-  if (top) select(top[0], false);
+  // Start on the skill in the URL (/skills/#skill-python, linked from project cards), else the most-used one
+  const linked = location.hash.match(/^#skill-(.+)$/)?.[1];
+  if (linked && skills[linked]) {
+    select(linked, false);
+    $(`.skill-node[data-skill="${linked}"]`)?.scrollIntoView({ block: 'center' });
+  } else {
+    const top = Object.entries(skills).sort((a, b) => b[1].used.length - a[1].used.length)[0];
+    if (top) select(top[0], false);
+  }
 })();
 
 // =====================================================================

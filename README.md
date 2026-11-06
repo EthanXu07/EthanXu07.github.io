@@ -12,7 +12,7 @@ node tools/build.mjs
 | File | What it controls |
 |---|---|
 | `src/data/experience.json` | Experience entries → also the skill tree links |
-| `src/data/projects.json` | Projects, publications and trophies |
+| `src/data/projects.json` | Projects, publications and trophies for the vault page. Each project is a chest: `rarity` (legendary / epic / rare / common) tints the chest and card, `stats` are the `[label, value]` lines on its loot card, `skills` become tags linking to `/skills/#skill-<id>` |
 | `src/data/skills.json` | Skill tree branches (mirrors the résumé's Technical Skills + a Specialties branch). "Used ×N" = how many experience entries/projects list it in their `skills`; the rest show "On résumé" |
 | `src/interests.json` | The library: one book spine, open book and page per interest. `call` is the Dewey Decimal call number, `spine` the book colour, `description` the paragraph shown in the open book and on the page. `photo` / `gallery` currently point to generic stock photos in `assets/interests/photos/` (CC0 / public domain, see `CREDITS.md`). Swap in your own photos by replacing those files or changing the paths. An optional `favorites` list (see Webnovels & anime) shows in the open book on the library page: add a line to add a title |
 | `src/data/on-hold.json` | The "Up next" pile of books on the bottom shelf of the library bookcase: one per hobby to pick up next (shown as one line under the shelf when the pile has no room). The brass plaque on the base (volumes, sections, last shelved) is computed at build time |

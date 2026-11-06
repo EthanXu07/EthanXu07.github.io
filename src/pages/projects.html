@@ -1,17 +1,37 @@
-    <!-- ============ WORLD 3: PROJECTS (projects, publications, awards) ============ -->
-    <!-- Entries come from src/data/projects.json -->
+    <!-- ============ WORLD 3: THE VAULT (projects, publications, awards) ============ -->
+    <!-- Chests, loot cards and trophies come from src/data/projects.json -->
     <section id="projects" class="world" data-checkpoint="Projects">
       <header class="world-head">
         <p class="world-num">WORLD 3</p>
-        <h1 class="world-title">Projects</h1>
+        <h1 class="world-title">The vault</h1>
       </header>
+      <p class="section-lede">Things I've built, researched and shipped. Every project is a chest. Crack one open to see the loot.</p>
 
-      <div class="loot-grid">
+      <!-- Stone wall with torches; one chest per project on its own pedestal. Without JS each chest links to its card below -->
+      <div class="vault">
+        <span class="torch torch-l" aria-hidden="true">{{torch}}</span>
+        <span class="torch torch-r" aria-hidden="true">{{torch}}</span>
+        <ul class="chests" aria-label="Project chests">
+{{chests}}
+        </ul>
+        <div class="vault-base">
+          <p class="shelf-plaque">{{stats}}</p>
+          <p class="vault-progress" id="vaultProgress" aria-live="polite" hidden></p>
+        </div>
+      </div>
+
+      <p class="desk-hint">Open a chest to inspect its loot below.</p>
+
+      <!-- Loot cards: one per project. With JS only the open chest's card shows (script.js) -->
+      <div class="loot-cards">
 {{projects}}
       </div>
 
-      <h3 class="mini-head trophy-head">Achievements unlocked</h3>
-      <ul class="trophies">
+      <!-- Trophy case: achievements on little pedestals behind glass -->
+      <section class="trophy-case" aria-labelledby="trophyTitle">
+        <h2 class="guest-plaque" id="trophyTitle">Trophy case</h2>
+        <ul class="trophies">
 {{trophies}}
-      </ul>
+        </ul>
+      </section>
     </section>

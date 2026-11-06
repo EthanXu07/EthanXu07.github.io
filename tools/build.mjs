@@ -291,12 +291,64 @@ ${q.bullets.map((b) => `            <li>${b}</li>`).join('\n')}
           <p class="reward"><span>Rewards</span> ${esc(q.rewards)}</p>
         </li>`;
 
-const renderProject = (p) => `        <article class="item px-box" id="project-${p.id}">
-          <div class="item-icon" aria-hidden="true" style="--c:${p.color}">${p.icon}</div>
-          <p class="item-type">${esc(p.type)}</p>
-          <h3>${esc(p.title)}</h3>
-          <p class="item-sub">${esc(p.sub)}</p>
-          <p>${p.desc}</p>${p.links.length ? `
+// The vault: a pixel chest per project (lid shut / lid open, bands tinted by rarity) and a loot card for each
+const RARITY = { legendary: 'Legendary', epic: 'Epic', rare: 'Rare', common: 'Common' };
+const CHEST = `<svg class="chest-art" viewBox="0 0 20 18" width="100" height="90" shape-rendering="crispEdges" aria-hidden="true">
+                <g class="lid-shut">
+                  <path fill="#2a1f1a" d="M3 2h14v1H3zM1 3h18v6H1z"/>
+                  <path fill="#8a5530" d="M2 3h16v5H2z"/>
+                  <path fill="#b0703f" d="M3 3h14v1H3z"/>
+                  <path class="band" d="M4 3h2v5H4zM14 3h2v5h-2z"/>
+                  <path fill="#2a1f1a" d="M8 6h4v5H8z"/>
+                  <path fill="#f3c969" d="M9 7h2v2H9z"/>
+                </g>
+                <g class="lid-open">
+                  <path fill="#2a1f1a" d="M2 0h16v1H2zM1 1h18v3H1zM1 4h18v5H1z"/>
+                  <path fill="#5a3520" d="M2 1h16v2H2z"/>
+                  <path class="band" d="M4 1h2v2H4zM14 1h2v2h-2z"/>
+                  <path fill="#140d09" d="M2 5h16v4H2z"/>
+                  <path fill="#f3c969" d="M8 5h4v1H8zM6 6h8v1H6zM4 7h12v2H4z"/>
+                  <path fill="#c9962a" d="M5 8h1v1H5zM9 7h1v1H9zM12 8h2v1h-2zM7 6h1v1H7z"/>
+                  <path class="glow" d="M9 5h1v1H9zM13 7h1v1h-1zM5 7h1v1H5z"/>
+                </g>
+                <path fill="#2a1f1a" d="M1 9h18v8H1z"/>
+                <path fill="#7a4429" d="M2 9h16v7H2z"/>
+                <path fill="#a0623a" d="M2 9h16v1H2z"/>
+                <path fill="#5a3520" d="M2 15h16v1H2z"/>
+                <path class="band" d="M4 9h2v7H4zM14 9h2v7h-2z"/>
+                <path fill="#2a1f1a" d="M8 9h4v3H8z"/>
+                <path fill="#d4ad55" d="M9 10h2v1H9z"/>
+              </svg>`;
+const TORCH = `<svg viewBox="0 0 8 18" width="40" height="90" shape-rendering="crispEdges">
+          <g class="flame"><path fill="#d4553a" d="M3 1h2v1H3zM2 2h4v6H2z"/><path fill="#e8a93a" d="M3 3h2v5H3z"/><path fill="#f3c969" d="M3 5h2v3H3z"/></g>
+          <path fill="#2a1f1a" d="M2 8h4v1H2zM3 9h2v8H3z"/><path fill="#7a4429" d="M3 9h1v8H3z"/>
+          <path fill="#4a463e" d="M1 11h6v2H1z"/><path fill="#6b665a" d="M1 11h6v1H1z"/>
+        </svg>`;
+
+const renderChest = (p) => `          <li class="chest-slot" data-rarity="${p.rarity}">
+            <a class="chest" href="#project-${p.id}" data-chest="${p.id}" aria-controls="project-${p.id}">
+              <span class="chest-loot" aria-hidden="true" style="--c:${p.color}">${p.icon}</span>
+              ${CHEST}
+              <span class="pedestal"><b>${esc(p.title)}</b><small>${RARITY[p.rarity]}</small></span>
+            </a>
+          </li>`;
+
+const renderProject = (p) => `        <article class="loot-card px-box" id="project-${p.id}" data-rarity="${p.rarity}">
+          <div class="loot-head">
+            <div class="item-icon" aria-hidden="true" style="--c:${p.color}">${p.icon}</div>
+            <div>
+              <p class="item-type"><span class="rarity">${RARITY[p.rarity]}</span> · ${esc(p.type.replace(/^Project · /, ''))}</p>
+              <h3 tabindex="-1">${esc(p.title)}</h3>
+              <p class="item-sub">${esc(p.sub)}</p>
+            </div>
+          </div>
+          <div class="loot-body">
+            <p class="loot-desc">${p.desc}</p>
+            <dl class="loot-stats">
+${p.stats.map(([k, v]) => `              <div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('\n')}
+            </dl>
+          </div>
+          <p class="loot-tags"><span>Skills</span> ${p.skills.map((id) => `<a href="/skills/#skill-${id}">${esc(skillName(id))}</a>`).join(' ')}</p>${p.links.length ? `
           <div class="item-links">
 ${p.links.map((l) => `            <a class="btn btn-sm ${l.style}" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join('\n')}
           </div>` : ''}
@@ -386,10 +438,14 @@ page({
 });
 
 page({
-  out: 'projects/index.html', path: '/projects/', page: 'projects', title: 'Projects · Ethan Xu', description: 'Projects, publications and awards: Ethan Xu.',
+  out: 'projects/index.html', path: '/projects/', page: 'projects', title: 'The vault · Ethan Xu', description: 'Projects, publications and awards: Ethan Xu.',
   content: fill(src('pages/projects.html'), {
+    torch: TORCH,
+    chests: projects.map(renderChest).join('\n'),
+    stats: [`${projects.length} chests`, `${projects.filter((p) => /^Publication/.test(p.type)).length} publication`, `${trophies.length} trophies`, '0 mimics']
+      .map(esc).join(' <span aria-hidden="true">·</span> '),
     projects: projects.map(renderProject).join('\n\n'),
-    trophies: trophies.map((t) => `        <li><span class="trophy" aria-hidden="true">${t.icon}</span>${esc(t.label)}</li>`).join('\n'),
+    trophies: trophies.map((t) => `          <li><span class="trophy" aria-hidden="true">${t.icon}</span><span class="trophy-label">${esc(t.label)}</span></li>`).join('\n'),
   }),
 });
 
