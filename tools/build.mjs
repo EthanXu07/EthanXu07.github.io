@@ -328,8 +328,16 @@ const TORCH = `<svg viewBox="0 0 8 18" width="40" height="90" shape-rendering="c
 const renderChest = (p) => `          <li class="chest-slot" data-rarity="${p.rarity}">
             <a class="chest" href="#project-${p.id}" data-chest="${p.id}" aria-controls="project-${p.id}">
               <span class="chest-loot" aria-hidden="true" style="--c:${p.color}">${p.icon}</span>
-              ${CHEST}
-              <span class="pedestal"><b>${esc(p.title)}</b><small>${RARITY[p.rarity]}</small></span>
+              <span class="chest-body">
+                ${CHEST}
+                <span class="chest-emblem" aria-hidden="true" style="--c:${p.color}">${p.icon}</span>
+                <span class="chest-tag">${esc(p.type.replace(/^Project · /, '').replace(/^Publication · (\S+).*/, '$1 paper'))}</span>
+              </span>
+              <span class="pedestal">
+                <b>${esc(p.title)}</b>
+                <span class="pedestal-hook">${esc(p.hook)}</span>
+                <small>${RARITY[p.rarity]}</small>
+              </span>
             </a>
           </li>`;
 
@@ -438,7 +446,7 @@ page({
 });
 
 page({
-  out: 'projects/index.html', path: '/projects/', page: 'projects', title: 'The vault · Ethan Xu', description: 'Projects, publications and awards: Ethan Xu.',
+  out: 'projects/index.html', path: '/projects/', page: 'projects', title: 'The project vault · Ethan Xu', description: 'Projects, publications and awards: Ethan Xu.',
   content: fill(src('pages/projects.html'), {
     torch: TORCH,
     chests: projects.map(renderChest).join('\n'),

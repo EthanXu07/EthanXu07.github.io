@@ -8,6 +8,7 @@
       "rarity": "legendary",
       "title": "SENTINEL",
       "sub": "Sentiment Evolution and Narrative Tracking in Extended LLM Interactions",
+      "hook": "Tracks how LLM sentiment drifts over long chats",
       "desc": "A framework for measuring sentiment drift within long-context LLM conversations and agentic workflows, aimed at reducing LLM emotional hallucination. Published at the NeurIPS MTI-LLM 2025 Workshop.",
       "links": [
         {
@@ -49,6 +50,7 @@
       "rarity": "epic",
       "title": "No Limit Poker Bot",
       "sub": "Python · Decision trees · Monte Carlo",
+      "hook": "Decision-tree bot for a student poker tournament",
       "desc": "A bot for No Limit, the student poker-bot tournament run by Sequoia, OpenAI and Citadel Securities. Three interpretable decision trees (stack vs. table average, hand strength, opponent modeling) feed an equity and EV step, with thresholds tuned by simulating the scored tournaments. It finished 1st on an 8-bot ladder and averages +10 points per table against a tight-aggressive baseline, with every decision under 1 ms. The code is private; the overview covers the model and results.",
       "links": [
         {
@@ -88,6 +90,7 @@
       "rarity": "rare",
       "title": "Fintrax",
       "sub": "Python · PyTorch · Hugging Face · Beautiful Soup",
+      "hook": "Reads executive confidence on earnings calls",
       "desc": "Scores how confident management sounds on earnings calls and turns it into BUY/HOLD/SELL signals. A FinBERT model, fine-tuned on weak labels from the Loughran-McDonald word lists plus hedge and certainty phrases, rates each sentence; call scores are z-scored against all earlier calls and backtested against SPY. Transcripts are scraped from the Motley Fool.",
       "links": [
         {
@@ -128,6 +131,7 @@
       "rarity": "common",
       "title": "AER Citation Tracker",
       "sub": "Python · Beautiful Soup · Crossref · OpenAlex",
+      "hook": "Ranks AER papers by citation count",
       "desc": "Scrapes recent <em>American Economic Review</em> issues, looks up each article's DOI on Crossref and OpenAlex, and outputs a CSV ranked by citation count.",
       "links": [],
       "skills": [
