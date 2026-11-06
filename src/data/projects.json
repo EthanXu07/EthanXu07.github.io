@@ -5,6 +5,7 @@
       "icon": "✦",
       "color": "#e8a93a",
       "type": "Publication · NeurIPS 2025",
+      "rarity": "legendary",
       "title": "SENTINEL",
       "sub": "Sentiment Evolution and Narrative Tracking in Extended LLM Interactions",
       "desc": "A framework for measuring sentiment drift within long-context LLM conversations and agentic workflows, aimed at reducing LLM emotional hallucination. Published at the NeurIPS MTI-LLM 2025 Workshop.",
@@ -24,6 +25,20 @@
         "llms",
         "nlp",
         "research-writing"
+      ],
+      "stats": [
+        [
+          "Venue",
+          "NeurIPS 2025"
+        ],
+        [
+          "Workshop",
+          "MTI-LLM"
+        ],
+        [
+          "Tracks",
+          "Sentiment drift over long chats"
+        ]
       ]
     },
     {
@@ -31,6 +46,7 @@
       "icon": "♠",
       "color": "#d4553a",
       "type": "Project · AI",
+      "rarity": "epic",
       "title": "No Limit Poker Bot",
       "sub": "Python · Decision trees · Monte Carlo",
       "desc": "A bot for No Limit, the student poker-bot tournament run by Sequoia, OpenAI and Citadel Securities. Three interpretable decision trees (stack vs. table average, hand strength, opponent modeling) feed an equity and EV step, with thresholds tuned by simulating the scored tournaments. It finished 1st on an 8-bot ladder and averages +10 points per table against a tight-aggressive baseline, with every decision under 1 ms. The code is private; the overview covers the model and results.",
@@ -44,6 +60,24 @@
       "skills": [
         "python",
         "backtesting"
+      ],
+      "stats": [
+        [
+          "8-bot ladder",
+          "1st place"
+        ],
+        [
+          "vs TAG baseline",
+          "+10.2 pts / table"
+        ],
+        [
+          "Weighted score",
+          "50.1 (avg bot 31.9)"
+        ],
+        [
+          "Decision time",
+          "~0.05 ms"
+        ]
       ]
     },
     {
@@ -51,6 +85,7 @@
       "icon": "$",
       "color": "#5f9c8f",
       "type": "Project · ML",
+      "rarity": "rare",
       "title": "Fintrax",
       "sub": "Python · PyTorch · Hugging Face · Beautiful Soup",
       "desc": "Scores how confident management sounds on earnings calls and turns it into BUY/HOLD/SELL signals. A FinBERT model, fine-tuned on weak labels from the Loughran-McDonald word lists plus hedge and certainty phrases, rates each sentence; call scores are z-scored against all earlier calls and backtested against SPY. Transcripts are scraped from the Motley Fool.",
@@ -69,6 +104,20 @@
         "huggingface",
         "nlp",
         "backtesting"
+      ],
+      "stats": [
+        [
+          "Archive",
+          "~53k transcripts"
+        ],
+        [
+          "Pilot",
+          "202 calls · 30 tickers"
+        ],
+        [
+          "Lexicon-free AUC",
+          "0.67"
+        ]
       ]
     },
     {
@@ -76,6 +125,7 @@
       "icon": "≡",
       "color": "#8fb8c9",
       "type": "Project · Data",
+      "rarity": "common",
       "title": "AER Citation Tracker",
       "sub": "Python · Beautiful Soup · Crossref · OpenAlex",
       "desc": "Scrapes recent <em>American Economic Review</em> issues, looks up each article's DOI on Crossref and OpenAlex, and outputs a CSV ranked by citation count.",
@@ -84,6 +134,16 @@
         "python",
         "beautiful-soup",
         "rest-apis"
+      ],
+      "stats": [
+        [
+          "Sources",
+          "Crossref · OpenAlex"
+        ],
+        [
+          "Output",
+          "CSV ranked by citations"
+        ]
       ]
     }
   ],
