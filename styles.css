@@ -128,7 +128,8 @@ kbd {
   max-width: 76rem; margin: 0 auto; padding: .55rem clamp(1rem, 4vw, 2rem);
 }
 .hud-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; font: .7rem var(--pixel); white-space: nowrap; }
-.hearts { color: var(--tomato); letter-spacing: .1em; font-size: .8rem; }
+.hud-crest { display: flex; }
+.hud-crest .nav-icon { width: 32px; height: 32px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,.4)); }
 .hud-nav { display: flex; gap: .25rem; }
 .hud-nav a {
   display: flex; align-items: center; gap: .5rem;
@@ -180,7 +181,7 @@ kbd {
   html { scroll-padding-top: 8rem; }
 }
 @media (max-width: 26rem) {
-  .hearts { display: none; }
+  .hud-crest .nav-icon { width: 16px; height: 16px; }
 }
 
 /* ---------- Side track (map + walking sprite) ---------- */

@@ -55,8 +55,27 @@ const ICON_COLORS = {
   skills: { Y: '#f3c969', y: '#e8a93a', '*': '#fff8e8' },
   interests: { R: '#e0533d', r: '#a93524', '*': '#ffd9cf' },
   contact: { P: '#f1e6cc', p: '#b9a988', S: '#d4553a' },
+  berkeley: { B: '#003262', b: '#3b7ea1', G: '#fdb515' }, // HUD logo: Berkeley Blue shield, California Gold "B"
 };
 const ICONS = {
+  berkeley: [
+    '................',
+    '.bbbbbbbbbbbbbb.',
+    '.bBBBBBBBBBBBBb.',
+    '.bBBGGGGGGBBBBb.',
+    '.bBBGGBBBGGBBBb.',
+    '.bBBGGBBBGGBBBb.',
+    '.bBBGGGGGGBBBBb.',
+    '.bBBGGBBBBGGBBb.',
+    '.bBBGGBBBBGGBBb.',
+    '.bBBGGBBBBGGBBb.',
+    '.bBBGGGGGGGBBBb.',
+    '..bBBBBBBBBBBb..',
+    '...bBBBBBBBBb...',
+    '....bBBBBBBb....',
+    '.....bBBBBb.....',
+    '.......bb.......',
+  ],
   home: [
     '................',
     '.......Rr...CC..',
@@ -244,6 +263,7 @@ function page({ out, path, page, title, description, content, sub = true, script
   const html = fill(layout, {
     title: esc(title), description: esc(description), path, page,
     nav: nav(page),
+    logo: pixelIcon(ICONS.berkeley, 'berkeley'),
     mainClass: sub ? 'subpage' : 'home',
     content,
     contact: contactHtml,
