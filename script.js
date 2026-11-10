@@ -72,6 +72,48 @@ function drawSprite(ctx, rows, x, y, flip = false) {
 }
 
 // =====================================================================
+//  HUD portrait: the player's face in the corner. Blinks now and then,
+//  smiles on hover, and cheers (with sparkles) on a level up.
+// =====================================================================
+(() => {
+  const frame = $('#hudPortrait');
+  const pctx = frame?.querySelector('canvas').getContext('2d');
+  if (!pctx) return;
+  let blink = false, smile = false, cheer = 0;
+  const SPARKLES = [[1, 2], [14, 1], [0, 9], [15, 7], [13, 13], [2, 14]];
+  function draw() {
+    pctx.clearRect(0, 0, 16, 16);
+    const head = HEAD.map((row, i) => {
+      if (i === 4 && blink) return row.replace(/e/g, 's');
+      if (i === 6 && (smile || cheer)) return '...smmmms...';
+      return row;
+    });
+    drawSprite(pctx, head, 2, 3);
+    if (cheer) {
+      pctx.fillStyle = cheer % 2 ? '#f3c969' : '#fff8e8';
+      SPARKLES.forEach(([x, y], i) => { if ((i + cheer) % 2) pctx.fillRect(x, y, 1, 1); });
+    }
+  }
+  draw();
+  frame.closest('a')?.addEventListener('pointerenter', () => { smile = true; draw(); });
+  frame.closest('a')?.addEventListener('pointerleave', () => { smile = false; draw(); });
+  document.addEventListener('levelup', () => {
+    frame.classList.remove('cheer'); void frame.offsetWidth; frame.classList.add('cheer');
+    if (reduceMotion) { cheer = 1; draw(); setTimeout(() => { cheer = 0; draw(); }, 1200); return; }
+    let n = 8;
+    const step = () => { cheer = n--; draw(); if (n >= 0) setTimeout(step, 150); };
+    step();
+  });
+  if (reduceMotion) return;
+  (function blinkLater() {
+    setTimeout(() => {
+      blink = true; draw();
+      setTimeout(() => { blink = false; draw(); blinkLater(); }, 140);
+    }, 2500 + Math.random() * 3000);
+  })();
+})();
+
+// =====================================================================
 //  Title-screen dialog (typewriter)
 // =====================================================================
 (() => {
@@ -138,6 +180,7 @@ function drawSprite(ctx, rows, x, y, flip = false) {
       lvEl.parentElement.classList.remove('up');
       void lvEl.offsetWidth;
       lvEl.parentElement.classList.add('up');
+      document.dispatchEvent(new Event('levelup'));
     }
     level = Math.max(level, next);
   }

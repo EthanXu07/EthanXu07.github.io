@@ -824,15 +824,42 @@
       ctx.fillRect(x + 4, y, 2, 3); ctx.fillRect(x, y + 3, 10, 2); ctx.fillRect(x + 2, y + 5, 6, 2); ctx.fillRect(x + 1, y + 7, 3, 3); ctx.fillRect(x + 6, y + 7, 3, 3);
     }
   }
+  // The Campanile: the clock hand sweeps, the spire light blinks, and every few
+  // seconds the bell swings and chimes notes that drift up and fade
   function drawCampanile(x) {
     const tH = 78;
+    const tt = reduceMotion ? 0 : t;
     ctx.fillStyle = '#d9cbb0'; ctx.fillRect(x, -tH, 11, tH);
     ctx.fillStyle = '#b3a488'; ctx.fillRect(x + 8, -tH, 3, tH);
+    // Belfry with the swinging bell
     ctx.fillStyle = '#2a1f1a'; ctx.fillRect(x + 3, -tH + 5, 5, 7);
-    ctx.fillStyle = '#e8a93a'; ctx.fillRect(x + 5, -tH + 17, 2, 2);
+    const cyc = tt % 300, ringing = !reduceMotion && cyc < 96;
+    const sw = ringing ? Math.round(Math.sin(cyc * 0.2)) : 0;
+    ctx.fillStyle = '#f3c969'; ctx.fillRect(x + 5, -tH + 6, 1, 1); ctx.fillRect(x + 4 + sw, -tH + 7, 3, 2);
+    ctx.fillStyle = '#b57a1c'; ctx.fillRect(x + 4 + sw, -tH + 9, 3, 1); ctx.fillRect(x + 5 - sw, -tH + 10, 1, 1);
+    if (!reduceMotion) for (let k = 0; k < 3; k++) {
+      const age = cyc - k * 28;
+      if (age < 0 || age >= 80) continue;
+      const side = k % 2 ? -5 : 13;
+      const nx = x + side + Math.round(Math.sin(age * 0.12 + k) * 2), ny = Math.round(-tH + 2 - age * 0.35);
+      ctx.globalAlpha = 1 - age / 80;
+      ctx.fillStyle = '#f3c969';
+      ctx.fillRect(nx, ny + 3, 2, 2); ctx.fillRect(nx + 1, ny, 1, 3); ctx.fillRect(nx + 2, ny, 1, 1);
+      ctx.globalAlpha = 1;
+    }
+    // Clock face: the minute hand goes round, the hour hand creeps
+    ctx.fillStyle = '#f1e6cc'; ctx.fillRect(x + 3, -tH + 16, 5, 3); ctx.fillRect(x + 4, -tH + 15, 3, 5);
+    const HANDS = [[0, -2], [1, -1], [2, 0], [1, 1], [0, 2], [-1, 1], [-2, 0], [-1, -1]];
+    const [mx, my] = HANDS[Math.floor(tt / 20) % 8], [hx, hy] = HANDS[Math.floor(tt / 160) % 8];
+    ctx.fillStyle = '#2a1f1a';
+    ctx.fillRect(x + 5, -tH + 17, 1, 1);
+    ctx.fillRect(x + 5 + Math.sign(hx), -tH + 17 + Math.sign(hy), 1, 1);
+    ctx.fillStyle = '#9c3423'; ctx.fillRect(x + 5 + mx, -tH + 17 + my, 1, 1);
+    // Spire, with a blinking light on top
     ctx.fillStyle = '#6f9a8a';
     for (let i = 0; i < 8; i++) ctx.fillRect(x + Math.floor(i / 2), -tH - 1 - i, 11 - Math.floor(i / 2) * 2, 1);
     ctx.fillRect(x + 5, -tH - 12, 1, 4);
+    if (reduceMotion || Math.floor(tt / 40) % 2) { ctx.fillStyle = '#d4553a'; ctx.fillRect(x + 5, -tH - 13, 1, 1); }
   }
   function drawCastle(x) {
     ctx.fillStyle = '#8b949c'; ctx.fillRect(x, -46, 60, 46);
