@@ -335,8 +335,10 @@ $$('.chip').forEach((chip) => {
     const m = location.hash.match(/^#project-(.+)$/);
     return m && $(`[data-chest="${m[1]}"]`) ? m[1] : null;
   };
+  // All chests start shut unless the URL names one
+  showProgress();
   const linked = fromHash();
-  open(linked || chests[0].dataset.chest, !!linked);
+  if (linked) open(linked, true);
   window.addEventListener('hashchange', () => { const id = fromHash(); if (id) open(id, true); });
 })();
 
