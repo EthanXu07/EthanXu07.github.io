@@ -1,6 +1,6 @@
 // =====================================================================
 //  Guest wall (library page): a shared r/place-style pixel canvas.
-//  Pick a colour (or the eraser) and a brush size, then click or drag to
+//  Pick a colour (or the Eraser button) and a brush size, then click or drag to
 //  paint. Strokes save in batches through the database function
 //  paint_pixels() (tools/guest-wall.sql); no cooldown. Other visitors'
 //  painting shows up every few seconds while the wall is on screen.
@@ -164,8 +164,7 @@
   function setStatus() {
     status.textContent = !loaded ? (loadError ? "Couldn't load the wall right now." : snapshotShown ? 'Catching up…' : 'Loading the wall…')
       : failures ? 'Connection trouble: retrying…'
-      : queue.size || inflight.size ? 'Saving…'
-      : 'Saved · live';
+      : '';   // all good: nothing to say
     const sel = hover || (document.activeElement === canvas ? cursor : null);
     if (sel) {
       const i = sel[1] * COLS + sel[0];
@@ -229,17 +228,19 @@
   const paletteEl = $('.guest-palette');
   const pick = (c) => {
     color = c; store.set('guestwall:color', String(c));
-    paletteEl.querySelectorAll('[data-color]').forEach((s) => s.setAttribute('aria-pressed', String(+s.dataset.color === c)));
+    root.querySelectorAll('[data-color]').forEach((s) => s.setAttribute('aria-pressed', String(+s.dataset.color === c)));
     redraw();
   };
-  [...PALETTE.map(([hex, name], i) => [i, hex, name]), [BLANK, PAPER, 'Eraser']].forEach(([i, hex, name]) => {
+  PALETTE.forEach(([hex, name], i) => {
     const b = document.createElement('button');
-    b.type = 'button'; b.className = i === BLANK ? 'guest-swatch guest-eraser' : 'guest-swatch';
+    b.type = 'button'; b.className = 'guest-swatch';
     b.dataset.color = i; b.style.setProperty('--c', hex);
     b.setAttribute('aria-label', name); b.title = name;
     b.addEventListener('click', () => pick(i));
     paletteEl.append(b);
   });
+  // the eraser sits on its own next to the brush tools and paints squares back to blank
+  root.querySelector('.guest-erase')?.addEventListener('click', () => pick(BLANK));
   pick(color);
   root.querySelectorAll('[data-brush]').forEach((b) => {
     b.setAttribute('aria-pressed', String(+b.dataset.brush === brush));
