@@ -1291,6 +1291,7 @@ main.subpage { padding-top: 5rem; }
   background: var(--wood);
   box-shadow: inset 4px 4px 0 var(--wood-hi), inset -4px -4px 0 var(--wood-lo), 0 0 0 4px var(--edge), 8px 8px 0 var(--edge);
 }
+.guest-wall.is-below-desk { margin-top: 3rem; }   /* moved under the reading desk while a book is open (script.js) */
 .guest-head { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-bottom: .9rem; }
 .guest-plaque {
   position: relative; margin: 0; padding: .45rem 1.1rem;

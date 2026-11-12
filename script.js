@@ -262,6 +262,16 @@ $$('.chip').forEach((chip) => {
   const spines = $$('[data-book]');
   if (!spines.length) return;
   const hints = $$('#shelfHint, #shelfPrompt'); // desk scene + the prompt under the shelf
+  // While a book is open the guest wall steps aside to below the reading desk, so the
+  // open book sits right under the shelf; it moves back when the book is put away.
+  // (Moving the node keeps the canvas pixels and guest-wall.js listeners.)
+  const wall = $('#guestWall');
+  const desk = $('.reading-desk');
+  const placeWall = (below) => {
+    if (!wall || !desk) return;
+    if (below) desk.after(wall); else desk.before(wall);
+    wall.classList.toggle('is-below-desk', below);
+  };
   let openSlug = null;
 
   function close(focusSpine) {
@@ -273,6 +283,7 @@ $$('.chip').forEach((chip) => {
     if (focusSpine) spine.focus();
     openSlug = null;
     hints.forEach((h) => { h.hidden = false; });
+    placeWall(false);
   }
 
   function open(slug) {
@@ -284,6 +295,7 @@ $$('.chip').forEach((chip) => {
     spine.closest('.book').classList.add('is-out');
     openSlug = slug;
     hints.forEach((h) => { h.hidden = true; });
+    placeWall(true);
     book.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
   }
 
