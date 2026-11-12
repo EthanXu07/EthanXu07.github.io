@@ -943,7 +943,7 @@ main.subpage { padding-top: 5rem; }
 .toc-subjects span { margin-right: .6rem; font: .5rem var(--pixel); color: var(--tomato-dark); text-transform: uppercase; }
 .toc-folio { margin: 1rem 0 0; text-align: center; font: .5rem var(--pixel); color: var(--text-dark-2); }
 /* chapters read like pages of the book */
-.interest-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1.75rem; }
+.interest-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1.75rem; align-items: start; }
 /* an even number of long chapters reads better two to a row than three plus an orphan */
 .interest-sections:has(> .chapter:nth-child(4):last-child),
 .interest-sections:has(> .chapter:nth-child(6):last-child) { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
@@ -957,18 +957,36 @@ main.subpage { padding-top: 5rem; }
 .chapter h2 { margin: 0 0 .6rem; font: 700 1.35rem/1.2 var(--title); color: var(--text-dark); }
 .chapter p { margin: 0; }
 .chapter p + p { margin-top: .8rem; }
+/* extra paragraphs fold away so a chapter reads at a glance */
+.chapter-more { margin-top: .8rem; }
+.chapter-more summary { display: inline-block; cursor: pointer; list-style: none; font: .5rem/1.6 var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: var(--tomato-dark); }
+.chapter-more summary::-webkit-details-marker { display: none; }
+.chapter-more summary::before { content: "▸ "; }
+.chapter-more[open] summary::before { content: "▾ "; }
+.chapter-more summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.chapter-more[open] summary { margin-bottom: .6rem; }
+.chapter-more p + p { margin-top: .8rem; }
 .chapter-list { margin: .9rem 0 0; padding: 0; list-style: none; }
 .chapter-list li { position: relative; padding-left: 1.1rem; }
 .chapter-list li + li { margin-top: .35rem; }
 .chapter-list li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; background: var(--tomato-dark); }
 .placeholder-note { padding: .75rem .9rem; border: 2px dashed var(--ink-3); color: var(--text-light-2); font-style: italic; }
 .chapter .placeholder-note { border-color: var(--paper-2); color: var(--text-dark-2); }
+/* "At a glance": labelled facts in place of a long paragraph */
+.glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: .55rem; margin: 0 0 1rem; }
+.glance > div { padding: .5rem .65rem; background: #fffaf0; box-shadow: 0 0 0 2px var(--paper-2); }
+.glance dt { font: .45rem/1.6 var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: var(--tomato-dark); }
+.glance dd { margin: .15rem 0 0; font-size: .9rem; line-height: 1.35; }
+.glance-hero { margin: 1.1rem 0 0; max-width: 36rem; }
+.glance-hero > div { background: var(--ink-2); box-shadow: 0 0 0 2px var(--edge); }
+.glance-hero dt { color: var(--gold); }
+.glance-hero dd { color: var(--text-light); }
 /* open book on the library page: chapter list and notebook teaser */
 .volume-chapters { margin: .3rem 0 0; padding-left: 1.6rem; columns: 2 11rem; column-gap: 1.2rem; font-size: .92rem; }
 .volume-chapters li { break-inside: avoid; padding: .1rem 0; }
 .volume-chapters li::marker { font: .5rem var(--pixel); color: var(--tomato-dark); }
 .volume-lab { margin: .9rem 0 0; padding: .6rem .75rem; font-size: .9rem; background: var(--paper-2); box-shadow: 0 0 0 2px var(--edge); }
-.volume-lab b { font: .5rem var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: var(--tomato-dark); }
+.volume-lab b { margin-right: .4rem; font: .5rem var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: var(--tomato-dark); }
 /* ---- Field notebook: one interactive tool per interest (interest-lab.js) ---- */
 .lab {
   margin-top: 2.5rem; padding: 1.5rem 1.6rem 1.7rem;

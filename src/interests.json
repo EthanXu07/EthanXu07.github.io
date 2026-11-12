@@ -6,7 +6,7 @@
     "call": "796.51 XU",
     "spine": "#4f7a3a",
     "tagline": "Trails, switchbacks and whatever view is waiting at the top.",
-    "description": "Hiking is how I hit reset. There's something about a trailhead that makes the rest of the week feel far away: the steady climb, the switchbacks, the false summits, and then the moment the trees open up and the whole valley is laid out below. Around Berkeley that means the East Bay hills and regional parks, with the Bay glittering behind you; further out, it's any trail with real elevation gain that ends somewhere worth the climb. I plan the route, pack more water than I need, and always turn around on time, but the best part is still the view at the top and the long, easy walk back down.",
+    "description": "Hiking is how I hit reset: a steady climb, a few switchbacks, and a view that makes the week feel far away.",
     "objectives": [
       "Find the trailhead, follow the switchbacks, earn the view",
       "Explore the Berkeley Hills and trails beyond the Bay",
@@ -78,7 +78,25 @@
       "kind": "trail-time",
       "title": "Trail planner",
       "intro": "How long will it take? Hikers use 'book time': half an hour per mile plus half an hour per 1,000 feet of climbing. Plug in a trail and see when you'll be back and how much water to bring."
-    }
+    },
+    "glance": [
+      [
+        "Where",
+        "East Bay hills close to campus, bigger peaks on long weekends"
+      ],
+      [
+        "Best part",
+        "The moment the trees open up at the top"
+      ],
+      [
+        "Rule",
+        "Pack extra water and turn around on time"
+      ],
+      [
+        "Next",
+        "A first overnight backpacking trip"
+      ]
+    ]
   },
   {
     "slug": "racket-sports",
@@ -87,7 +105,7 @@
     "call": "796.34 XU",
     "spine": "#a8432c",
     "tagline": "If there's a racket, a net and a rally, I'm in.",
-    "description": "I'll play anything with a racket and a net: tennis, badminton, table tennis, pickleball. Each one has its own rhythm, from the long, physical rallies of tennis to the split-second exchanges at a badminton net, but they all reward the same things: quick feet, good anticipation and the patience to keep a rally going one shot longer. I love the chess-like side of it too, working out what an opponent hates and setting up a winner two or three shots ahead. Most of all, they're an easy way to turn a free afternoon with friends into a friendly rivalry, with the rematch always scheduled for tomorrow.",
+    "description": "If there's a racket, a net and a rally, I'm in. Every sport has its own rhythm, but they all reward quick feet and patience.",
     "objectives": [
       "Find a court and a rally partner",
       "Keep every rally going one shot longer",
@@ -153,7 +171,25 @@
       "kind": "reaction",
       "title": "Reaction test",
       "intro": "Wait for the pad to turn green, then hit it as fast as you can. Five tries per round. Most people land somewhere around 200 to 300 ms; a fast smash gives you about a tenth of a second."
-    }
+    },
+    "glance": [
+      [
+        "Plays",
+        "Tennis, badminton, table tennis, pickleball"
+      ],
+      [
+        "Strength",
+        "Reading the opponent and setting up the shot"
+      ],
+      [
+        "Working on",
+        "Footwork: moving early instead of reaching"
+      ],
+      [
+        "Next",
+        "Squash"
+      ]
+    ]
   },
   {
     "slug": "soccer",
@@ -162,7 +198,7 @@
     "call": "796.334 XU",
     "spine": "#2f5d73",
     "tagline": "Always down for a pickup game.",
-    "description": "Soccer is the sport I'll always say yes to. Pickup games are my favourite way to play: no refs, mixed skill levels, teams picked on the spot, and everyone chasing the same ball until it gets too dark to see it. I like playing in the middle of everything, winning the ball back, keeping it moving and setting up the next pass, because the best goals come from a few good passes rather than one person doing it all. Off the field, I'm usually watching the big matches with friends and arguing about them long after the final whistle.",
+    "description": "Soccer is the sport I'll always say yes to, especially pickup until it's too dark to see the ball.",
     "objectives": [
       "Show up for pickup games",
       "Win the ball back and play it forward",
@@ -228,7 +264,25 @@
       "kind": "teams",
       "title": "Pickup team picker",
       "intro": "The first rule of pickup: make the teams fair. List who showed up with a rough skill rating, and a snake draft splits them so no team gets all the top picks."
-    }
+    },
+    "glance": [
+      [
+        "Plays",
+        "Pickup games, wherever a field is free"
+      ],
+      [
+        "Role",
+        "Middle of the action: win it back, pass it on"
+      ],
+      [
+        "Watches",
+        "Big leagues and every major tournament"
+      ],
+      [
+        "Working on",
+        "Weaker foot and first touch"
+      ]
+    ]
   },
   {
     "slug": "swimming",
@@ -237,7 +291,7 @@
     "call": "797.21 XU",
     "spine": "#3d7f9a",
     "tagline": "Laps in the pool are my favorite way to reset.",
-    "description": "Swimming laps is my favourite way to clear my head. Once I'm in the water there's nothing to check and nowhere to be: just the black line on the bottom of the pool, steady breathing and counting lengths. It's also a full-body workout that's easy on the joints, which makes it the perfect balance to lifting and soccer, and a technical sport where small fixes to a stroke or a turn make a real difference. I come out feeling more relaxed than when I went in, even after a hard set, and usually with a clearer head about whatever problem I'd been stuck on.",
+    "description": "Laps are my favourite way to clear my head: just the black line, steady breathing and counting lengths.",
     "objectives": [
       "Swim laps to clear my head",
       "Keep sharpening stroke technique",
@@ -302,7 +356,25 @@
       "kind": "pace",
       "title": "Lap calculator",
       "intro": "Turn a session into numbers: total distance, pace per 100 and SWOLF, the swimmer's golf score (strokes plus seconds per length, lower is better)."
-    }
+    },
+    "glance": [
+      [
+        "Stroke",
+        "Freestyle for long sets, mixed strokes for balance"
+      ],
+      [
+        "Why",
+        "Full-body work that's easy on the joints"
+      ],
+      [
+        "Working on",
+        "Hip rotation and faster flip turns"
+      ],
+      [
+        "Someday",
+        "An open-water race"
+      ]
+    ]
   },
   {
     "slug": "gym",
@@ -311,7 +383,7 @@
     "call": "613.71 XU",
     "spine": "#4d555e",
     "tagline": "Lifting, progressive overload and showing up even when I don't feel like it.",
-    "description": "The gym is where I build consistency. I follow a structured split built around the big compound lifts (squat, bench, deadlift, rows, overhead press) and try to add a little weight or one more rep each week. Progress is slow, but it's measurable and it compounds: a semester of logged sessions tells a story no single workout can. Some days it's about chasing a number; other days it's just about showing up, putting the headphones in and getting the work done. It's the most honest feedback loop I know, and the habits carry straight over to studying and building software.",
+    "description": "The gym is where I build consistency: a little more weight or one more rep, every week.",
     "objectives": [
       "Keep a consistent lifting split",
       "Add a little weight or a rep every week",
@@ -382,7 +454,25 @@
       "kind": "lift",
       "title": "Lifting calculator",
       "intro": "Estimate a one-rep max from any set, see where small weekly increases lead, and work out which plates go on the bar."
-    }
+    },
+    "glance": [
+      [
+        "Split",
+        "Squat, bench, deadlift, rows and press"
+      ],
+      [
+        "Method",
+        "Progressive overload, every session logged"
+      ],
+      [
+        "Why",
+        "The most honest feedback loop I know"
+      ],
+      [
+        "Carries over",
+        "Small steps compound in study and code too"
+      ]
+    ]
   },
   {
     "slug": "eating",
@@ -391,7 +481,7 @@
     "call": "394.12 XU",
     "spine": "#b57a1c",
     "tagline": "Always hunting for the next great meal. Taste-testing counts as a sport.",
-    "description": "I'm always on the hunt for the next great meal: a new ramen spot, a hole-in-the-wall dumpling shop, a hot pot night with a big group, or a dessert worth the walk. Berkeley and the Bay Area make that easy, with nearly every cuisine on earth within a short drive and new places opening all the time. I'll read the reviews, ask friends, and then go find out for myself, ranking spots, arguing about them and going back anyway. Trying something new with friends is half the fun, and the house rules are simple: share everything, order something you've never had, and always save room for dessert.",
+    "description": "I'm always hunting for the next great meal, and Berkeley makes that easy.",
     "objectives": [
       "Hunt down the best spots around Berkeley",
       "Try a cuisine I haven't had before",
@@ -462,7 +552,25 @@
       "kind": "wheel",
       "title": "Where should we eat?",
       "intro": "Can't decide? Spin the wheel. It lands on one of my go-to cuisines, or on 'something new'."
-    }
+    },
+    "glance": [
+      [
+        "Favourites",
+        "Ramen, pho, dumplings, hot pot, Korean BBQ"
+      ],
+      [
+        "How I find spots",
+        "Ask friends, read reviews, go see for myself"
+      ],
+      [
+        "House rules",
+        "Share everything, always get dessert"
+      ],
+      [
+        "Next",
+        "Learning to cook the favourites myself"
+      ]
+    ]
   },
   {
     "slug": "card-games",
@@ -471,7 +579,7 @@
     "call": "795.4 XU",
     "spine": "#7a2e3a",
     "tagline": "Poker and blackjack: reading the table and playing the odds.",
-    "description": "Poker and blackjack are where probability meets psychology. In blackjack, the math tells you exactly what to do; in poker, the math is just the starting point, and the rest is reading the table: the timing of a bet, the player who suddenly sits up straighter, the bluff that doesn't quite add up. I liked the math enough that I built a No Limit Hold'em bot for a student poker-bot tournament, turning ranges, pot odds and opponent reads into code. At the table, though, it's always for fun and friendly stakes. The real prize is a well-timed bluff, and the best stories are the hands that went wrong.",
+    "description": "Poker and blackjack are where probability meets psychology. The math is the starting point; the rest is reading the table.",
     "objectives": [
       "Read the table and play the odds in poker",
       "Know basic strategy cold at the blackjack table",
@@ -537,7 +645,25 @@
       "kind": "pot-odds",
       "title": "Pot odds calculator",
       "intro": "The core poker decision in one place: compare the price of a call (pot odds) with how often your draw gets there (equity), using exact odds and the rule of 2 and 4."
-    }
+    },
+    "glance": [
+      [
+        "Plays",
+        "No-limit Texas Hold'em and blackjack"
+      ],
+      [
+        "Built",
+        "A No Limit Hold'em bot for a student tournament"
+      ],
+      [
+        "Stakes",
+        "Always for fun and friendly stakes"
+      ],
+      [
+        "Philosophy",
+        "Judge the decision, not the result"
+      ]
+    ]
   },
   {
     "slug": "board-games",
@@ -546,7 +672,7 @@
     "call": "794 XU",
     "spine": "#4a3f7a",
     "tagline": "Catan, Risk and Secret Hitler: trading, conquering and bluffing on game night.",
-    "description": "Game night means Catan, Risk or Secret Hitler on the table and a long evening of trading, conquering and lying to my friends' faces. Each one rewards a different skill: negotiation and timing in Catan, patience and long-term strategy in Risk, and pure social deduction in Secret Hitler, where watching how people vote matters more than anything they say. I love that every game is a small system with clear rules and a hidden best strategy, and that the other players are sitting right across from you. The best nights are the ones people still bring up weeks later, usually right before demanding a rematch.",
+    "description": "Game night means trading, conquering and lying to my friends' faces.",
     "objectives": [
       "Trade my way to the longest road in Catan",
       "Hold Australia and conquer the world in Risk",
@@ -612,7 +738,25 @@
       "kind": "dice",
       "title": "Catan dice lab",
       "intro": "Why do sixes and eights matter so much? Roll two dice a few thousand times and watch your results fill in the expected curve, with seven (the robber) on top."
-    }
+    },
+    "glance": [
+      [
+        "Catan",
+        "Trade early, spread your numbers"
+      ],
+      [
+        "Risk",
+        "Hold a continent you can defend"
+      ],
+      [
+        "Secret Hitler",
+        "Watch the votes, not the words"
+      ],
+      [
+        "Next",
+        "Getting properly into chess"
+      ]
+    ]
   },
   {
     "slug": "video-games",
@@ -621,7 +765,7 @@
     "call": "794.8 XU",
     "spine": "#1f7a7a",
     "tagline": "League of Legends and Valorant: climbing ranked one game at a time.",
-    "description": "League of Legends and Valorant are my games of choice: one a strategy game about macro decisions, map control and teamwork, the other a tactical shooter about aim, positioning, utility and communication. I approach them like any skill, reviewing my losses, learning the meta and drilling the fundamentals, and climbing ranked one game at a time. But the best nights aren't solo queue; they're late-night games with friends on comms, terrible strategies that somehow work, and clutch rounds we replay the next day. Gaming is also how I stay close to friends who live far away.",
+    "description": "League of Legends and Valorant: climbing ranked one game at a time, best with friends on comms.",
     "objectives": [
       "Climb the ranked ladder in League of Legends",
       "Sharpen my aim and crosshair placement in Valorant",
@@ -688,7 +832,25 @@
       "kind": "aim",
       "title": "Aim trainer",
       "intro": "Twenty seconds, as many targets as you can hit. Accuracy counts as much as speed, just like crosshair placement in Valorant."
-    }
+    },
+    "glance": [
+      [
+        "League",
+        "Roles that shape the map and objectives"
+      ],
+      [
+        "Valorant",
+        "Utility agents: flashes and smokes win rounds"
+      ],
+      [
+        "Method",
+        "Review losses, fix one habit at a time"
+      ],
+      [
+        "Best part",
+        "Late-night games with friends"
+      ]
+    ]
   },
   {
     "slug": "webnovels-anime",
@@ -697,7 +859,7 @@
     "call": "791.4334 XU",
     "spine": "#a33a6b",
     "tagline": "Binge-reading webnovels and watching anime, one more chapter or episode at a time.",
-    "description": "Webnovels and anime are my go-to stories: long-running series with huge worlds, power systems with real rules, and plot twists I didn't see coming. I gravitate toward clever protagonists who win by thinking rather than just by power, and morally grey casts whose motives make sense, which is why Reverend Insanity, Code Geass and Vinland Saga sit at the top of my list. I'll follow a webnovel for hundreds of chapters as they release, binge a season of anime in a weekend, and then go hunting for the next recommendation. Part of the fun is the wait between chapters and trading theories with friends.",
+    "description": "Long-running stories with huge worlds, real power systems and twists I didn't see coming.",
     "objectives": [
       "Follow ongoing webnovels as new chapters drop",
       "Work through my anime watchlist",
@@ -768,6 +930,24 @@
       "kind": "binge",
       "title": "Binge calculator",
       "intro": "Thinking of starting a long series? See how long it would take to catch up at your pace. Each square is a day."
-    }
+    },
+    "glance": [
+      [
+        "Favourites",
+        "Reverend Insanity, Code Geass, Vinland Saga"
+      ],
+      [
+        "Looks for",
+        "Clever protagonists who win by thinking"
+      ],
+      [
+        "Habit",
+        "A few chapters at a time as they release"
+      ],
+      [
+        "Always open to",
+        "Recommendations"
+      ]
+    ]
   }
 ]

@@ -487,6 +487,8 @@ const favoritesList = (it) => !it.favorites?.length ? '' : `
 ${it.favorites.map((f) => `              <li>${esc(f)}</li>`).join('\n')}
             </ul>`;
 // Each interest opens as a two-page book: summary on the left, contents on the right
+// "At a glance": short labelled facts instead of a paragraph (the `glance` field)
+const glanceList = (it, cls = 'glance') => it.glance ? `<dl class="${cls}">${it.glance.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : '';
 const cards = interests.map((it) => `        <article class="open-book" id="book-${it.slug}" style="--c: ${esc(it.spine)}" aria-labelledby="book-${it.slug}-title" hidden>
           <div class="open-book-page open-book-left">
             <div class="catalog-top">
@@ -496,6 +498,7 @@ const cards = interests.map((it) => `        <article class="open-book" id="book
             <h3 id="book-${it.slug}-title" tabindex="-1">${esc(it.title)}</h3>
             <p class="catalog-tagline">${esc(it.tagline)}</p>
             <p class="open-book-desc">${esc(it.description)}</p>
+            ${glanceList(it)}
             <dl class="catalog-meta">
               <dt>Section</dt><dd>${esc(it.type)}</dd>
               <dt>Subjects</dt><dd>${esc(it.rewards)}</dd>
@@ -511,7 +514,7 @@ ${objectivesList(it)}
             <ol class="volume-chapters">
 ${it.sections.map((sec) => `              <li>${esc(sec.heading)}</li>`).join('\n')}
             </ol>${it.lab ? `
-            <p class="volume-lab"><b>Field notebook:</b> ${esc(it.lab.title)}. ${esc(it.lab.intro.split(/(?<=[.?!])\s/)[0])}</p>` : ''}
+            <p class="volume-lab"><b>Field notebook</b> ${esc(it.lab.title)}</p>` : ''}
             <div class="open-book-actions">
               <a class="btn btn-tomato btn-sm" href="/interests/${it.slug}/">Read the full volume ${TRI}</a>
               <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
@@ -547,10 +550,13 @@ interests.forEach((it, i) => {
   const sections = it.sections.map((s, n) => `        <section class="interest-section chapter">
           <p class="chapter-num">Chapter ${n + 1}</p>
           <h2>${esc(s.heading)}</h2>
-          ${s.body ? [].concat(s.body).map((t) => `<p>${esc(t)}</p>`).join('\n          ') : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}${s.list ? `
+          ${s.body ? `<p>${esc([].concat(s.body)[0])}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}${s.list ? `
           <ul class="chapter-list">
 ${s.list.map((t) => `            <li>${esc(t)}</li>`).join('\n')}
-          </ul>` : ''}
+          </ul>` : ''}${[].concat(s.body || []).length > 1 ? `
+          <details class="chapter-more"><summary>Keep reading</summary>
+            ${[].concat(s.body).slice(1).map((t) => `<p>${esc(t)}</p>`).join('\n            ')}
+          </details>` : ''}
         </section>`).join('\n');
   const gallery = it.gallery.map((g, n) =>
     `        <img src="${esc(g)}" alt="${esc(it.title)} photo ${n + 1}" loading="lazy" width="960" height="720">`).join('\n');
@@ -568,7 +574,7 @@ ${s.list.map((t) => `            <li>${esc(t)}</li>`).join('\n')}
     title: `${it.title} · The library · Ethan Xu`, description: `${it.title}: ${it.tagline}`,
     content: fill(interestTpl, {
       num: String(i + 1), total: String(interests.length),
-      title: esc(it.title), tagline: esc(it.tagline), description: esc(it.description), photo: esc(it.photo),
+      title: esc(it.title), tagline: esc(it.tagline), description: esc(it.description), glance: glanceList(it, 'glance glance-hero'), photo: esc(it.photo),
       type: esc(it.type), call: esc(it.call), spine: esc(it.spine),
       rewards: esc(it.rewards), toc: tocList(it),
       sections, gallery, lab,
