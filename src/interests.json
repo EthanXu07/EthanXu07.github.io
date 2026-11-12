@@ -26,7 +26,11 @@
       },
       {
         "heading": "Favorite trails",
-        "placeholder": "List a few favorite trails, summits or parks."
+        "body": "The best trails are the ones that make you work for it: a steady climb, a few false summits, then a ridge where the whole Bay opens up below. Close to campus, the East Bay hills are perfect for a quick loop before or after class, and on longer weekends I go looking for anything with real elevation gain and a view at the end. Sunrise and golden hour are worth the early start or the walk back down in the dark."
+      },
+      {
+        "heading": "How I hike",
+        "body": "I like to keep it simple: good shoes, more water than I think I'll need, a snack for the top and a rough plan for the way down. Most hikes are with friends, which turns a climb into a long conversation, but a solo hike is my favourite way to think through a problem. I leave the trail how I found it and always check the weather before heading out."
       }
     ]
   },
@@ -57,11 +61,15 @@
       },
       {
         "heading": "What I play",
-        "placeholder": "Which ones: tennis, badminton, pickleball, squash, table tennis…"
+        "body": "Tennis, badminton, table tennis and pickleball all make the rotation. Tennis is the most physical, with long points that come down to footwork and consistency. Badminton is the fastest: tiny windows to react and a lot of deception at the net. Table tennis is pure reflexes and spin, and pickleball is the easiest one to get a whole group of friends playing at once."
       },
       {
         "heading": "Best moments",
-        "placeholder": "A favorite match, rally or place to play."
+        "body": "The rallies I remember are the ones that go on far longer than they should: both players scrambling, every shot coming back, until someone finally finds the angle. Close games against friends are the best of all, because the rematch is always the next day."
+      },
+      {
+        "heading": "What I'm working on",
+        "body": "Keeping the ball in play under pressure, moving early instead of reaching, and placing shots on purpose rather than just getting them back. The skills carry over between sports, so getting better at one usually helps the others."
       }
     ]
   },
@@ -92,11 +100,15 @@
       },
       {
         "heading": "On the pitch",
-        "placeholder": "Where you play and which position."
+        "body": "Pickup is where I play the most: whatever field is free, whoever shows up, teams picked on the spot. I like being in the middle of the action, winning the ball back, keeping it moving and setting up the next pass. In pickup everyone plays a bit of everything, which is half the fun."
       },
       {
         "heading": "Teams I follow",
-        "placeholder": "Favorite clubs or players."
+        "body": "I keep up with the big leagues and never miss the major tournaments. A World Cup or a Champions League night is the best excuse to get a group together around a screen, and the arguments about the result last a lot longer than the match."
+      },
+      {
+        "heading": "What it taught me",
+        "body": "Soccer is a team sport in the most literal way: one good pass is worth more than five dribbles. Moving off the ball, talking to teammates and making the simple play are habits that carry over to every group project I've worked on."
       }
     ]
   },
@@ -127,11 +139,11 @@
       },
       {
         "heading": "In the water",
-        "placeholder": "Favorite stroke, pool or open-water spot."
+        "body": "Freestyle is my default for long sets, and I mix in other strokes to keep things balanced. A typical session is a warm-up, a main set of steady laps or intervals and an easy cool-down. Pools are great for structure, but open water on a calm day is a completely different experience."
       },
       {
         "heading": "Goals",
-        "placeholder": "Anything you're training toward."
+        "body": "Smoother technique first, speed second: a longer stroke, cleaner turns and more relaxed breathing. Those small fixes make laps feel easier, which makes the longer sets possible. Beating a personal best is the bonus."
       }
     ]
   },
@@ -162,11 +174,15 @@
       },
       {
         "heading": "My split",
-        "placeholder": "Your routine: push/pull/legs, upper/lower, favorite lifts."
+        "body": "I train on a structured split so every muscle group gets work through the week, built around the big compound lifts: squats, bench, deadlifts, rows and overhead press, with accessory work after. Each session has a plan before I walk in, and I log the numbers so I know exactly what to beat next time."
       },
       {
         "heading": "Personal records",
-        "placeholder": "PRs you're proud of or chasing."
+        "body": "PRs are the scoreboard, but the real goal is steady progress without getting hurt. Good form, enough sleep and enough food matter as much as the lifting itself. Most weeks the win is one more rep or a little more weight than last week. Over a semester that adds up to a lot."
+      },
+      {
+        "heading": "What it taught me",
+        "body": "Consistency beats intensity. Showing up on the days I don't feel like it is what makes the good days possible. It's the same lesson as any long project: small, measurable steps, tracked honestly, compound over time."
       }
     ]
   },
@@ -197,11 +213,15 @@
       },
       {
         "heading": "Favorite cuisines",
-        "placeholder": "What you'd happily eat every week."
+        "body": "Noodles of any kind are at the top of the list: ramen, pho, hand-pulled noodles. Close behind are dumplings, hot pot, Korean barbecue, tacos and a really good sandwich. I'll try almost anything once, and the best meals usually come from the places with the shortest menus and the longest lines."
       },
       {
         "heading": "Top spots",
-        "placeholder": "Go-to restaurants around Berkeley and beyond."
+        "body": "Berkeley has a lot of great food within walking distance of campus, and the rest of the Bay Area has nearly every cuisine within a short drive. My process: ask friends, read the reviews, and then go find out for myself. The list is always changing, which is the point."
+      },
+      {
+        "heading": "The rules",
+        "body": "Order something you've never had before. Share everything so everyone tries more. Save room for dessert. And if a spot is good, bring someone new back to it."
       }
     ]
   },
@@ -232,11 +252,15 @@
       },
       {
         "heading": "What I play",
-        "placeholder": "Poker variants (Texas Hold'em?), blackjack, and where you play them."
+        "body": "Texas Hold'em is the main game, mostly no-limit with friends. Blackjack is the change of pace: basic strategy, discipline and knowing when to walk away. I liked the poker math enough that I built a No Limit Hold'em bot for a student poker-bot tournament, which turned everything I knew about ranges, pot odds and reading opponents into code (it's in the projects vault)."
       },
       {
         "heading": "Best hands",
-        "placeholder": "A favorite hand, bluff or comeback."
+        "body": "The hands I remember aren't the biggest pots. They're the ones where the read was right: a fold that saved a stack, a call against a bluff, or a well-timed bluff of my own that got through. The worst beats are good stories too."
+      },
+      {
+        "heading": "How I think about it",
+        "body": "Make good decisions and let the results take care of themselves over enough hands. A good call can still lose, and a bad one can still win; what matters is whether it was right with what you knew at the time. That idea is useful well beyond the card table."
       }
     ]
   },
@@ -267,11 +291,15 @@
       },
       {
         "heading": "On the table",
-        "placeholder": "Catan, Risk, Secret Hitler: favorite strategies or house rules."
+        "body": "In Catan, I go for flexible starting spots and trade early, because the player who trades well usually wins. In Risk, holding a continent you can defend beats spreading out across the map. In Secret Hitler, the trick is to keep the story consistent and watch who votes how, because the votes give people away long before the reveal."
       },
       {
         "heading": "Game night stories",
-        "placeholder": "A legendary comeback, betrayal or winning move."
+        "body": "The best game nights are the ones people bring up weeks later: a trade that looked harmless and won the game, an alliance that fell apart one turn too early, or a perfectly timed lie in Secret Hitler. Whoever lost always demands a rematch."
+      },
+      {
+        "heading": "Why strategy games stick",
+        "body": "Every game is a small system with clear rules, and figuring out what actually wins inside it is the same kind of thinking I enjoy in code and math. The difference is that your opponents are sitting right across the table."
       }
     ]
   },
@@ -302,11 +330,15 @@
       },
       {
         "heading": "Mains",
-        "placeholder": "Your League role and champions, and your Valorant agents."
+        "body": "In League I like roles that shape the map: tracking objectives, timing rotations and helping the team play around the right fights. In Valorant I gravitate toward agents with utility, because a good flash or smoke wins rounds just as often as aim does. I'm always picking up new champions and agents when the meta shifts."
       },
       {
         "heading": "Peak rank",
-        "placeholder": "Highest rank, best game or clutch moment."
+        "body": "Ranked is a long-term project: review the losses, fix one habit at a time, and don't tilt-queue after a bad game. The climb is satisfying, but the games I remember are the clutch rounds and the comebacks with friends on comms."
+      },
+      {
+        "heading": "How I get better",
+        "body": "Watch replays, learn from players better than me, and focus on fundamentals before flashy plays. In League that's farming, vision and decision-making; in Valorant it's crosshair placement, positioning and communication. It's the same process as getting better at anything."
       }
     ]
   },
@@ -342,7 +374,11 @@
       },
       {
         "heading": "Currently reading and watching",
-        "placeholder": "Webnovels you're following and anime you're watching now."
+        "body": "There's always a webnovel or two on the go, read a few chapters at a time as they release, and an anime watchlist that grows faster than I can get through it. I gravitate toward long series with clever protagonists, morally grey characters and power systems with real rules, the same things that make Reverend Insanity, Code Geass and Vinland Saga favourites."
+      },
+      {
+        "heading": "What makes a great series",
+        "body": "A world with rules that stay consistent, characters who change over the story, and a payoff that was set up long before it arrives. The best series make you go back and reread the early chapters once you know where it's all going."
       }
     ]
   }
