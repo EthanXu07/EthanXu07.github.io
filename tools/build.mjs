@@ -542,19 +542,31 @@ interests.forEach((it, i) => {
   const sections = it.sections.map((s, n) => `        <section class="interest-section chapter">
           <p class="chapter-num">Chapter ${n + 1}</p>
           <h2>${esc(s.heading)}</h2>
-          ${s.body ? `<p>${esc(s.body)}</p>` : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}
+          ${s.body ? [].concat(s.body).map((t) => `<p>${esc(t)}</p>`).join('\n          ') : `<p class="placeholder-note">✎ ${esc(s.placeholder)}</p>`}${s.list ? `
+          <ul class="chapter-list">
+${s.list.map((t) => `            <li>${esc(t)}</li>`).join('\n')}
+          </ul>` : ''}
         </section>`).join('\n');
   const gallery = it.gallery.map((g, n) =>
     `        <img src="${esc(g)}" alt="${esc(it.title)} photo ${n + 1}" loading="lazy" width="960" height="720">`).join('\n');
+  // Field notebook: one interactive tool per interest, filled in by interest-lab.js
+  const lab = it.lab ? `      <section class="lab" data-lab="${esc(it.lab.kind)}" aria-labelledby="lab-title">
+        <p class="chapter-num">Appendix · field notebook</p>
+        <h2 id="lab-title">${esc(it.lab.title)}</h2>
+        <p class="lab-intro">${esc(it.lab.intro)}</p>
+        <div class="lab-body"></div>
+        <noscript><p class="lab-intro">This one needs JavaScript.</p></noscript>
+      </section>` : '';
   page({
     out: `interests/${it.slug}/index.html`, path: `/interests/${it.slug}/`, page: 'interests',
+    scripts: it.lab ? `  <script src="/interest-lab.js"></script>\n` : '',
     title: `${it.title} · The library · Ethan Xu`, description: `${it.title}: ${it.tagline}`,
     content: fill(interestTpl, {
       num: String(i + 1), total: String(interests.length),
       title: esc(it.title), tagline: esc(it.tagline), description: esc(it.description), photo: esc(it.photo),
       type: esc(it.type), call: esc(it.call), spine: esc(it.spine),
       rewards: esc(it.rewards), toc: tocList(it),
-      sections, gallery,
+      sections, gallery, lab,
       prevHref: `/interests/${prev.slug}/`, prevTitle: esc(prev.title),
       nextHref: `/interests/${next.slug}/`, nextTitle: esc(next.title),
     }),

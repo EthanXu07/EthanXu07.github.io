@@ -22,17 +22,63 @@
     "sections": [
       {
         "heading": "Why I hike",
-        "body": "It's the one place my phone stays in my pocket. A long climb leaves room to think through a problem or not think at all, and reaching the top always feels earned. I like that every trail is a little different: the same loop looks completely new in fog, at sunset or after a rainy week."
+        "body": [
+          "It's the one place my phone stays in my pocket. A long climb leaves room to think through a problem or not think at all, and reaching the top always feels earned.",
+          "I like that every trail is a little different, and that the same trail is never the same twice. A loop I've done a dozen times looks completely new in fog, at sunset or after a rainy week, when everything is green and the creeks are actually running."
+        ]
       },
       {
         "heading": "Favorite trails",
-        "body": "The best trails are the ones that make you work for it: a steady climb, a few false summits, then a ridge where the whole Bay opens up below. Close to campus, the East Bay hills are perfect for a quick loop before or after class, and on longer weekends I go looking for anything with real elevation gain and a view at the end. Sunrise and golden hour are worth the early start or the walk back down in the dark."
+        "body": [
+          "The best trails are the ones that make you work for it: a steady climb, a few false summits, then a ridge where the whole Bay opens up below.",
+          "Close to campus, the East Bay hills are perfect for a quick loop before or after class. On longer weekends I go looking for anything with real elevation gain and a view at the end: coastal bluffs, redwood groves, or a peak where you can see three counties at once."
+        ],
+        "list": [
+          "Short and steep: a fast climb to a viewpoint after class",
+          "Long and rolling: a full day out with friends and a packed lunch",
+          "Sunrise or golden hour: worth the early alarm or the walk down in the dark"
+        ]
       },
       {
-        "heading": "How I hike",
-        "body": "I like to keep it simple: good shoes, more water than I think I'll need, a snack for the top and a rough plan for the way down. Most hikes are with friends, which turns a climb into a long conversation, but a solo hike is my favourite way to think through a problem. I leave the trail how I found it and always check the weather before heading out."
+        "heading": "How I plan a hike",
+        "body": [
+          "Most of the planning is about the boring stuff that makes the fun part possible: how long it is, how much climbing, where the water is, and when the sun goes down. I check the weather and the trail conditions before I leave, and I always tell someone where I'm going if I'm heading out alone.",
+          "Distance is easy to underestimate and elevation is easy to ignore, so I budget time by both: half an hour per mile plus half an hour per thousand feet of climbing (the trail planner below does the math). Then I set a turnaround time and stick to it, even if the summit is close."
+        ]
+      },
+      {
+        "heading": "What's in my pack",
+        "body": [
+          "I like to keep it light, but there are a few things that always come with me, no matter how short the hike looks on the map."
+        ],
+        "list": [
+          "More water than I think I'll need",
+          "A snack for the top (the view tastes better with one)",
+          "A light layer: the ridge is always windier than the trailhead",
+          "Sunscreen, a hat and a charged phone with an offline map",
+          "A small first-aid kit, just in case"
+        ]
+      },
+      {
+        "heading": "Hiking with friends vs. solo",
+        "body": [
+          "Hiking with friends turns a climb into a long conversation. Some of my best talks have happened halfway up a switchback, when everyone is too out of breath to be anything but honest.",
+          "Solo hikes are different: quieter, faster, and the best way I know to untangle a problem. I've worked out more bugs on a trail than at a desk. Whichever kind it is, I leave the trail how I found it: pack out what I pack in, stay on the path, and give way to people coming uphill."
+        ]
+      },
+      {
+        "heading": "Still to climb",
+        "body": [
+          "The list of trails I want to do keeps getting longer. Next up: more long-distance day hikes, a first proper overnight backpacking trip, and more of the big national parks a few hours' drive from the Bay.",
+          "Eventually I want to stand on top of a real mountain, the kind where you start before sunrise and the trail ends above the tree line."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "trail-time",
+      "title": "Trail planner",
+      "intro": "How long will it take? Hikers use 'book time': half an hour per mile plus half an hour per 1,000 feet of climbing. Plug in a trail and see when you'll be back and how much water to bring."
+    }
   },
   {
     "slug": "racket-sports",
@@ -57,21 +103,57 @@
     "sections": [
       {
         "heading": "Why I play",
-        "body": "Racket sports are the perfect mix of exercise and strategy. A good rally is part reflexes, part chess: setting up a shot two or three hits ahead. They're also easy to pick up anywhere. A free court, two rackets and someone willing to play is all it takes."
+        "body": [
+          "Racket sports are the perfect mix of exercise and strategy. A good rally is part reflexes, part chess: setting up a shot two or three hits ahead.",
+          "They're also easy to pick up anywhere. A free court, two rackets and someone willing to play is all it takes, and after one game everyone wants a rematch."
+        ]
       },
       {
         "heading": "What I play",
-        "body": "Tennis, badminton, table tennis and pickleball all make the rotation. Tennis is the most physical, with long points that come down to footwork and consistency. Badminton is the fastest: tiny windows to react and a lot of deception at the net. Table tennis is pure reflexes and spin, and pickleball is the easiest one to get a whole group of friends playing at once."
+        "body": [
+          "Tennis, badminton, table tennis and pickleball all make the rotation. They look similar from the outside, but each one asks for something different."
+        ],
+        "list": [
+          "Tennis: the most physical. Long points, big swings, and matches won on footwork and consistency",
+          "Badminton: the fastest. Tiny windows to react and a lot of deception at the net",
+          "Table tennis: pure reflexes and spin. Reading the paddle angle matters more than power",
+          "Pickleball: the most social. Easy to learn, so a whole group can play at once"
+        ]
+      },
+      {
+        "heading": "Footwork first",
+        "body": [
+          "The biggest lesson across every racket sport is that most bad shots are really bad positioning. If I'm late to the ball, no swing can save it.",
+          "So I work on the unglamorous stuff: a split step as my opponent hits, small adjustment steps instead of lunging, and recovering to the middle after every shot. When the footwork is right, the shots get easy."
+        ]
+      },
+      {
+        "heading": "Playing the opponent",
+        "body": [
+          "Once the basics are there, the game becomes about the person across the net. Do they hate their backhand? Do they rush the net? Do they get impatient in long rallies?",
+          "I like finding the pattern and playing into it: keep feeding the weak side, change pace when they settle into a rhythm, and save the risky shot for when it actually wins the point. It's the same kind of reading I enjoy at the poker table, just with more running."
+        ]
       },
       {
         "heading": "Best moments",
-        "body": "The rallies I remember are the ones that go on far longer than they should: both players scrambling, every shot coming back, until someone finally finds the angle. Close games against friends are the best of all, because the rematch is always the next day."
+        "body": [
+          "The rallies I remember are the ones that go on far longer than they should: both players scrambling, every shot coming back, until someone finally finds the angle.",
+          "Close games against friends are the best of all. Nobody remembers the easy wins; everybody remembers the deuce game that went on forever, and the rematch is always the next day."
+        ]
       },
       {
         "heading": "What I'm working on",
-        "body": "Keeping the ball in play under pressure, moving early instead of reaching, and placing shots on purpose rather than just getting them back. The skills carry over between sports, so getting better at one usually helps the others."
+        "body": [
+          "Keeping the ball in play under pressure, moving early instead of reaching, and placing shots on purpose rather than just getting them back.",
+          "The skills carry over between sports, so getting better at one usually helps the others. Next on the list is squash, the one racket sport I haven't properly tried yet."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "reaction",
+      "title": "Reaction test",
+      "intro": "Wait for the pad to turn green, then hit it as fast as you can. Five tries per round. Most people land somewhere around 200 to 300 ms; a fast smash gives you about a tenth of a second."
+    }
   },
   {
     "slug": "soccer",
@@ -96,21 +178,57 @@
     "sections": [
       {
         "heading": "Why I play",
-        "body": "It's the most social way I know to get a workout in. Ninety minutes of running doesn't feel like cardio when you're trying to win the ball back. I love the teamwork too: the best goals come from a few good passes, not one person doing everything."
+        "body": [
+          "It's the most social way I know to get a workout in. Ninety minutes of running doesn't feel like cardio when you're trying to win the ball back.",
+          "I love the teamwork too: the best goals come from a few good passes, not one person doing everything. A team that talks and moves together beats a team of better individual players more often than you'd think."
+        ]
       },
       {
         "heading": "On the pitch",
-        "body": "Pickup is where I play the most: whatever field is free, whoever shows up, teams picked on the spot. I like being in the middle of the action, winning the ball back, keeping it moving and setting up the next pass. In pickup everyone plays a bit of everything, which is half the fun."
+        "body": [
+          "Pickup is where I play the most: whatever field is free, whoever shows up, teams picked on the spot. I like being in the middle of the action, winning the ball back, keeping it moving and setting up the next pass.",
+          "In pickup everyone plays a bit of everything, which is half the fun. One minute you're the last defender, the next you're making a run into the box."
+        ]
+      },
+      {
+        "heading": "The pickup code",
+        "body": [
+          "Pickup soccer runs on unwritten rules, and the games are better when everyone follows them."
+        ],
+        "list": [
+          "Make the teams fair, then reshuffle if the score gets lopsided",
+          "Call your own fouls and don't argue too long about the out-of-bounds",
+          "Pass to the new person: that's how they come back next week",
+          "Next goal wins when it gets too dark to see the ball"
+        ]
       },
       {
         "heading": "Teams I follow",
-        "body": "I keep up with the big leagues and never miss the major tournaments. A World Cup or a Champions League night is the best excuse to get a group together around a screen, and the arguments about the result last a lot longer than the match."
+        "body": [
+          "I keep up with the big leagues and never miss the major tournaments. A World Cup or a Champions League night is the best excuse to get a group together around a screen.",
+          "Watching the pros also makes me a better player. Seeing how a good midfielder scans before receiving the ball, or how a defence shifts as a unit, gives me something to try the next time I'm on the field. The arguments about the result last a lot longer than the match."
+        ]
+      },
+      {
+        "heading": "What I'm working on",
+        "body": [
+          "My weaker foot, first touch under pressure, and looking up before the ball arrives so I already know where it's going next.",
+          "Fitness is the quiet one: the last fifteen minutes of a pickup game are where the extra stamina from swimming and the gym actually shows up."
+        ]
       },
       {
         "heading": "What it taught me",
-        "body": "Soccer is a team sport in the most literal way: one good pass is worth more than five dribbles. Moving off the ball, talking to teammates and making the simple play are habits that carry over to every group project I've worked on."
+        "body": [
+          "Soccer is a team sport in the most literal way: one good pass is worth more than five dribbles. Moving off the ball, talking to teammates and making the simple play are habits that carry over to every group project I've worked on.",
+          "It also taught me to shake off mistakes quickly. Everyone gives the ball away; what matters is how fast you work to win it back."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "teams",
+      "title": "Pickup team picker",
+      "intro": "The first rule of pickup: make the teams fair. List who showed up with a rough skill rating, and a snake draft splits them so no team gets all the top picks."
+    }
   },
   {
     "slug": "swimming",
@@ -135,17 +253,56 @@
     "sections": [
       {
         "heading": "Why I swim",
-        "body": "It's a full-body workout that's easy on the joints, so it balances out the running and lifting. Swimming is also technical in a way I enjoy: small fixes to a stroke or a turn make a real difference, so there's always something to work on."
+        "body": [
+          "It's a full-body workout that's easy on the joints, so it balances out the running and lifting. After a heavy week at the gym, a swim is the best recovery I know.",
+          "Swimming is also technical in a way I enjoy: small fixes to a stroke or a turn make a real difference, so there's always something to work on."
+        ]
       },
       {
         "heading": "In the water",
-        "body": "Freestyle is my default for long sets, and I mix in other strokes to keep things balanced. A typical session is a warm-up, a main set of steady laps or intervals and an easy cool-down. Pools are great for structure, but open water on a calm day is a completely different experience."
+        "body": [
+          "Freestyle is my default for long sets, and I mix in other strokes to keep things balanced. Pools are great for structure, but open water on a calm day is a completely different experience: no walls, no lane lines, just you and the horizon."
+        ]
+      },
+      {
+        "heading": "A typical session",
+        "body": [
+          "I go in with a plan, even a loose one, so the session has a shape instead of just counting laps until I'm bored."
+        ],
+        "list": [
+          "Warm-up: easy laps, mixing strokes, to loosen up",
+          "Drills: a few lengths focused on one part of the stroke",
+          "Main set: steady distance or intervals on a set rest",
+          "Cool-down: slow and easy, focusing on long breaths"
+        ]
+      },
+      {
+        "heading": "Technique I'm chasing",
+        "body": [
+          "The goal is to swim easier, not harder. A longer stroke means fewer strokes per length, and a relaxed breathing rhythm means I'm not fighting for air halfway down the pool.",
+          "Right now that means rotating more from the hips, keeping my head still, and cleaning up flip turns so I come off the wall with real speed instead of losing it."
+        ]
       },
       {
         "heading": "Goals",
-        "body": "Smoother technique first, speed second: a longer stroke, cleaner turns and more relaxed breathing. Those small fixes make laps feel easier, which makes the longer sets possible. Beating a personal best is the bonus."
+        "body": [
+          "Smoother technique first, speed second. Those small fixes make laps feel easier, which makes the longer sets possible.",
+          "Beating a personal best is the bonus. Someday I'd like to try an open-water race, where the pacing and navigation are as important as the swimming."
+        ]
+      },
+      {
+        "heading": "Why it resets me",
+        "body": [
+          "Underwater there's nothing to check and nobody to reply to. It's just breathing, counting and the black line on the bottom of the pool.",
+          "That makes it the closest thing I have to meditation. I almost always come out with a clearer head than I went in with, and more than one problem I'd been stuck on has solved itself somewhere around lap forty."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "pace",
+      "title": "Lap calculator",
+      "intro": "Turn a session into numbers: total distance, pace per 100 and SWOLF, the swimmer's golf score (strokes plus seconds per length, lower is better)."
+    }
   },
   {
     "slug": "gym",
@@ -170,21 +327,62 @@
     "sections": [
       {
         "heading": "Why I lift",
-        "body": "Lifting is the most honest feedback loop I know: put in the work and the numbers go up; skip it and they don't. It's also my favourite way to deal with stress after a long day of classes or code. An hour with headphones in and a plan on the whiteboard resets everything."
+        "body": [
+          "Lifting is the most honest feedback loop I know: put in the work and the numbers go up; skip it and they don't.",
+          "It's also my favourite way to deal with stress after a long day of classes or code. An hour with headphones in and a plan for the session resets everything."
+        ]
       },
       {
         "heading": "My split",
-        "body": "I train on a structured split so every muscle group gets work through the week, built around the big compound lifts: squats, bench, deadlifts, rows and overhead press, with accessory work after. Each session has a plan before I walk in, and I log the numbers so I know exactly what to beat next time."
+        "body": [
+          "I train on a structured split so every muscle group gets work through the week, built around the big compound lifts with accessory work after. Each session has a plan before I walk in, and I log the numbers so I know exactly what to beat next time."
+        ],
+        "list": [
+          "Squat and deadlift for the lower body",
+          "Bench and overhead press for pushing",
+          "Rows and pull-ups for pulling",
+          "Accessories and core to round it out"
+        ]
+      },
+      {
+        "heading": "Progressive overload",
+        "body": [
+          "The whole system comes down to one idea: do a little more than last time. One more rep, a little more weight, or the same weight with cleaner form.",
+          "It sounds slow, and week to week it is. But small increases compound, and looking back over a semester of logged sessions is one of the most satisfying things I know. It's the same reason I like training a model and watching the loss curve go down."
+        ]
       },
       {
         "heading": "Personal records",
-        "body": "PRs are the scoreboard, but the real goal is steady progress without getting hurt. Good form, enough sleep and enough food matter as much as the lifting itself. Most weeks the win is one more rep or a little more weight than last week. Over a semester that adds up to a lot."
+        "body": [
+          "PRs are the scoreboard, but the real goal is steady progress without getting hurt. A record set with bad form doesn't count, and an injury costs far more than any single heavy day is worth.",
+          "Most weeks the win is small. Over a semester that adds up to a lot."
+        ]
+      },
+      {
+        "heading": "Outside the gym",
+        "body": [
+          "Progress is made in the gym but built outside it. The things that move the numbers most are the least exciting."
+        ],
+        "list": [
+          "Sleep: the cheapest performance boost there is",
+          "Protein and enough food overall",
+          "Rest days, taken seriously",
+          "Swimming and soccer for conditioning and recovery"
+        ]
       },
       {
         "heading": "What it taught me",
-        "body": "Consistency beats intensity. Showing up on the days I don't feel like it is what makes the good days possible. It's the same lesson as any long project: small, measurable steps, tracked honestly, compound over time."
+        "body": [
+          "Consistency beats intensity. Showing up on the days I don't feel like it is what makes the good days possible.",
+          "It's the same lesson as any long project: small, measurable steps, tracked honestly, compound over time. That mindset has made me better at studying and at building software, not just at lifting."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "lift",
+      "title": "Lifting calculator",
+      "intro": "Estimate a one-rep max from any set, see where small weekly increases lead, and work out which plates go on the bar."
+    }
   },
   {
     "slug": "eating",
@@ -209,21 +407,62 @@
     "sections": [
       {
         "heading": "Why I eat (seriously)",
-        "body": "Food is the easiest way to explore a place and its people without leaving town. Every cuisine has its own logic, ingredients and stories, and a good meal is the best excuse to get friends around a table. I'll rank spots, argue about them, and go back anyway."
+        "body": [
+          "Food is the easiest way to explore a place and its people without leaving town. Every cuisine has its own logic, ingredients and stories.",
+          "A good meal is also the best excuse to get friends around a table. I'll rank spots, argue about them, and go back anyway."
+        ]
       },
       {
         "heading": "Favorite cuisines",
-        "body": "Noodles of any kind are at the top of the list: ramen, pho, hand-pulled noodles. Close behind are dumplings, hot pot, Korean barbecue, tacos and a really good sandwich. I'll try almost anything once, and the best meals usually come from the places with the shortest menus and the longest lines."
+        "body": [
+          "Noodles of any kind are at the top of the list, closely followed by anything that comes in a dumpling. I'll try almost anything once, and the best meals usually come from the places with the shortest menus and the longest lines."
+        ],
+        "list": [
+          "Ramen, pho and hand-pulled noodles",
+          "Dumplings, from soup dumplings to potstickers",
+          "Hot pot and Korean barbecue, the more people the better",
+          "Tacos and a really good sandwich",
+          "Boba and dessert, always"
+        ]
       },
       {
         "heading": "Top spots",
-        "body": "Berkeley has a lot of great food within walking distance of campus, and the rest of the Bay Area has nearly every cuisine within a short drive. My process: ask friends, read the reviews, and then go find out for myself. The list is always changing, which is the point."
+        "body": [
+          "Berkeley has a lot of great food within walking distance of campus, and the rest of the Bay Area has nearly every cuisine within a short drive.",
+          "The list of favourites keeps changing, which is the point: there's always a new opening, a hidden gem a friend swears by, or an old favourite worth checking still holds up."
+        ]
+      },
+      {
+        "heading": "How I find a new spot",
+        "body": [
+          "My process is half research, half gut feeling. Ask friends first, then read the reviews, then look at the photos people post rather than the restaurant's own.",
+          "A short menu, a line out the door at lunch, and a place that does one thing really well are all good signs. A huge menu that tries to do everything usually isn't. And sometimes the best move is just to walk into the place that smells good."
+        ]
       },
       {
         "heading": "The rules",
-        "body": "Order something you've never had before. Share everything so everyone tries more. Save room for dessert. And if a spot is good, bring someone new back to it."
+        "body": [
+          "Eating out with me comes with a few house rules."
+        ],
+        "list": [
+          "Order something you've never had before",
+          "Share everything so everyone tries more",
+          "Save room for dessert",
+          "If a spot is good, bring someone new back to it"
+        ]
+      },
+      {
+        "heading": "Still on the list",
+        "body": [
+          "Cuisines I want to explore more deeply, a proper food trip to a city known for its food, and learning to cook a few of my favourite dishes myself, which is why cooking is sitting on the 'Up next' shelf of this library."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "wheel",
+      "title": "Where should we eat?",
+      "intro": "Can't decide? Spin the wheel. It lands on one of my go-to cuisines, or on 'something new'."
+    }
   },
   {
     "slug": "card-games",
@@ -248,21 +487,57 @@
     "sections": [
       {
         "heading": "Why I play",
-        "body": "Card games are probability you can feel. Counting outs, weighing pot odds and knowing basic strategy cold make the math click in a way a textbook never did. Poker adds the human side: tells, timing and staying calm when the river doesn't go your way."
+        "body": [
+          "Card games are probability you can feel. Counting outs, weighing pot odds and knowing basic strategy cold make the math click in a way a textbook never did.",
+          "Poker adds the human side: tells, timing and staying calm when the river doesn't go your way."
+        ]
       },
       {
         "heading": "What I play",
-        "body": "Texas Hold'em is the main game, mostly no-limit with friends. Blackjack is the change of pace: basic strategy, discipline and knowing when to walk away. I liked the poker math enough that I built a No Limit Hold'em bot for a student poker-bot tournament, which turned everything I knew about ranges, pot odds and reading opponents into code (it's in the projects vault)."
+        "body": [
+          "Texas Hold'em is the main game, mostly no-limit with friends. Blackjack is the change of pace: basic strategy, discipline and knowing when to walk away.",
+          "The two games are opposites in a useful way. Blackjack has a correct answer for every hand; poker almost never does, so you have to make the best decision you can with incomplete information."
+        ]
+      },
+      {
+        "heading": "The math at the table",
+        "body": [
+          "Most of good poker comes down to a few simple numbers you can work out in your head."
+        ],
+        "list": [
+          "Outs: how many cards still make your hand",
+          "Pot odds: what share of the final pot you have to put in to call",
+          "Equity: how often your hand wins against their likely range",
+          "If your equity beats the pot odds, the call makes money over time"
+        ]
+      },
+      {
+        "heading": "From the table to code",
+        "body": [
+          "I liked the poker math enough that I built a No Limit Hold'em bot for a student poker-bot tournament. It turned everything I knew about ranges, pot odds and reading opponents into code: decision trees for stack size, hand strength and how each opponent plays, plus an expected-value step to pick the action.",
+          "Building it taught me a lot about my own game. Writing down exactly when to fold, call or raise forces you to be honest about leaks you'd never notice at a real table. The details are in the projects vault."
+        ]
       },
       {
         "heading": "Best hands",
-        "body": "The hands I remember aren't the biggest pots. They're the ones where the read was right: a fold that saved a stack, a call against a bluff, or a well-timed bluff of my own that got through. The worst beats are good stories too."
+        "body": [
+          "The hands I remember aren't the biggest pots. They're the ones where the read was right: a fold that saved a stack, a call against a bluff, or a well-timed bluff of my own that got through.",
+          "The worst beats are good stories too, especially once enough time has passed to laugh about them."
+        ]
       },
       {
         "heading": "How I think about it",
-        "body": "Make good decisions and let the results take care of themselves over enough hands. A good call can still lose, and a bad one can still win; what matters is whether it was right with what you knew at the time. That idea is useful well beyond the card table."
+        "body": [
+          "Make good decisions and let the results take care of themselves over enough hands. A good call can still lose, and a bad one can still win; what matters is whether it was right with what you knew at the time.",
+          "That idea is useful well beyond the card table. Judging a decision by its process instead of its outcome is how I try to approach everything from research to everyday choices. And I always play for fun and friendly stakes."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "pot-odds",
+      "title": "Pot odds calculator",
+      "intro": "The core poker decision in one place: compare the price of a call (pot odds) with how often your draw gets there (equity), using exact odds and the rule of 2 and 4."
+    }
   },
   {
     "slug": "board-games",
@@ -287,21 +562,57 @@
     "sections": [
       {
         "heading": "Why I play",
-        "body": "Board games put strategy and people in the same room. Every game is a different puzzle, but the best moments are social: the trade that wins Catan, the alliance that collapses in Risk, the reveal at the end of Secret Hitler. They're the best excuse for a long night with friends."
+        "body": [
+          "Board games put strategy and people in the same room. Every game is a different puzzle, but the best moments are social: the trade that wins Catan, the alliance that collapses in Risk, the reveal at the end of Secret Hitler.",
+          "They're the best excuse for a long night with friends."
+        ]
       },
       {
-        "heading": "On the table",
-        "body": "In Catan, I go for flexible starting spots and trade early, because the player who trades well usually wins. In Risk, holding a continent you can defend beats spreading out across the map. In Secret Hitler, the trick is to keep the story consistent and watch who votes how, because the votes give people away long before the reveal."
+        "heading": "Catan",
+        "body": [
+          "In Catan, I go for flexible starting spots with a good spread of numbers and resources, and I trade early and often, because the player who trades well usually wins.",
+          "The real game is at the table, not on the board: knowing when someone is one card away from winning and quietly refusing every trade they offer."
+        ],
+        "list": [
+          "Spread your numbers: sixes and eights are great, but not all on one hex",
+          "Ore and wheat win the late game",
+          "Never let the leader get the longest road for free"
+        ]
+      },
+      {
+        "heading": "Risk",
+        "body": [
+          "Risk rewards patience more than people expect. Holding a continent you can actually defend beats spreading out across the map, and the player who attacks first often just weakens themselves for everyone else.",
+          "Alliances are temporary, and everyone knows it. The fun is in deciding exactly when to break one."
+        ]
+      },
+      {
+        "heading": "Secret Hitler",
+        "body": [
+          "Secret Hitler is pure social deduction: a game where lying is allowed and everyone is trying to catch you doing it.",
+          "The trick is to keep your story consistent and to watch the votes, because how people vote gives them away long before the reveal. As a liberal you're looking for patterns; as a fascist you're trying to be the most trustworthy person in the room."
+        ]
       },
       {
         "heading": "Game night stories",
-        "body": "The best game nights are the ones people bring up weeks later: a trade that looked harmless and won the game, an alliance that fell apart one turn too early, or a perfectly timed lie in Secret Hitler. Whoever lost always demands a rematch."
+        "body": [
+          "The best game nights are the ones people bring up weeks later: a trade that looked harmless and won the game, an alliance that fell apart one turn too early, or a perfectly timed lie that nobody saw coming.",
+          "Whoever lost always demands a rematch, and somehow it's always past midnight by then."
+        ]
       },
       {
         "heading": "Why strategy games stick",
-        "body": "Every game is a small system with clear rules, and figuring out what actually wins inside it is the same kind of thinking I enjoy in code and math. The difference is that your opponents are sitting right across the table."
+        "body": [
+          "Every game is a small system with clear rules, and figuring out what actually wins inside it is the same kind of thinking I enjoy in code and math. The difference is that your opponents are sitting right across the table.",
+          "Next on my list is getting properly into chess, which is why it's sitting on the 'Up next' shelf."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "dice",
+      "title": "Catan dice lab",
+      "intro": "Why do sixes and eights matter so much? Roll two dice a few thousand times and watch your results fill in the expected curve, with seven (the robber) on top."
+    }
   },
   {
     "slug": "video-games",
@@ -326,21 +637,58 @@
     "sections": [
       {
         "heading": "Why I play",
-        "body": "Competitive games are a lot like any skill: improvement comes from reviewing mistakes, learning the meta and practising the fundamentals. League rewards thinking a few moves ahead; Valorant rewards precision under pressure. Both are at their best with a team that communicates."
+        "body": [
+          "Competitive games are a lot like any skill: improvement comes from reviewing mistakes, learning the meta and practising the fundamentals.",
+          "League rewards thinking a few moves ahead; Valorant rewards precision under pressure. Both are at their best with a team that communicates."
+        ]
       },
       {
-        "heading": "Mains",
-        "body": "In League I like roles that shape the map: tracking objectives, timing rotations and helping the team play around the right fights. In Valorant I gravitate toward agents with utility, because a good flash or smoke wins rounds just as often as aim does. I'm always picking up new champions and agents when the meta shifts."
+        "heading": "League of Legends",
+        "body": [
+          "League is a strategy game disguised as an action game. The mechanics matter, but most games are decided by macro decisions: which objective to take, when to group, and when to back off.",
+          "I like roles that shape the map: tracking objectives, timing rotations and helping the team play around the right fights. I'm always picking up new champions when the meta shifts."
+        ]
       },
       {
-        "heading": "Peak rank",
-        "body": "Ranked is a long-term project: review the losses, fix one habit at a time, and don't tilt-queue after a bad game. The climb is satisfying, but the games I remember are the clutch rounds and the comebacks with friends on comms."
+        "heading": "Valorant",
+        "body": [
+          "Valorant is the opposite pace: one shot can decide a round, so the fundamentals have to be automatic.",
+          "I gravitate toward agents with utility, because a good flash or smoke wins rounds just as often as aim does. Good comms and a plan for the round beat five people playing alone."
+        ],
+        "list": [
+          "Crosshair at head height, always",
+          "Stop moving before you shoot",
+          "Trade your teammates: never peek alone",
+          "Say what you see, short and clear"
+        ]
       },
       {
         "heading": "How I get better",
-        "body": "Watch replays, learn from players better than me, and focus on fundamentals before flashy plays. In League that's farming, vision and decision-making; in Valorant it's crosshair placement, positioning and communication. It's the same process as getting better at anything."
+        "body": [
+          "Watch replays, learn from players better than me, and focus on fundamentals before flashy plays. In League that's farming, vision and decision-making; in Valorant it's crosshair placement, positioning and communication.",
+          "The process is the same as getting better at anything: find the one mistake that costs the most, fix it, then find the next one."
+        ]
+      },
+      {
+        "heading": "Peak rank",
+        "body": [
+          "Ranked is a long-term project: review the losses, fix one habit at a time, and don't tilt-queue after a bad game.",
+          "The climb is satisfying, but the games I remember are the clutch rounds and the comebacks with friends on comms."
+        ]
+      },
+      {
+        "heading": "Playing with friends",
+        "body": [
+          "Solo queue is for practice; playing with friends is the real point. Late-night five-stacks, terrible strategies that somehow work, and replaying the best moments the next day.",
+          "Gaming is also how I stay in touch with friends who live far away. A few games a week keeps everyone talking."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "aim",
+      "title": "Aim trainer",
+      "intro": "Twenty seconds, as many targets as you can hit. Accuracy counts as much as speed, just like crosshair placement in Valorant."
+    }
   },
   {
     "slug": "webnovels-anime",
@@ -370,16 +718,56 @@
     "sections": [
       {
         "heading": "Why I read and watch",
-        "body": "I love stories that have room to build a whole world: the magic system, the politics, the side characters who end up mattering. Serialised fiction also makes it a shared experience, waiting for the next chapter or episode drop and talking theories with friends."
+        "body": [
+          "I love stories that have room to build a whole world: the magic system, the politics, the side characters who end up mattering.",
+          "Serialised fiction also makes it a shared experience: waiting for the next chapter or episode, then talking theories with friends."
+        ]
+      },
+      {
+        "heading": "What I look for",
+        "body": [
+          "My favourites tend to share a few things."
+        ],
+        "list": [
+          "A clever protagonist who wins by thinking, not just by power",
+          "Morally grey characters with believable motives",
+          "A power system with real rules and real costs",
+          "Long-term setups that pay off hundreds of chapters later"
+        ]
+      },
+      {
+        "heading": "My favourites",
+        "body": [
+          "Reverend Insanity is the webnovel I recommend most: a ruthless, calculating protagonist in a world where every advantage has a price. Code Geass is the anime equivalent, a strategic battle of wits where every plan has a counter-plan.",
+          "Vinland Saga is the change of pace: it starts as a revenge story and turns into something much quieter and deeper about what it means to be strong."
+        ]
       },
       {
         "heading": "Currently reading and watching",
-        "body": "There's always a webnovel or two on the go, read a few chapters at a time as they release, and an anime watchlist that grows faster than I can get through it. I gravitate toward long series with clever protagonists, morally grey characters and power systems with real rules, the same things that make Reverend Insanity, Code Geass and Vinland Saga favourites."
+        "body": [
+          "There's always a webnovel or two on the go, read a few chapters at a time as they release, and an anime watchlist that grows faster than I can get through it.",
+          "I'm always open to recommendations. If you've got a series with a great world and a protagonist who outsmarts everyone, send it my way."
+        ]
+      },
+      {
+        "heading": "Webnovels vs. anime",
+        "body": [
+          "Webnovels are where the depth is: hundreds or thousands of chapters, inner monologue, and worldbuilding that would never fit on screen.",
+          "Anime is where the moments are: the soundtrack, the animation and the voice acting can turn a scene I've already read into something that hits much harder. The best adaptations make you want to go back and read the source."
+        ]
       },
       {
         "heading": "What makes a great series",
-        "body": "A world with rules that stay consistent, characters who change over the story, and a payoff that was set up long before it arrives. The best series make you go back and reread the early chapters once you know where it's all going."
+        "body": [
+          "A world with rules that stay consistent, characters who change over the story, and a payoff that was set up long before it arrives.",
+          "The best series make you go back and reread the early chapters once you know where it's all going, and notice everything you missed the first time."
+        ]
       }
-    ]
+    ],
+    "lab": {
+      "kind": "binge",
+      "title": "Binge calculator",
+      "intro": "Thinking of starting a long series? See how long it would take to catch up at your pace. Each square is a day."
+    }
   }
 ]
