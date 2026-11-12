@@ -437,7 +437,7 @@ const DESC = 'Ethan Xu: Computer Science at UC Berkeley. ML research, data pipel
 page({
   out: 'index.html', path: '/', page: 'home', sub: false, title: 'Ethan Xu', description: DESC,
   content: src('pages/home-title.html') + src('pages/home-player.html') + fill(src('pages/home-levels.html'), { exploreCards: exploreCards() }),
-  scripts: '  <script src="/leaderboard.js"></script>\n  <script src="/home.js"></script>\n',
+  scripts: '  <script src="/leaderboard.js"></script>\n  <script src="/home.js"></script>\n  <script src="/guest-wall.js"></script>\n',
 });
 
 page({
@@ -527,7 +527,6 @@ const chips = [...new Set(interests.map((it) => it.type))]
 page({
   out: 'interests/index.html', path: '/interests/', page: 'interests', title: 'The library · Ethan Xu', description: 'What Ethan Xu does when he is not coding.',
   content: fill(src('pages/interests.html'), { spines, cards, chips }),
-  scripts: '  <script src="/guest-wall.js"></script>\n',
 });
 
 const interestTpl = src('pages/interest.html');

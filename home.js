@@ -233,7 +233,7 @@
   };
   const inView = () => { const r = section.getBoundingClientRect(); return r.bottom > window.innerHeight * 0.35 && r.top < window.innerHeight * 0.5; };
   window.addEventListener('keydown', (e) => {
-    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.('input, textarea, select, dialog')) return;
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.('input, textarea, select, dialog, .guest-wall')) return;
     if (!inView()) return;
     const onControl = e.target.closest?.('a, button');
     if (e.key === 'Enter' && !onControl && playing) {

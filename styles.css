@@ -1286,14 +1286,13 @@ main.subpage { padding-top: 5rem; }
 .board-list[aria-busy="true"]::after { content: "Loading…"; display: block; padding: 1rem; text-align: center; color: var(--text-light-2); }
 
 /* ---------- Guest wall (library page, guest-wall.js) ---------- */
-/* A wooden frame between the bookcase and the reading desk */
+/* A wooden frame on the home page, under "Explore my work" */
 .guest-wall {
   --wood: #8a5a3c; --wood-hi: #a8714a; --wood-lo: #5a3520;
   margin-top: 1.5rem; padding: 1rem clamp(.75rem, 3vw, 1.5rem) 1.1rem;
   background: var(--wood);
   box-shadow: inset 4px 4px 0 var(--wood-hi), inset -4px -4px 0 var(--wood-lo), 0 0 0 4px var(--edge), 8px 8px 0 var(--edge);
 }
-.guest-wall.is-below-desk { margin-top: 3rem; }   /* moved under the reading desk while a book is open (script.js) */
 .guest-head { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-bottom: .9rem; }
 .guest-plaque {
   position: relative; margin: 0; padding: .45rem 1.1rem;
