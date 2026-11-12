@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=1be7a612">
+  <link rel="stylesheet" href="/styles.css?v=9c3571c2">
   <script src="/site-config.js?v=5244d598"></script>
   <script>window.SITE = Object.assign(window.SITE || {}, { resumeFile: "/assets/resume-root.pdf?v=060de6e1" });</script>
 </head>
@@ -214,32 +214,43 @@
 
     <!-- ============ GUEST WALL ============ -->
     <!-- Shared r/place-style pixel canvas (guest-wall.js, tools/guest-wall.sql) -->
-    <section id="guest" class="world" data-checkpoint="Guest wall">
-        <section class="guest-wall" id="guestWall" aria-labelledby="guestWallTitle">
-          <div class="guest-head">
-            <h2 class="guest-plaque" id="guestWallTitle">Guest wall</h2>
-            <p class="guest-lede">Leave your mark. Pick a colour and paint: click, or drag to draw. Everyone shares this wall, and what you paint stays until someone paints over it.</p>
-          </div>
-          <div class="guest-scroll">
-            <canvas class="guest-canvas" tabindex="0" role="img" aria-label="Shared pixel wall, 160 by 60 squares. Use the arrow keys to move, Enter to paint, Shift and arrows to paint a line."></canvas>
-          </div>
-          <div class="guest-bar">
-            <div class="guest-palette" role="group" aria-label="Colour"></div>
-            <div class="guest-tools">
-              <div class="guest-seg" role="group" aria-label="Brush size">
-                <button type="button" data-brush="1" aria-label="Brush size 1"><i style="--s:2px"></i></button>
-                <button type="button" data-brush="2" aria-label="Brush size 2"><i style="--s:5px"></i></button>
-                <button type="button" data-brush="4" aria-label="Brush size 4"><i style="--s:9px"></i></button>
-              </div>
-              <div class="guest-seg guest-modes" role="group" aria-label="Touch mode">
-                <button type="button" data-mode="paint" aria-pressed="true">Paint</button>
-                <button type="button" data-mode="move" aria-pressed="false">Move</button>
-              </div>
+    <section id="guest" class="world" data-checkpoint="Guest wall" aria-labelledby="guestWallTitle">
+      <header class="world-head">
+        <p class="world-num">GUEST BOOK</p>
+        <h2 class="world-title" id="guestWallTitle">The guest wall</h2>
+      </header>
+      <p class="section-lede">A shared pixel canvas for everyone who visits this site. Instead of signing a guest book, paint something: a doodle, your initials, a tiny piece of pixel art. It's live, so you'll see other visitors' strokes appear as they paint.</p>
+      <dl class="glance glance-hero guest-howto">
+        <div><dt>How to paint</dt><dd>Pick a colour and a brush size, then click or drag on the canvas</dd></div>
+        <div><dt>Shared and live</dt><dd>One canvas for every visitor, updating in real time</dd></div>
+        <div><dt>It stays</dt><dd>Your pixels last until someone paints over them</dd></div>
+        <div><dt>Keyboard and phone</dt><dd>Arrow keys and Enter to paint; on a phone, switch to Move to scroll</dd></div>
+      </dl>
+      <section class="guest-wall" id="guestWall" aria-label="Guest wall canvas">
+        <div class="guest-head">
+          <p class="guest-plaque">Live canvas · 160 × 60</p>
+          <p class="guest-lede">Be kind: keep it something you'd be happy for anyone to see.</p>
+        </div>
+        <div class="guest-scroll">
+          <canvas class="guest-canvas" tabindex="0" role="img" aria-label="Shared pixel wall, 160 by 60 squares. Use the arrow keys to move, Enter to paint, Shift and arrows to paint a line."></canvas>
+        </div>
+        <div class="guest-bar">
+          <div class="guest-palette" role="group" aria-label="Colour"></div>
+          <div class="guest-tools">
+            <div class="guest-seg" role="group" aria-label="Brush size">
+              <button type="button" data-brush="1" aria-label="Brush size 1"><i style="--s:2px"></i></button>
+              <button type="button" data-brush="2" aria-label="Brush size 2"><i style="--s:5px"></i></button>
+              <button type="button" data-brush="4" aria-label="Brush size 4"><i style="--s:9px"></i></button>
             </div>
-            <p class="guest-status" role="status" aria-live="polite"></p>
-            <p class="guest-coords" aria-hidden="true"></p>
+            <div class="guest-seg guest-modes" role="group" aria-label="Touch mode">
+              <button type="button" data-mode="paint" aria-pressed="true">Paint</button>
+              <button type="button" data-mode="move" aria-pressed="false">Move</button>
+            </div>
           </div>
-        </section>
+          <p class="guest-status" role="status" aria-live="polite"></p>
+          <p class="guest-coords" aria-hidden="true"></p>
+        </div>
+      </section>
     </section>
 
   </main>
