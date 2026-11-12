@@ -507,6 +507,11 @@ const cards = interests.map((it) => `        <article class="open-book" id="book
             <ul class="quest-list">
 ${objectivesList(it)}
             </ul>
+            <p class="checkout-label">Inside this volume</p>
+            <ol class="volume-chapters">
+${it.sections.map((sec) => `              <li>${esc(sec.heading)}</li>`).join('\n')}
+            </ol>${it.lab ? `
+            <p class="volume-lab"><b>Field notebook:</b> ${esc(it.lab.title)}. ${esc(it.lab.intro.split(/(?<=[.?!])\s/)[0])}</p>` : ''}
             <div class="open-book-actions">
               <a class="btn btn-tomato btn-sm" href="/interests/${it.slug}/">Read the full volume ${TRI}</a>
               <button class="btn btn-paper btn-sm" type="button" data-close-book>Put it back</button>
