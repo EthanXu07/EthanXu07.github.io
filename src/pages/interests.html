@@ -17,8 +17,6 @@
 {{spines}}
           <li class="bookend" aria-hidden="true"></li>
           <!-- shelf props: decorative, hidden on narrow screens -->
-          <!-- "Up next" pile: one book lying flat per hobby still to be written (src/data/on-hold.json) -->
-          <li class="shelf-prop prop-stack" aria-hidden="true"><b>Up next</b>{{upNextBooks}}</li>
           <li class="shelf-prop prop-plant" aria-hidden="true">
             <svg viewBox="0 0 16 22" width="64" height="88" shape-rendering="crispEdges">
               <path fill="#3f6b33" d="M7 1h2v2H7zM4 3h2v2H4zM10 3h2v2h-2zM2 6h3v2H2zM11 6h3v2h-3zM6 3h4v9H6zM3 5h3v3H3zM10 5h3v3h-3zM1 8h4v2H1zM11 8h4v2h-4z"/>
@@ -30,11 +28,6 @@
             </svg>
           </li>
         </ul>
-        <!-- Base of the bookcase: brass plaque with shelf stats. The "Up next" line only shows when the pile above has no room (script.js) -->
-        <div class="bookcase-base">
-          <p class="shelf-plaque">{{stats}}</p>
-          <p class="up-next"><b>Up next:</b> {{upNextLine}}</p>
-        </div>
       </div>
 
       <!-- Points up at the shelf; hidden while a book is open (script.js) -->

@@ -306,7 +306,7 @@ $$('.chip').forEach((chip) => {
   }));
   $$('[data-close-book]').forEach((btn) => btn.addEventListener('click', () => close(true)));
 
-  // Shelf props (bookend, "Up next" pile, plant) only stay if they fit on the last row of books;
+  // Shelf props (bookend, plant) only stay if they fit on the last row of books;
   // anything that would wrap onto a shelf of its own is dropped. Re-run on resize and filtering.
   const shelf = $('.books');
   const props = $$('.bookend, .shelf-prop');
@@ -316,8 +316,6 @@ $$('.chip').forEach((chip) => {
     if (!books.length) return;
     const lastRow = books[books.length - 1].offsetTop;
     props.forEach((p) => { if (p.offsetTop > lastRow) p.hidden = true; });
-    // the "Up next" pile has a one-line stand-in on the base of the bookcase for when it is dropped
-    shelf.closest('.bookcase').classList.toggle('has-pile', !$('.prop-stack').hidden);
   }
   new ResizeObserver(fitProps).observe(shelf);
   $$('.chip').forEach((chip) => chip.addEventListener('click', () => requestAnimationFrame(fitProps)));
