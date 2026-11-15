@@ -240,7 +240,7 @@
       if (state === 'over') { e.preventDefault(); newGame(); return; }
       if (state === 'won' && phase === 'ready') {
         e.preventDefault();
-        document.getElementById('contact')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+        location.href = prompt.go.href;
         return;
       }
     }
@@ -349,7 +349,7 @@
     prompt.desc.textContent = `${coinCount} coins · ${hearts} hearts left. Nice run! Press Enter to get in touch, or walk past the castle to see the leaderboard →`;
     forms.clear.hidden = false;
     $id('exploreAgain').hidden = $id('exploreBoard').hidden = false;
-    prompt.go.href = '#contact';
+    prompt.go.href = document.querySelector('.hud-nav a[title="Contact"]')?.href || '/contact/';
     prompt.go.firstChild.textContent = 'Contact ';
     prompt.el.hidden = false;
   }

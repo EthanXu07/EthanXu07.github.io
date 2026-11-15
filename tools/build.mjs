@@ -2,7 +2,7 @@
 // Builds the multi-page site from src/ into the repo root (which GitHub Pages serves).
 // No dependencies:   node tools/build.mjs
 //
-//   src/layout.html           shared nav, footer, résumé pop-up (game pages)
+//   src/layout.html           shared nav, page ending, résumé pop-up (game pages)
 //   src/pages/*.html          page bodies
 //   src/data/experience.json  experience (jobs + research) ┐ one source of truth for
 //   src/data/projects.json    projects + trophies          │ experience, projects and the skill tree
@@ -36,14 +36,14 @@ const stamp = (html) => html.replace(/(href|src)="\/(styles\.css|[\w-]+\.js)"/g,
   `${attr}="/${f}?v=${createHash('sha1').update(readFileSync(join(ROOT, f))).digest('hex').slice(0, 8)}"`);
 
 // ---------------------------------------------------------------- Navigation
-// Keys 1–6 follow this order. Contact is the Save Point at the bottom of every page.
+// Keys 1–6 follow this order. Each page ends with a goal flag pointing to the next one.
 const WORLDS = [
   { key: 'home', label: 'Home', href: '/' },
   { key: 'experience', label: 'Experience', href: '/experience/' },
   { key: 'projects', label: 'Projects', href: '/projects/' },
   { key: 'skills', label: 'Skills', href: '/skills/' },
   { key: 'interests', label: 'Interests', href: '/interests/' },
-  { key: 'contact', label: 'Contact', href: '#contact' },
+  { key: 'contact', label: 'Contact', href: '/contact/' },
 ];
 
 // 10×10 pixel icons for the nav ('#' = filled). Rendered as crisp SVG in currentColor.
@@ -240,13 +240,33 @@ const nav = (active) => WORLDS.map((w) => {
   return `        <a href="${w.href}" title="${w.label}"${current ? ' class="active" aria-current="page"' : ''}>${pixelIcon(ICONS[w.key], w.key)}<span class="nav-label">${w.label}</span></a>`;
 }).join('\n');
 
+// Page ending: the hero reaches a goal flag (drawn by script.js), then a button on to the next world.
+// The last world (Contact) ends the game instead and loops back to the title screen.
+function ending(key) {
+  const i = WORLDS.findIndex((w) => w.key === key);
+  const next = WORLDS[i + 1];
+  const [kicker, sub, go] = next
+    ? ['Stage clear', `World ${i + 1} · ${WORLDS[i].label}`, `<a class="btn btn-sm btn-gold" href="${next.href}">Next: ${next.label} ${TRI}</a>`]
+    : ['The end', 'Thanks for playing', '<a class="btn btn-sm btn-gold" href="/">↺ Title screen</a>'];
+  return `  <footer class="credits">
+    <div class="goal">
+      <canvas class="goal-scene" id="goalScene" width="64" height="20" aria-hidden="true"></canvas>
+      <p class="goal-text"><span class="goal-kicker">${kicker}</span><span class="goal-sub">${sub}</span></p>
+    </div>
+    <nav class="credits-nav" aria-label="Keep going">
+      ${go}
+      <a href="#hud" class="btn btn-sm btn-ghost">▲ Back to top</a>
+    </nav>
+  </footer>`;
+}
+
 function page({ out, path, page, title, description, content, sub = true, scripts = '' }) {
   const html = fill(layout, {
     title: esc(title), description: esc(description), path, page,
     nav: nav(page),
     mainClass: sub ? 'subpage' : 'home',
     content,
-    contact: contactHtml,
+    ending: ending(page),
     resumeModal: src('pages/_resume-modal.html'),
     scripts,
   });
@@ -583,11 +603,10 @@ const redirect = (from, to, anchorFrom, anchorTo) => write(`${from}/index.html`,
 redirect('quests', 'experience', 'quest', 'exp');
 redirect('loot', 'projects', 'loot', 'project');
 
-// Old /contact/ URL → the Save Point section
-write('contact/index.html', `<!doctype html><meta charset="utf-8"><title>Contact · Ethan Xu</title>
-<meta http-equiv="refresh" content="0; url=/#contact"><link rel="canonical" href="https://ethanxu.dev/#contact">
-<a href="/#contact">Contact Ethan Xu</a>
-`);
+page({
+  out: 'contact/index.html', path: '/contact/', page: 'contact', title: 'Contact · Ethan Xu', description: 'Get in touch with Ethan Xu: email, LinkedIn, GitHub and résumé.',
+  content: contactHtml,
+});
 
 // ---------------------------------------------------------------- Site copies
 // ethanxu.dev/home/ and /root/: the whole site again, each with its own résumé and grad date.
@@ -600,7 +619,7 @@ const COPIES = [
 const GRAD = /(<dt>Grad<\/dt><dd>)[^<]*(<\/dd>)/;
 const resumePage = readFileSync(join(ROOT, 'resume/index.html'), 'utf8');
 for (const c of COPIES) {
-  const prefix = (html) => html.replace(/href="\/(?=(?:experience|projects|skills|interests|resume)\/|#|")/g, `href="/${c.dir}/`);
+  const prefix = (html) => html.replace(/href="\/(?=(?:experience|projects|skills|interests|contact|resume)\/|#|")/g, `href="/${c.dir}/`);
   const config = (html) => html.replaceAll('"/assets/resume.pdf"', JSON.stringify(c.resumeFile)).replace(/(<script src="[./]*site-config\.js[^"]*"><\/script>)/,
     `$1\n  <script>window.SITE = Object.assign(window.SITE || {}, { resumeFile: ${JSON.stringify(c.resumeFile)} });</script>`);
   for (const [out, html] of built) {

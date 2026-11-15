@@ -475,7 +475,7 @@ resumeModal.addEventListener('close', () => { document.body.style.overflow = '';
 resumeModal.addEventListener('click', (e) => { if (e.target === resumeModal) resumeModal.close(); });
 
 // =====================================================================
-//  Keyboard shortcuts: 1–5 switch pages, 6 jumps to contact, R opens the résumé
+//  Keyboard shortcuts: 1–6 switch pages, R opens the résumé
 // =====================================================================
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey || resumeModal.open || e.target.closest?.('input, textarea, select')) return;
@@ -656,4 +656,55 @@ document.addEventListener('keydown', (e) => {
   }
   draw();
   if (!reduceMotion) setInterval(draw, 120);
+})();
+
+// =====================================================================
+//  Page ending: when the bottom of the page comes into view, the hero
+//  walks up to the goal flag and runs it up the pole. 64×20 canvas.
+// =====================================================================
+(() => {
+  const c = $('#goalScene');
+  if (!c) return;
+  const g = c.getContext('2d');
+  const goal = c.closest('.goal');
+  const POLE = 52, GROUND = 18, START = 2, STOP = POLE - 13, TOP = 3, LOW = GROUND - 6;
+  let x = START, flagY = LOW, frame = 0, done = false;
+
+  function draw() {
+    g.clearRect(0, 0, c.width, c.height);
+    g.fillStyle = '#2e463b'; g.fillRect(0, GROUND, c.width, 2);              // ground
+    for (let i = 3; i < c.width; i += 7) { g.fillStyle = '#7aa35a'; g.fillRect(i, GROUND - 1, 1, 1); } // grass tufts
+    g.fillStyle = '#b9a988'; g.fillRect(POLE, 2, 1, GROUND - 2);             // pole
+    g.fillStyle = '#e8a93a'; g.fillRect(POLE - 1, 0, 3, 2);                  // knob
+    g.fillStyle = '#d4553a'; g.fillRect(POLE + 1, flagY, 6, 4);              // flag
+    g.fillStyle = '#9c3423'; g.fillRect(POLE + 1, flagY + 3, 6, 1);
+    if (done) { g.fillStyle = '#f1e6cc'; g.fillRect(POLE + 3, flagY + 1, 2, 1); } // star on the raised flag
+    drawSprite(g, x < STOP && (frame >> 1) % 2 ? SPRITE.walk : SPRITE.stand, x, GROUND - 16);
+  }
+
+  function finish() {
+    x = STOP; flagY = TOP; done = true;
+    goal.classList.add('cleared');
+    draw();
+  }
+
+  function play() {
+    if (reduceMotion) { finish(); return; }
+    const timer = setInterval(() => {
+      frame++;
+      if (x < STOP) x = Math.min(STOP, x + 1);
+      else if (flagY > TOP) flagY = Math.max(TOP, flagY - 1);
+      else { clearInterval(timer); finish(); return; }
+      draw();
+    }, 45);
+  }
+
+  draw();
+  if (!('IntersectionObserver' in window)) { finish(); return; }
+  const io = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    io.disconnect();
+    play();
+  }, { threshold: 0.9 });
+  io.observe(goal);
 })();

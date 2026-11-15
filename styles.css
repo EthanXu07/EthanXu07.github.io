@@ -606,7 +606,7 @@ kbd {
 .tri { display: inline-block; width: 0; height: 0; margin-left: .35em; vertical-align: .05em; border-top: .32em solid transparent; border-bottom: .32em solid transparent; border-left: .45em solid currentColor; }
 
 /* ---------- Multi-page layout ---------- */
-main.subpage { padding-top: 5rem; }
+main.subpage { padding-top: 5rem; min-height: calc(100svh - 9rem); } /* keeps the page ending at the bottom of short pages */
 @media (max-width: 52rem) { main.subpage { padding-top: 7.5rem; } }
 
 /* Home: overview cards */
@@ -1115,15 +1115,23 @@ main.subpage { padding-top: 5rem; }
 .contact-go { flex: none; padding: .4rem .55rem; font: .55rem/1 var(--pixel); text-transform: uppercase; background: var(--gold-dark); color: var(--paper); }
 .contact-row:hover .contact-go, .contact-row:focus-visible .contact-go { background: var(--tomato); }
 
-/* ---------- Credits ---------- */
+/* ---------- Credits: the page ending (goal flag + next world) ---------- */
 .credits {
-  text-align: center;
-  padding: 3rem 1rem calc(3rem + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.25rem 2.5rem;
+  padding: 2.5rem 1rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
   border-top: var(--px) solid var(--edge);
   background: var(--edge);
   color: var(--text-light-2);
   font-size: .9rem;
 }
+.goal { display: flex; align-items: flex-end; gap: 1rem; }
+.goal-scene { display: block; width: 192px; height: 60px; image-rendering: pixelated; }
+.goal-text { margin: 0 0 .35rem; display: grid; gap: .45rem; }
+.goal-kicker { font: .75rem/1 var(--pixel); text-transform: uppercase; color: var(--text-light-2); transition: color .2s steps(2), transform .2s steps(2); }
+.goal.cleared .goal-kicker { color: var(--gold); transform: translateY(-2px); }
+.goal-sub { font: 700 1.05rem/1.2 var(--title); color: var(--paper); }
+.credits-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+@media (max-width: 30rem) { .goal-scene { width: 160px; height: 50px; } }
 
 
 /* ---------- Skill tree ---------- */
