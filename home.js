@@ -358,37 +358,60 @@
   const clearMs = () => Math.round((runFrames * 1000) / 60);
   const forms = {};
   section.querySelectorAll('.run-submit').forEach((f) => { forms[f.dataset.mode] = f; });
+  // Name step after a run: the box starts filled in (your last name, or a made-up one),
+  // chips offer the names used in this browser plus fresh defaults, and "guest" saves with no name.
+  const controls = (f) => f.querySelectorAll('input, button');
+  function fillPicks(f) {
+    const box = f.querySelector('.name-picks');
+    const recent = Leaderboard.recentNames();
+    const chips = [...recent.map((n) => [n, 'recent']), ...Leaderboard.suggestNames(recent.length ? 2 : 3).map((n) => [n, 'new'])];
+    box.replaceChildren(...chips.map(([n, kind]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = `name-pick name-pick-${kind}`; b.textContent = n;
+      b.title = kind === 'recent' ? 'A name you used before' : 'Use this name';
+      b.addEventListener('click', () => { f.elements.name.value = n; f.elements.name.focus(); });
+      return b;
+    }));
+    const dice = document.createElement('button');
+    dice.type = 'button'; dice.className = 'name-pick name-pick-dice'; dice.textContent = '🎲'; dice.title = 'More names';
+    dice.setAttribute('aria-label', 'Suggest other names');
+    dice.addEventListener('click', () => { fillPicks(f); f.querySelector('.name-pick-new')?.focus(); });
+    box.append(dice);
+    return chips[0][0];
+  }
   function resetSubmit() {
     for (const f of Object.values(forms)) {
       f.hidden = true;
-      f.elements.name.disabled = false; f.querySelector('button').disabled = false;
-      f.elements.name.value = Leaderboard.savedName();
+      controls(f).forEach((c) => { c.disabled = false; });
+      f.elements.name.value = fillPicks(f);
       f.querySelector('.run-submit-msg').textContent = '';
       f.classList.remove('done');
+      f.guest = null;
       f.ranks = {}; // boards this run is already on, so a retry after a failed save doesn't add it twice
     }
   }
+  async function saveRun(f, name, guest) {
+    const msg = f.querySelector('.run-submit-msg');
+    controls(f).forEach((c) => { c.disabled = true; });
+    msg.textContent = 'Saving…';
+    try {
+      const entries = f.dataset.mode === 'clear' ? [['speed', clearMs()], ['score', score]] : [['score', score]];
+      await Promise.all(entries.map(async ([mode, value]) => { f.ranks[mode] ??= await Leaderboard.submit(mode, name, value, { guest }); }));
+      msg.textContent = `Saved as ${name}! ${entries.map(([mode]) => `${mode === 'speed' ? 'Speedrun' : 'High score'} #${f.ranks[mode]}`).join(' · ')}`;
+      f.classList.add('done');
+      refreshWall(true);
+      popConfetti(p.x + PW / 2, p.y, 40);
+      openBoard(entries[0][0], { name, values: Object.fromEntries(entries) });
+    } catch {
+      msg.textContent = "Couldn't reach the leaderboard. Try again?";
+      controls(f).forEach((c) => { c.disabled = false; });
+      f.elements.name.focus(); // it lost focus while disabled; keep Enter retrying instead of reaching the game
+    }
+  }
   for (const f of Object.values(forms)) {
-    f.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = Leaderboard.cleanName(f.elements.name.value);
-      const msg = f.querySelector('.run-submit-msg');
-      f.elements.name.disabled = true; f.querySelector('button').disabled = true;
-      msg.textContent = 'Saving…';
-      try {
-        const entries = f.dataset.mode === 'clear' ? [['speed', clearMs()], ['score', score]] : [['score', score]];
-        await Promise.all(entries.map(async ([mode, value]) => { f.ranks[mode] ??= await Leaderboard.submit(mode, name, value); }));
-        msg.textContent = `Saved! ${entries.map(([mode]) => `${mode === 'speed' ? 'Speedrun' : 'High score'} #${f.ranks[mode]}`).join(' · ')}`;
-        f.classList.add('done');
-        refreshWall(true);
-        popConfetti(p.x + PW / 2, p.y, 40);
-        openBoard(entries[0][0], name);
-      } catch {
-        msg.textContent = "Couldn't reach the leaderboard. Try again?";
-        f.elements.name.disabled = false; f.querySelector('button').disabled = false;
-        f.elements.name.focus(); // it lost focus while disabled; keep Enter retrying instead of reaching the game
-      }
-    });
+    f.addEventListener('submit', (e) => { e.preventDefault(); saveRun(f, Leaderboard.cleanName(f.elements.name.value), false); });
+    // A guest keeps one made-up name for every board this run goes on
+    f.querySelector('[data-guest]').addEventListener('click', () => { f.guest ??= Leaderboard.guestName(); saveRun(f, f.guest, true); });
   }
 
   const board = { el: $id('boardModal'), list: $id('boardList'), note: $id('boardNote'), tab: 'speed', mine: '' };
@@ -411,14 +434,16 @@
     }
     for (const r of rows) {
       const li = document.createElement('li');
-      if (board.mine && r.name === board.mine) li.classList.add('mine');
+      // Highlight this run's own row (same name and value), not every run under that name
+      const mine = board.mine;
+      if (mine && r.name === mine.name && (mine.values?.[mode] ?? r.value) === r.value) li.classList.add('mine');
       const n = document.createElement('span'); n.className = 'board-name'; n.textContent = r.name;
       const v = document.createElement('span'); v.className = 'board-value'; v.textContent = Leaderboard.fmt(mode, r.value);
       li.append(n, v);
       board.list.append(li);
     }
   }
-  function openBoard(tab = board.tab, mine = Leaderboard.savedName()) {
+  function openBoard(tab = board.tab, mine = { name: Leaderboard.savedName() }) {
     board.tab = tab; board.mine = mine;
     for (const k in keys) keys[k] = false;
     if (!board.el.open) board.el.showModal();

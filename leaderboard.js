@@ -9,7 +9,8 @@ window.Leaderboard = (() => {
   const cfg = window.SITE?.supabase || {};
   const global = !!(cfg.url && cfg.anonKey);
   const LOCAL_KEY = 'leaderboard:v1';
-  const NAME_KEY = 'leaderboard:name';
+  const NAME_KEY = 'leaderboard:name';   // the last name used (older saves)
+  const NAMES_KEY = 'leaderboard:names'; // names used in this browser, newest first: the "accounts" offered after a run
   const TOP = 10;
   const asc = (mode) => mode === 'speed';
 
@@ -50,11 +51,11 @@ window.Leaderboard = (() => {
   }
   const prefetch = () => { if (global) ['speed', 'score'].forEach((m) => top(m)); };
 
-  // Returns the 1-based rank this entry landed at
-  async function submit(mode, name, value) {
+  // Returns the 1-based rank this entry landed at. Guest runs aren't remembered as a name.
+  async function submit(mode, name, value, { guest = false } = {}) {
     name = cleanName(name);
     value = Math.round(value);
-    try { localStorage.setItem(NAME_KEY, name); } catch { /* ignore */ }
+    if (!guest) remember(name);
     const created_at = new Date().toISOString();
     if (global) {
       await api('leaderboard', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ mode, name, value }) });
@@ -68,9 +69,32 @@ window.Leaderboard = (() => {
     return all[mode].findIndex((r) => r.created_at === created_at && r.name === name) + 1 || all[mode].length + 1;
   }
   const cleanName = (s) => String(s || '').replace(/[^\p{L}\p{N} _.\-]/gu, '').trim().slice(0, 12) || 'Player';
-  const savedName = () => { try { return localStorage.getItem(NAME_KEY) || ''; } catch { return ''; } };
+  const recentNames = () => {
+    let names = [];
+    try { names = JSON.parse(localStorage.getItem(NAMES_KEY)) || []; } catch { /* ignore */ }
+    try { const last = localStorage.getItem(NAME_KEY); if (last && !names.includes(last)) names.unshift(last); } catch { /* ignore */ }
+    return names.filter((n) => typeof n === 'string' && n && !isGuest(n)).slice(0, 3);
+  };
+  function remember(name) {
+    if (isGuest(name)) return;
+    const names = [name, ...recentNames().filter((n) => n.toLowerCase() !== name.toLowerCase())].slice(0, 3);
+    try { localStorage.setItem(NAME_KEY, name); localStorage.setItem(NAMES_KEY, JSON.stringify(names)); } catch { /* private mode */ }
+  }
+  const savedName = () => recentNames()[0] || '';
+
+  // Default names: adjective + creature, always ≤ 12 characters
+  const ADJ = ['Swift', 'Pixel', 'Brave', 'Lucky', 'Sunny', 'Turbo', 'Mossy', 'Quiet', 'Jolly', 'Rusty', 'Cosmic', 'Sneaky'];
+  const NOUN = ['Otter', 'Fox', 'Frog', 'Comet', 'Koala', 'Gecko', 'Panda', 'Moth', 'Yeti', 'Crab', 'Owl', 'Bean'];
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  function suggestNames(n = 2) {
+    const out = new Set();
+    while (out.size < n) { const s = pick(ADJ) + pick(NOUN); if (s.length <= 12) out.add(s); }
+    return [...out];
+  }
+  const guestName = () => `Guest-${100 + Math.floor(Math.random() * 900)}`;
+  const isGuest = (name) => /^Guest(-\d+)?$/i.test(name);
   const fmtTime = (ms) => { const s = ms / 1000, m = Math.floor(s / 60); return `${m}:${(s - m * 60).toFixed(2).padStart(5, '0')}`; };
   const fmt = (mode, v) => (mode === 'speed' ? fmtTime(v) : v.toLocaleString());
 
-  return { global, top, prefetch, submit, savedName, fmt, fmtTime, cleanName };
+  return { global, top, prefetch, submit, savedName, recentNames, suggestNames, guestName, fmt, fmtTime, cleanName };
 })();

@@ -24,8 +24,10 @@
         <p class="explore-over-title">Out of hearts!</p>
         <p class="explore-desc" id="exploreOverStats"></p>
         <form class="run-submit" data-mode="score" hidden>
-          <label for="overName">Enter your name for the high score board</label>
-          <div class="run-submit-row"><input id="overName" name="name" maxlength="12" autocomplete="nickname" placeholder="Your name" required><button class="btn btn-gold btn-sm">Submit</button></div>
+          <label for="overName">Name on the board</label>
+          <div class="run-submit-row"><input id="overName" name="name" maxlength="12" autocomplete="nickname" placeholder="Your name" required><button class="btn btn-gold btn-sm">Save</button></div>
+          <div class="name-picks" role="group" aria-label="Pick a name"></div>
+          <button class="run-guest" type="button" data-guest>No name? Save as a guest ▸</button>
           <p class="run-submit-msg" role="status"></p>
         </form>
         <div class="explore-actions">
@@ -39,8 +41,10 @@
         <p class="explore-title" id="exploreTitle"></p>
         <p class="explore-desc" id="exploreDesc"></p>
         <form class="run-submit" data-mode="clear" hidden>
-          <label for="clearName">Enter your name for the leaderboard</label>
-          <div class="run-submit-row"><input id="clearName" name="name" maxlength="12" autocomplete="nickname" placeholder="Your name" required><button class="btn btn-tomato btn-sm">Submit</button></div>
+          <label for="clearName">Name on the board</label>
+          <div class="run-submit-row"><input id="clearName" name="name" maxlength="12" autocomplete="nickname" placeholder="Your name" required><button class="btn btn-tomato btn-sm">Save</button></div>
+          <div class="name-picks" role="group" aria-label="Pick a name"></div>
+          <button class="run-guest" type="button" data-guest>No name? Save as a guest ▸</button>
           <p class="run-submit-msg" role="status"></p>
         </form>
         <div class="explore-actions">
