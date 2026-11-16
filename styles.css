@@ -317,9 +317,9 @@ kbd {
 .explore-scroll:hover { color: var(--gold); }
 .title-screen.playing .explore-scroll { display: block; }
 .explore-exit { border: 0; cursor: pointer; background: var(--tomato); box-shadow: 0 0 0 2px var(--edge), inset 0 -3px 0 var(--tomato-dark); }
-.explore-exit kbd { margin-left: .3rem; font: inherit; font-size: .42rem; opacity: .8; }
+.explore-exit kbd { padding: .12rem .25rem; font: .42rem/1 var(--pixel); background: rgba(241, 230, 204, .85); box-shadow: none; }
 .explore-exit:hover, .explore-exit:focus-visible { color: var(--paper); background: var(--tomato-dark); outline: none; }
-.title-screen.playing .explore-exit { display: block; pointer-events: auto; }
+.title-screen.playing .explore-exit { display: flex; align-items: center; gap: .4rem; line-height: 1; pointer-events: auto; }
 .title-screen:not(.playing) .explore-links { display: none; }
 /* Leave room for the level map on wide screens */
 @media (min-width: 80rem) { .title-screen.playing .title-inner { left: 5.5rem; } }
