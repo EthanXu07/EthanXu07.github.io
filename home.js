@@ -223,6 +223,18 @@
     }
   }
   $id('pressStart')?.addEventListener('click', (e) => { e.preventDefault(); start(); });
+
+  // ---------- Exit: back to the title screen (Esc or the ✕ Exit game button) ----------
+  function exit() {
+    if (!playing) return;
+    playing = false;
+    for (const k in keys) keys[k] = false;
+    if (board.el.open) board.el.close();
+    newGame(); // fresh level behind the title card; also hides the game-over and level-clear panels
+    section.classList.remove('playing');
+    $id('pressStart')?.focus({ preventScroll: true });
+  }
+  $id('exploreExit')?.addEventListener('click', exit);
   $id('exploreRetry').addEventListener('click', () => newGame());
   $id('exploreAgain').addEventListener('click', () => newGame());
 
@@ -233,6 +245,9 @@
   };
   const inView = () => { const r = section.getBoundingClientRect(); return r.bottom > window.innerHeight * 0.35 && r.top < window.innerHeight * 0.5; };
   window.addEventListener('keydown', (e) => {
+    // Esc leaves the game from anywhere on the title screen, even while typing a leaderboard name
+    // (an open leaderboard closes first, natively)
+    if (e.key === 'Escape' && playing && !board.el.open && !e.target.closest?.('textarea, .guest-wall') && inView()) { e.preventDefault(); exit(); return; }
     if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.('input, textarea, select, dialog, .guest-wall')) return;
     if (!inView()) return;
     const onControl = e.target.closest?.('a, button');
