@@ -265,7 +265,16 @@ kbd {
 @keyframes bob { 50% { transform: translateY(3px); } }
 
 .title-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
-.hint { margin: 1.5rem 0 0; font-size: .8rem; color: var(--paper); text-shadow: 0 2px 0 var(--edge); }
+.hint {
+  display: inline-flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.25rem;
+  margin: 1.5rem 0 0; padding: .65rem 1.1rem;
+  font: 600 .95rem/1 var(--body); color: var(--paper);
+  background: rgba(14, 22, 20, .78); border-radius: 4px;
+  box-shadow: 0 0 0 3px var(--edge);
+}
+.hint span { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; }
+.hint kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 1.6rem; height: 1.6rem; padding: 0 .4rem; font-size: .65rem; line-height: 1; box-shadow: 0 2px 0 var(--paper-2); }
+.hint kbd.arrow { font-size: .95rem; }
 @media (hover: none) { .hint { display: none; } }
 
 /* ---------- Explorer mode (home.js): the card moves to the corner ---------- */
@@ -1371,3 +1380,6 @@ main.subpage { padding-top: 5rem; min-height: calc(100svh - 9rem); } /* keeps th
 .guest-status:empty { display: none; }
 .guest-status { margin: 0; font: .5rem/1.8 var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: #f3c969; text-shadow: 2px 2px 0 rgba(0,0,0,.35); }
 .guest-coords { flex-basis: 100%; margin: 0; min-height: 1.2em; font-size: .8rem; color: #f1dcae; }
+
+/* Start button: the triangle is a flex item, so it centres on the text */
+.btn .tri-lead { margin: 0; vertical-align: 0; border-top-width: .5em; border-bottom-width: .5em; border-left-width: .7em; }
