@@ -124,9 +124,9 @@ function drawSprite(ctx, rows, x, y, flip = false) {
   let i = 0;
   const tick = () => {
     el.textContent = text.slice(0, ++i);
-    if (i < text.length) timer = setTimeout(tick, '.!'.includes(text[i - 1]) ? 260 : 22);
+    if (i < text.length) timer = setTimeout(tick, '.!'.includes(text[i - 1]) ? 160 : 14);
   };
-  let timer = setTimeout(tick, 600);
+  let timer = setTimeout(tick, 400);
   $('.dialog').addEventListener('click', () => { clearTimeout(timer); el.textContent = text; });
 })();
 
